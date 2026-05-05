@@ -7,25 +7,15 @@
     <meta name="keywords" content="Surender Singh, Portfolio, Data Scientist, ML Engineer, Web Developer, AI, Machine Learning, Python, MITRC">
     <meta name="author" content="Surender Singh">
     <title>Surender Singh — Portfolio</title>
-
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-
-    <!-- Stylesheet -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-    <!-- ============ CURSOR ============ -->
     <div class="cursor-dot" id="cursorDot"></div>
     <div class="cursor-ring" id="cursorRing"></div>
-
-    <!-- ============ PARTICLES CANVAS ============ -->
     <canvas id="particleCanvas"></canvas>
-
-    <!-- ============ NAVIGATION ============ -->
     <nav class="navbar" id="navbar">
         <div class="nav-container">
             <a href="#hero" class="nav-logo" id="nav-logo">S<span class="logo-dot">.</span></a>
@@ -40,12 +30,11 @@
                 <li><a href="#skills" class="nav-link" id="nav-skills">SKILLS</a></li>
                 <li><a href="#projects" class="nav-link" id="nav-projects">WORK</a></li>
                 <li><a href="#resume" class="nav-link" id="nav-resume">RESUME</a></li>
+                <li><a href="#certifications" class="nav-link" id="nav-certs">CERTS</a></li>
                 <li><a href="#contact" class="nav-link" id="nav-contact">CONTACT</a></li>
             </ul>
         </div>
     </nav>
-
-    <!-- ============ HERO SECTION ============ -->
     <section class="hero" id="hero">
         <div class="hero-noise"></div>
         <div class="hero-container">
@@ -66,7 +55,7 @@
                 <p class="hero-sub">B.Tech AI&amp;DS &nbsp;·&nbsp; 6th Semester &nbsp;·&nbsp; MITRC</p>
                 <div class="hero-actions">
                     <a href="#projects" class="btn btn-primary" id="hero-work-btn">VIEW MY WORK</a>
-                    <a href="Surender's_Resume.pdf" download class="btn btn-ghost" id="hero-resume-btn">RESUME ↓</a>
+                    <a href="Resume.pdf" download class="btn btn-ghost" id="hero-resume-btn">RESUME ↓</a>
                 </div>
             </div>
             <div class="hero-right">
@@ -77,20 +66,13 @@
                     <div class="avatar-frame">
                         <img src="profile.jpg" alt="Surender Singh" class="avatar-img">
                     </div>
-                    <!-- Floating badges -->
                     <div class="floating-badge badge-ml">🤖 ML</div>
                     <div class="floating-badge badge-web">⚡ Web</div>
                     <div class="floating-badge badge-cv">👁 CV</div>
                 </div>
             </div>
         </div>
-        <div class="hero-scroll-cue">
-            <div class="scroll-line"></div>
-            <span>SCROLL</span>
-        </div>
     </section>
-
-    <!-- ============ ABOUT SECTION ============ -->
     <section class="section about" id="about">
         <div class="container">
             <div class="section-header reveal-up">
@@ -135,15 +117,12 @@
             </div>
         </div>
     </section>
-
-    <!-- ============ SKILLS / TECHSTACK SECTION ============ -->
     <section class="section skills" id="skills">
         <div class="container">
             <div class="section-header reveal-up">
                 <span class="section-tag">WHAT I KNOW</span>
                 <h2 class="section-title">My Techstack</h2>
             </div>
-            <!-- Physics Orbs Arena -->
             <div class="orbs-arena reveal-up" id="orbsArena">
                 <div class="orb-bg-text">MY TECHSTACK</div>
                 <div class="orbs-container" id="orbsContainer">
@@ -221,7 +200,6 @@
                     </div>
                 </div>
             </div>
-            <!-- Skill Categories Grid -->
             <div class="skills-cats">
                 <div class="skill-cat reveal-up" style="transition-delay:0ms">
                     <div class="skill-cat-icon">
@@ -253,16 +231,12 @@
             </div>
         </div>
     </section>
-
-    <!-- ============ PROJECTS SECTION ============ -->
     <section class="section projects" id="projects">
         <div class="container">
             <div class="section-header reveal-up">
                 <span class="section-tag">WHAT I'VE BUILT</span>
                 <h2 class="section-title">Featured Work</h2>
             </div>
-
-            <!-- Project 1: TaskFlow -->
             <article class="project-row reveal-up" id="project-taskflow" style="transition-delay:0ms">
                 <div class="project-num-bg">01</div>
                 <div class="project-screenshot">
@@ -293,8 +267,6 @@
                     </a>
                 </div>
             </article>
-
-            <!-- Project 2: PlayStore Pulse -->
             <article class="project-row project-row-reverse reveal-up" id="project-playstore" style="transition-delay:100ms">
                 <div class="project-num-bg">02</div>
                 <div class="project-screenshot">
@@ -325,8 +297,6 @@
                     </a>
                 </div>
             </article>
-
-            <!-- Project 3: Emotion Classifier -->
             <article class="project-row reveal-up" id="project-emotion" style="transition-delay:200ms">
                 <div class="project-num-bg">03</div>
                 <div class="project-screenshot">
@@ -356,8 +326,6 @@
                     </a>
                 </div>
             </article>
-
-            <!-- Project 4: Hand Gesture -->
             <article class="project-row project-row-reverse reveal-up" id="project-handgesture" style="transition-delay:300ms">
                 <div class="project-num-bg">04</div>
                 <div class="project-screenshot">
@@ -387,8 +355,6 @@
                     </a>
                 </div>
             </article>
-
-            <!-- Project 5: Text Summarizer -->
             <article class="project-row reveal-up" id="project-summarizer" style="transition-delay:400ms">
                 <div class="project-num-bg">05</div>
                 <div class="project-screenshot">
@@ -419,11 +385,8 @@
                     </a>
                 </div>
             </article>
-
         </div>
     </section>
-
-    <!-- ============ RESUME SECTION ============ -->
     <section class="section resume" id="resume">
         <div class="container">
             <div class="section-header reveal-up">
@@ -438,11 +401,11 @@
                 <h3>Surender Singh — Resume</h3>
                 <p>B.Tech AI&amp;DS &nbsp;·&nbsp; MITRC &nbsp;·&nbsp; Data Science &amp; Full-Stack Development</p>
                 <div class="resume-actions">
-                    <a href="Surender's_Resume.pdf" download class="btn btn-primary" id="resume-download">
+                    <a href="Resume.pdf" download class="btn btn-primary" id="resume-download">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                         Download
                     </a>
-                    <a href="Surender's_Resume.pdf" target="_blank" class="btn btn-ghost" id="resume-open-tab">
+                    <a href="Resume.pdf" target="_blank" class="btn btn-ghost" id="resume-open-tab">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
                         Open
                     </a>
@@ -450,8 +413,75 @@
             </div>
         </div>
     </section>
-
-    <!-- ============ CONTACT SECTION ============ -->
+    <section class="section certifications" id="certifications">
+        <div class="container">
+            <div class="section-header reveal-up">
+                <span class="section-tag">INTERNSHIP EXPERIENCE</span>
+                <h2 class="section-title">Certificates</h2>
+            </div>
+            <div class="cert-grid">
+                <div class="cert-card reveal-up" style="transition-delay:0ms" id="cert-codsoft">
+                    <div class="cert-badge">🔬</div>
+                    <span class="cert-company">CODSOFT</span>
+                    <h3 class="cert-role">Data Science Intern</h3>
+                    <div class="cert-details">
+                        <div class="cert-detail">
+                            <span class="cert-detail-icon">📅</span>
+                            <span>April 2026 (4 weeks)</span>
+                        </div>
+                        <div class="cert-detail">
+                            <span class="cert-detail-icon">🏢</span>
+                            <span>Virtual Internship Program</span>
+                        </div>
+                        <div class="cert-detail">
+                            <span class="cert-detail-icon">⭐</span>
+                            <span>Completed with Wonderful Remarks</span>
+                        </div>
+                    </div>
+                    <div class="cert-skills">
+                        <span>Data Science</span>
+                        <span>Python</span>
+                        <span>Machine Learning</span>
+                        <span>Analysis</span>
+                    </div>
+                    <div class="cert-actions">
+                        <a href="CODSOFT.pdf" target="_blank" class="cert-btn cert-btn-primary">View Certificate</a>
+                        <a href="CODSOFT.pdf" download class="cert-btn cert-btn-ghost">Download</a>
+                    </div>
+                </div>
+                <div class="cert-card reveal-up" style="transition-delay:150ms" id="cert-wsa">
+                    <div class="cert-badge">💻</div>
+                    <span class="cert-company">WEB STACK ACADEMY (WSA)</span>
+                    <h3 class="cert-role">Full Stack Web Development in MERN</h3>
+                    <div class="cert-details">
+                        <div class="cert-detail">
+                            <span class="cert-detail-icon">📅</span>
+                            <span>3 March 2026 – 20 April 2026</span>
+                        </div>
+                        <div class="cert-detail">
+                            <span class="cert-detail-icon">🏢</span>
+                            <span>Hands-on Internship</span>
+                        </div>
+                        <div class="cert-detail">
+                            <span class="cert-detail-icon">📜</span>
+                            <span>Certificate ID: WMS125_006</span>
+                        </div>
+                    </div>
+                    <div class="cert-skills">
+                        <span>HTML/CSS</span>
+                        <span>JavaScript</span>
+                        <span>React</span>
+                        <span>MERN Stack</span>
+                        <span>SDLC</span>
+                    </div>
+                    <div class="cert-actions">
+                        <a href="Full_Stack.pdf" target="_blank" class="cert-btn cert-btn-primary">View Certificate</a>
+                        <a href="Full_Stack.pdf" download class="cert-btn cert-btn-ghost">Download</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
     <section class="section contact" id="contact">
         <div class="container">
             <div class="section-header reveal-up">
@@ -513,13 +543,10 @@
                 </div>
             </div>
         </div>
-        <!-- Purple scroll indicator -->
         <a href="#hero" class="scroll-top-btn" id="scroll-top-btn" aria-label="Back to top">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 15l-6-6-6 6"/></svg>
         </a>
     </section>
-
-    <!-- ============ FOOTER ============ -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
@@ -528,7 +555,6 @@
             </div>
         </div>
     </footer>
-
     <script src="script.js"></script>
 </body>
 </html>
