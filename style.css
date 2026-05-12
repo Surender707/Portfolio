@@ -320,6 +320,11 @@ strong { color: var(--gold); font-weight: 600; }
     letter-spacing: -0.03em;
     color: var(--white);
     display: block;
+    text-shadow:
+        0 1px 0 rgba(0,0,0,0.04),
+        0 2px 0 rgba(0,0,0,0.03),
+        0 3px 0 rgba(0,0,0,0.02),
+        0 4px 10px rgba(0,0,0,0.06);
 }
 .name-accent {
     background: linear-gradient(135deg, var(--gold) 0%, #D4A843 40%, var(--amber) 100%);
@@ -441,6 +446,8 @@ strong { color: var(--gold); font-weight: 600; }
     position: relative;
     width: clamp(260px, 28vw, 440px);
     height: clamp(260px, 28vw, 440px);
+    perspective: 800px;
+    transform-style: preserve-3d;
 }
 .avatar-glow {
     position: absolute;
@@ -461,13 +468,21 @@ strong { color: var(--gold); font-weight: 600; }
 .ring-1 {
     inset: -16px;
     border: 1px solid rgba(184, 134, 11, 0.3);
-    animation: ringPulse 4s ease-in-out infinite, spin 25s linear infinite;
+    animation: ringPulse 4s ease-in-out infinite, ring3DOrbit 14s linear infinite;
     background: transparent;
 }
 .ring-2 {
     inset: -32px;
     border: 1px dashed rgba(184, 134, 11, 0.12);
-    animation: spin 40s linear infinite reverse;
+    animation: ring3DOrbit2 20s linear infinite;
+}
+@keyframes ring3DOrbit {
+    0%   { transform: rotateX(55deg) rotateZ(0deg); }
+    100% { transform: rotateX(55deg) rotateZ(360deg); }
+}
+@keyframes ring3DOrbit2 {
+    0%   { transform: rotateX(40deg) rotateY(25deg) rotateZ(0deg); }
+    100% { transform: rotateX(40deg) rotateY(25deg) rotateZ(-360deg); }
 }
 @keyframes ringPulse {
     0%, 100% { opacity: 0.3; }
@@ -520,12 +535,20 @@ strong { color: var(--gold); font-weight: 600; }
     box-shadow: 0 4px 20px var(--gold-soft);
     white-space: nowrap;
 }
-.badge-ml  { top: 10%; right: -10%; animation: badgeFloat 3s ease-in-out infinite; }
-.badge-web { bottom: 15%; right: -12%; animation: badgeFloat 3.5s ease-in-out infinite 0.5s; }
-.badge-cv  { bottom: 8%; left: -4%; animation: badgeFloat 4s ease-in-out infinite 1s; }
-@keyframes badgeFloat {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-8px); }
+.badge-ml  { top: 10%; right: -10%; animation: badge3DFloat1 4s ease-in-out infinite; }
+.badge-web { bottom: 15%; right: -12%; animation: badge3DFloat2 5s ease-in-out infinite 0.5s; }
+.badge-cv  { bottom: 8%; left: -4%; animation: badge3DFloat3 4.5s ease-in-out infinite 1s; }
+@keyframes badge3DFloat1 {
+    0%, 100% { transform: translateY(0) translateZ(20px) rotateY(0deg); }
+    50%      { transform: translateY(-12px) translateZ(35px) rotateY(8deg); }
+}
+@keyframes badge3DFloat2 {
+    0%, 100% { transform: translateY(0) translateZ(15px) rotateX(0deg); }
+    50%      { transform: translateY(-10px) translateZ(30px) rotateX(-6deg); }
+}
+@keyframes badge3DFloat3 {
+    0%, 100% { transform: translateY(0) translateZ(10px) rotateY(0deg); }
+    50%      { transform: translateY(-14px) translateZ(25px) rotateY(-10deg); }
 }
 .about { background: linear-gradient(180deg, #F0EBE0 0%, var(--bg) 100%); }
 .about::before {
@@ -1275,6 +1298,65 @@ strong { color: var(--gold); font-weight: 600; }
     90%  { opacity: 0.2; }
     100% { opacity: 0; transform: translateY(-20vh) scale(1); }
 }
+
+.tilt-shine {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.15) 0%, transparent 60%);
+}
+
+.about-stats,
+.skills-cats,
+.cert-grid,
+.contact-social-links {
+    perspective: 1200px;
+}
+
+.stat-card,
+.skill-cat,
+.cert-card,
+.social-link,
+.resume-card {
+    transform-style: preserve-3d;
+    will-change: transform;
+}
+
+.stat-card:hover,
+.skill-cat:hover,
+.cert-card:hover {
+    box-shadow:
+        0 8px 30px var(--gold-soft),
+        0 20px 50px rgba(0,0,0,0.1),
+        0 30px 70px rgba(0,0,0,0.04);
+}
+
+.screenshot-frame {
+    transform-style: preserve-3d;
+    will-change: transform;
+}
+
+.hero-left,
+.hero-right {
+    transition: transform 0.15s ease-out;
+    will-change: transform;
+}
+
+.hero-container {
+    perspective: 1200px;
+}
+
+.section-header {
+    transform-style: preserve-3d;
+}
+
+.project-row {
+    perspective: 1000px;
+}
 @media (max-width: 1200px) {
     .hero-container { gap: clamp(24px, 4vw, 48px); }
     .hero-avatar-wrap { width: clamp(220px, 24vw, 360px); height: clamp(220px, 24vw, 360px); }
@@ -1322,6 +1404,12 @@ strong { color: var(--gold); font-weight: 600; }
     .badge-cv  { display: none; }
     .ring-1, .ring-2 { display: none; }
     .avatar-glow { display: none; }
+    .hero-avatar-wrap { perspective: none; transform-style: flat; }
+    .hero-container { perspective: none; }
+    .about-stats, .skills-cats, .cert-grid, .contact-social-links { perspective: none; }
+    .stat-card, .skill-cat, .cert-card, .social-link, .resume-card { transform-style: flat; will-change: auto; }
+    .tilt-shine { display: none; }
+    .project-row { perspective: none; }
     .hero-name .name-line { font-size: clamp(2.4rem, 12vw, 4.5rem); }
     .hero-greeting { font-size: 0.75rem; }
     .hero-actions { justify-content: center; gap: 12px; }
