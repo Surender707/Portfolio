@@ -1537,9 +1537,9 @@ strong { color: var(--gold); font-weight: 600; }
     .skills-cats { gap: 10px; }
 }
 
-/* ═══════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    ROBOT GUIDE MASCOT
-   ═══════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .r-guide {
     position: fixed;
     bottom: 28px;
@@ -1553,7 +1553,7 @@ strong { color: var(--gold); font-weight: 600; }
     user-select: none;
 }
 
-/* ── Speech Bubble ─────────────────────────────────── */
+/* â”€â”€ Speech Bubble â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .r-bubble {
     max-width: 255px;
     min-width: 170px;
@@ -1603,7 +1603,7 @@ strong { color: var(--gold); font-weight: 600; }
     margin: 0;
 }
 
-/* ── Robot Character ──────────────────────────────── */
+/* â”€â”€ Robot Character â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .r-char {
     width: 68px;
     cursor: pointer;
@@ -1756,11 +1756,11 @@ strong { color: var(--gold); font-weight: 600; }
     box-shadow: 0 3px 6px rgba(0,0,0,0.25);
 }
 
-/* ═══════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    SECTION-SPECIFIC 3D DECORATIONS
-   ═══════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
-/* ── About: Rotating Wireframe Cubes ─────────────── */
+/* â”€â”€ About: Rotating Wireframe Cubes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .about-3d-deco {
     position: absolute;
     inset: 0;
@@ -1806,7 +1806,7 @@ strong { color: var(--gold); font-weight: 600; }
     50%       { transform: translateY(16px) rotate(-7deg); }
 }
 
-/* ── Skills: Perspective Grid Floor ─────────────── */
+/* â”€â”€ Skills: Perspective Grid Floor â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .skills-3d-deco {
     position: absolute;
     bottom: 0; left: 0; right: 0;
@@ -1840,7 +1840,7 @@ strong { color: var(--gold); font-weight: 600; }
     50%       { opacity: 1; }
 }
 
-/* ── Projects: Floating Depth Frames ────────────── */
+/* â”€â”€ Projects: Floating Depth Frames â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .projects-3d-deco {
     position: absolute;
     top: 0; bottom: 0;
@@ -1870,7 +1870,7 @@ strong { color: var(--gold); font-weight: 600; }
     50%       { opacity: 0.7;  transform: rotateY(-18deg) translateY(-12px); }
 }
 
-/* ── Resume: Orbiting Rings ──────────────────────── */
+/* â”€â”€ Resume: Orbiting Rings â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .resume-3d-deco {
     position: absolute;
     inset: 0;
@@ -1899,7 +1899,7 @@ strong { color: var(--gold); font-weight: 600; }
     to   { transform: rotateX(35deg) rotateY(20deg) rotateZ(-360deg); }
 }
 
-/* ── Certifications: Spinning Gem/Crystal ────────── */
+/* â”€â”€ Certifications: Spinning Gem/Crystal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .certs-3d-deco {
     position: absolute;
     top: 10%; right: 5%;
@@ -1943,7 +1943,7 @@ strong { color: var(--gold); font-weight: 600; }
     to   { transform: rotateX(25deg) rotateY(360deg); }
 }
 
-/* ── Contact: 3D Constellation ───────────────────── */
+/* â”€â”€ Contact: 3D Constellation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .contact-3d-deco {
     position: absolute;
     inset: 0;
@@ -1974,7 +1974,7 @@ strong { color: var(--gold); font-weight: 600; }
     100% { opacity: 0;   transform: translateY(-30px) scale(1.2); }
 }
 
-/* ── Mobile overrides ────────────────────────────── */
+/* â”€â”€ Mobile overrides â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 @media (max-width: 768px) {
     .r-guide { bottom: 16px; right: 14px; }
     .r-char { width: 54px; }
@@ -1987,7 +1987,7 @@ strong { color: var(--gold); font-weight: 600; }
     .skills-3d-deco, .resume-3d-deco, .contact-3d-deco { opacity: 0.5; }
 }
 
-/* ── Speaking mouth animation ─────────────────────── */
+/* â”€â”€ Speaking mouth animation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .r-smile {
     transition: all 0.15s;
 }
@@ -2001,7 +2001,7 @@ strong { color: var(--gold); font-weight: 600; }
     to   { width: 30px; border-radius: 50% 50% 50% 50%; }
 }
 
-/* ── Sound-wave ring when speaking ───────────────── */
+/* â”€â”€ Sound-wave ring when speaking â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .r-char::after {
     content: '';
     position: absolute;
@@ -2020,7 +2020,7 @@ strong { color: var(--gold); font-weight: 600; }
     50%       { transform: scale(1.1); opacity: 0.2; }
 }
 
-/* ── Mute button ──────────────────────────────────── */
+/* â”€â”€ Mute button â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .r-mute {
     position: absolute;
     top: 6px; left: 6px;
@@ -2038,3 +2038,74 @@ strong { color: var(--gold); font-weight: 600; }
 .r-mute:hover { background: rgba(184,134,11,0.1); transform: scale(1.15); }
 
 
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   SCROLL PROGRESS BAR
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+#scrollBar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    width: 0%;
+    background: linear-gradient(90deg, #c0392b, #B8860B, #D4A843);
+    z-index: 100001;
+    transition: width 0.1s linear;
+    box-shadow: 0 0 8px rgba(192, 57, 43, 0.6);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   SMOOTH SCROLLING
+   ═══════════════════════════════════════════════════════════════════ */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Smooth momentum scrolling on iOS */
+body {
+    -webkit-overflow-scrolling: touch;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   3D TILT CARDS
+   ═══════════════════════════════════════════════════════════════════ */
+.project-card {
+    transform-style: preserve-3d;
+    will-change: transform;
+    transition: box-shadow 0.3s ease, transform 0.15s ease;
+}
+.project-card .card-shine {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.15) 0%, transparent 65%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 5;
+}
+.project-card:hover .card-shine { opacity: 1; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   MAGNETIC BUTTONS
+   ═══════════════════════════════════════════════════════════════════ */
+.btn { will-change: transform; transition: transform 0.15s ease; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   TEXT SCRAMBLE
+   ═══════════════════════════════════════════════════════════════════ */
+.scramble-ready { opacity: 0; }
+.scramble-done  { opacity: 1; transition: opacity 0.3s; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   WEB CURSOR TRAIL
+   ═══════════════════════════════════════════════════════════════════ */
+.web-trail {
+    position: fixed;
+    pointer-events: none;
+    z-index: 99998;
+    opacity: 1;
+    animation: trailFade 0.5s ease forwards;
+}
+@keyframes trailFade {
+    0%   { opacity: 0.7; }
+    100% { opacity: 0; }
+}
