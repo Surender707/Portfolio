@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Resume of Surender Singh — B.Tech AI&DS, MITRC. Download or view online.">
+    <title>Resume — Surender Singh</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="resume" class="page-inner">
+    <div class="page-overlay" id="pageOverlay"></div>
+    <div id="scrollBar"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+    <canvas id="galaxyCanvas"></canvas>
+    <div class="noise-overlay"></div>
+
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo" id="nav-logo">S<span class="logo-dot">.</span></a>
+            <div class="nav-email">surenderchoudhary07072004@gmail.com</div>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                <span class="hamburger-line"></span><span class="hamburger-line"></span><span class="hamburger-line"></span>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="about.html"          class="nav-link" id="nav-about">ABOUT</a></li>
+                <li><a href="skills.html"         class="nav-link" id="nav-skills">SKILLS</a></li>
+                <li><a href="projects.html"       class="nav-link" id="nav-projects">WORK</a></li>
+                <li><a href="resume.html"         class="nav-link nav-active" id="nav-resume">RESUME</a></li>
+                <li><a href="certifications.html" class="nav-link" id="nav-certs">CERTS</a></li>
+                <li><a href="contact.html"        class="nav-link" id="nav-contact">CONTACT</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="inner-main">
+        <div class="page-hero-header reveal-up">
+            <span class="section-tag">MY CREDENTIALS</span>
+            <h1 class="page-hero-title">Resume</h1>
+        </div>
+        <section class="section resume" id="resume" style="padding-top:0">
+            <div class="resume-3d-deco"><div class="res-ring"></div><div class="res-ring"></div><div class="res-ring"></div></div>
+            <div class="container">
+                <div class="resume-card reveal-scale">
+                    <div class="resume-glow"></div>
+                    <div class="resume-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                    </div>
+                    <h3>Surender Singh — Resume</h3>
+                    <p>B.Tech AI&amp;DS &nbsp;·&nbsp; MITRC &nbsp;·&nbsp; Data Science &amp; Full-Stack Development</p>
+                    <div class="resume-actions">
+                        <a href="Surender_Singh_Resume.pdf" download class="btn btn-primary" id="resume-download">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                            Download
+                        </a>
+                        <a href="Surender_Singh_Resume.pdf" target="_blank" class="btn btn-ghost" id="resume-open-tab">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                            Open
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div class="page-nav-strip">
+        <a href="projects.html"       class="page-nav-arrow page-nav-prev">← WORK</a>
+        <div class="page-dots">
+            <a href="index.html"          class="pdot" title="Home"></a>
+            <a href="about.html"          class="pdot" title="About"></a>
+            <a href="skills.html"         class="pdot" title="Skills"></a>
+            <a href="projects.html"       class="pdot" title="Work"></a>
+            <a href="resume.html"         class="pdot pdot-active" title="Resume"></a>
+            <a href="certifications.html" class="pdot" title="Certs"></a>
+            <a href="contact.html"        class="pdot" title="Contact"></a>
+        </div>
+        <a href="certifications.html" class="page-nav-arrow page-nav-next">CERTS →</a>
+    </div>
+
+    <div class="r-guide" id="rGuide">
+        <div class="r-bubble" id="rBubble"><button class="r-mute" id="rMute">🔊</button><button class="r-close" id="rClose">✕</button><p id="rText"></p></div>
+        <div class="r-char" id="rChar" role="button" tabindex="0">
+            <div class="r-ant"><span class="r-ant-ball"></span></div>
+            <div class="r-head"><div class="r-visor"><span class="r-eye"><span class="r-pupil"></span></span><span class="r-eye"><span class="r-pupil"></span></span></div><span class="r-smile" id="rMouth"></span></div>
+            <div class="r-body"><div class="r-leds"><span></span><span></span><span></span></div><span class="r-arm r-al"></span><span class="r-arm r-ar"></span></div>
+            <div class="r-feet"><span class="r-foot"></span><span class="r-foot"></span></div>
+        </div>
+    </div>
+
+    <footer class="footer"><div class="container"><div class="footer-content"><p>Designed &amp; Built by <strong>Surender Singh</strong></p><p class="footer-year">© 2026</p></div></div></footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

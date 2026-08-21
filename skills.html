@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Skills of Surender Singh — Python, React, TensorFlow, PyTorch, Node.js, MongoDB, and more.">
+    <title>Skills — Surender Singh</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="skills" class="page-inner">
+
+    <div class="page-overlay" id="pageOverlay"></div>
+    <div id="scrollBar"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+    <canvas id="galaxyCanvas"></canvas>
+    <div class="noise-overlay"></div>
+
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo" id="nav-logo">S<span class="logo-dot">.</span></a>
+            <div class="nav-email">surenderchoudhary07072004@gmail.com</div>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                <span class="hamburger-line"></span><span class="hamburger-line"></span><span class="hamburger-line"></span>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="about.html"          class="nav-link" id="nav-about">ABOUT</a></li>
+                <li><a href="skills.html"         class="nav-link nav-active" id="nav-skills">SKILLS</a></li>
+                <li><a href="projects.html"       class="nav-link" id="nav-projects">WORK</a></li>
+                <li><a href="resume.html"         class="nav-link" id="nav-resume">RESUME</a></li>
+                <li><a href="certifications.html" class="nav-link" id="nav-certs">CERTS</a></li>
+                <li><a href="contact.html"        class="nav-link" id="nav-contact">CONTACT</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="inner-main">
+        <div class="page-hero-header reveal-up">
+            <span class="section-tag">WHAT I KNOW</span>
+            <h1 class="page-hero-title">My Techstack</h1>
+        </div>
+
+        <section class="section skills" id="skills" style="padding-top:0">
+            <div class="skills-3d-deco"><div class="s-grid"></div><div class="s-grid-glow"></div></div>
+            <div class="container">
+                <div class="orbs-arena reveal-up" id="orbsArena">
+                    <canvas id="skillsSphereCanvas"></canvas>
+                    <div class="orb-bg-text">TECHSTACK</div>
+                    <div class="orbs-container" id="orbsContainer">
+                        <div class="tech-orb" data-tech="Python"     style="--orb-color:#3776AB;--delay:0s">   <div class="orb-inner"><span class="orb-icon">🐍</span><span class="orb-label">Python</span></div></div>
+                        <div class="tech-orb" data-tech="React"      style="--orb-color:#61DAFB;--delay:0.3s"> <div class="orb-inner"><span class="orb-icon">⚛️</span><span class="orb-label">React</span></div></div>
+                        <div class="tech-orb" data-tech="JavaScript" style="--orb-color:#F7DF1E;--delay:0.6s"> <div class="orb-inner"><span class="orb-icon">JS</span><span class="orb-label">JavaScript</span></div></div>
+                        <div class="tech-orb" data-tech="TensorFlow" style="--orb-color:#FF6F00;--delay:0.9s"> <div class="orb-inner"><span class="orb-icon">🧠</span><span class="orb-label">TensorFlow</span></div></div>
+                        <div class="tech-orb" data-tech="Node.js"    style="--orb-color:#339933;--delay:1.2s"> <div class="orb-inner"><span class="orb-icon">🟢</span><span class="orb-label">Node.js</span></div></div>
+                        <div class="tech-orb" data-tech="MongoDB"    style="--orb-color:#47A248;--delay:1.5s"> <div class="orb-inner"><span class="orb-icon">🍃</span><span class="orb-label">MongoDB</span></div></div>
+                        <div class="tech-orb" data-tech="PyTorch"    style="--orb-color:#EE4C2C;--delay:1.8s"> <div class="orb-inner"><span class="orb-icon">🔥</span><span class="orb-label">PyTorch</span></div></div>
+                        <div class="tech-orb" data-tech="Flask"      style="--orb-color:#a8d8a8;--delay:2.1s"> <div class="orb-inner"><span class="orb-icon">🌐</span><span class="orb-label">Flask</span></div></div>
+                        <div class="tech-orb" data-tech="Git"        style="--orb-color:#F05032;--delay:2.4s"> <div class="orb-inner"><span class="orb-icon">⑂</span><span class="orb-label">Git</span></div></div>
+                        <div class="tech-orb" data-tech="OpenCV"     style="--orb-color:#5C3EE8;--delay:2.7s"> <div class="orb-inner"><span class="orb-icon">👁</span><span class="orb-label">OpenCV</span></div></div>
+                        <div class="tech-orb" data-tech="SQL"        style="--orb-color:#00aeff;--delay:3s">   <div class="orb-inner"><span class="orb-icon">🗄</span><span class="orb-label">SQL</span></div></div>
+                        <div class="tech-orb" data-tech="C++"        style="--orb-color:#00599C;--delay:3.3s"> <div class="orb-inner"><span class="orb-icon">C++</span><span class="orb-label">C++</span></div></div>
+                    </div>
+                </div>
+                <div class="skills-cats stagger-parent">
+                    <div class="skill-cat stagger-child">
+                        <div class="skill-cat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+                        <h3>Languages</h3>
+                        <div class="skill-tags"><span>Python</span><span>JavaScript</span><span>C++</span><span>Java</span><span>SQL</span></div>
+                    </div>
+                    <div class="skill-cat stagger-child">
+                        <div class="skill-cat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></div>
+                        <h3>Frameworks &amp; ML</h3>
+                        <div class="skill-tags"><span>React</span><span>Flask</span><span>Node.js</span><span>TensorFlow</span><span>PyTorch</span><span>scikit-learn</span></div>
+                    </div>
+                    <div class="skill-cat stagger-child">
+                        <div class="skill-cat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
+                        <h3>Tools &amp; Platforms</h3>
+                        <div class="skill-tags"><span>Git</span><span>GitHub</span><span>MongoDB</span><span>MySQL</span><span>VS Code</span><span>OpenCV</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div class="page-nav-strip">
+        <a href="about.html"    class="page-nav-arrow page-nav-prev">← ABOUT</a>
+        <div class="page-dots">
+            <a href="index.html"          class="pdot" title="Home"></a>
+            <a href="about.html"          class="pdot" title="About"></a>
+            <a href="skills.html"         class="pdot pdot-active" title="Skills"></a>
+            <a href="projects.html"       class="pdot" title="Work"></a>
+            <a href="resume.html"         class="pdot" title="Resume"></a>
+            <a href="certifications.html" class="pdot" title="Certs"></a>
+            <a href="contact.html"        class="pdot" title="Contact"></a>
+        </div>
+        <a href="projects.html" class="page-nav-arrow page-nav-next">WORK →</a>
+    </div>
+
+    <div class="r-guide" id="rGuide">
+        <div class="r-bubble" id="rBubble"><button class="r-mute" id="rMute">🔊</button><button class="r-close" id="rClose">✕</button><p id="rText"></p></div>
+        <div class="r-char" id="rChar" role="button" tabindex="0">
+            <div class="r-ant"><span class="r-ant-ball"></span></div>
+            <div class="r-head"><div class="r-visor"><span class="r-eye"><span class="r-pupil"></span></span><span class="r-eye"><span class="r-pupil"></span></span></div><span class="r-smile" id="rMouth"></span></div>
+            <div class="r-body"><div class="r-leds"><span></span><span></span><span></span></div><span class="r-arm r-al"></span><span class="r-arm r-ar"></span></div>
+            <div class="r-feet"><span class="r-foot"></span><span class="r-foot"></span></div>
+        </div>
+    </div>
+
+    <footer class="footer"><div class="container"><div class="footer-content"><p>Designed &amp; Built by <strong>Surender Singh</strong></p><p class="footer-year">© 2026</p></div></div></footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

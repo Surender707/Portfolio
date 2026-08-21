@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Projects by Surender Singh — TaskFlow, PlayStore Pulse, Emotion Classifier, Hand Gesture Mouse, Text Summarizer.">
+    <title>Work — Surender Singh</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="projects" class="page-inner slides-page">
+
+    <div class="page-overlay" id="pageOverlay"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+    <canvas id="galaxyCanvas"></canvas>
+    <div class="noise-overlay"></div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo" id="nav-logo">S<span class="logo-dot">.</span></a>
+            <div class="nav-email">surenderchoudhary07072004@gmail.com</div>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                <span class="hamburger-line"></span><span class="hamburger-line"></span><span class="hamburger-line"></span>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="about.html"          class="nav-link">ABOUT</a></li>
+                <li><a href="skills.html"         class="nav-link">SKILLS</a></li>
+                <li><a href="projects.html"       class="nav-link nav-active">WORK</a></li>
+                <li><a href="resume.html"         class="nav-link">RESUME</a></li>
+                <li><a href="certifications.html" class="nav-link">CERTS</a></li>
+                <li><a href="contact.html"        class="nav-link">CONTACT</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ░░ SLIDE DOT NAVIGATION (right side) ░░ -->
+    <nav class="slide-sidenav" id="slideSidenav" aria-label="Project navigation">
+        <button class="ssnav-dot active" data-slide="0" title="Overview"></button>
+        <button class="ssnav-dot" data-slide="1" title="TaskFlow"></button>
+        <button class="ssnav-dot" data-slide="2" title="PlayStore Pulse"></button>
+        <button class="ssnav-dot" data-slide="3" title="Emotion Classifier"></button>
+        <button class="ssnav-dot" data-slide="4" title="Hand Gesture Mouse"></button>
+        <button class="ssnav-dot" data-slide="5" title="Text Summarizer"></button>
+    </nav>
+
+    <!-- ░░ SLIDE COUNTER ░░ -->
+    <div class="slide-counter" id="slideCounter">
+        <span class="sc-current" id="scCurrent">00</span>
+        <span class="sc-sep">/</span>
+        <span class="sc-total">05</span>
+    </div>
+
+    <!-- ░░ SLIDES WRAPPER ░░ -->
+    <div class="slides-wrapper" id="slidesWrapper">
+
+        <!-- ─── SLIDE 0: INTRO ─── -->
+        <section class="slide slide-intro" id="slide-0" data-index="0">
+            <div class="slide-intro-content">
+                <span class="section-tag">SELECTED WORK</span>
+                <h1 class="slide-intro-title">Featured<br><span class="name-accent">Projects</span></h1>
+                <p class="slide-intro-sub">5 projects spanning ML, Full-Stack, Computer Vision & NLP.<br>Scroll or use ↑ ↓ arrow keys to explore.</p>
+                <div class="slide-intro-stats">
+                    <div class="sis"><span class="sis-num">5</span><span class="sis-lbl">Projects</span></div>
+                    <div class="sis"><span class="sis-num">10+</span><span class="sis-lbl">Technologies</span></div>
+                    <div class="sis"><span class="sis-num">3</span><span class="sis-lbl">Domains</span></div>
+                </div>
+                <div class="slide-scroll-hint">
+                    <div class="scroll-line-anim"></div>
+                    <span>SCROLL TO EXPLORE</span>
+                </div>
+            </div>
+            <div class="slide-intro-deco">
+                <div class="sid-ring r1"></div>
+                <div class="sid-ring r2"></div>
+                <div class="sid-ring r3"></div>
+                <span class="sid-text">01 — 05</span>
+            </div>
+        </section>
+
+        <!-- ─── SLIDE 1: TASKFLOW ─── -->
+        <section class="slide" id="slide-1" data-index="1">
+            <div class="slide-inner">
+                <div class="slide-left">
+                    <div class="slide-meta">
+                        <span class="slide-num">01</span>
+                        <span class="card-cat">MERN STACK APPLICATION</span>
+                    </div>
+                    <h2 class="slide-title">TaskFlow</h2>
+                    <p class="slide-tagline">Intelligent Task Management &amp; Productivity System</p>
+                    <p class="slide-desc">A comprehensive productivity application with a sleek dark-themed dashboard. Integrates a custom 'Intelligence Engine' for smart insights and automated task recommendations. Features JWT auth, real-time sync, and dynamic data visualisation.</p>
+                    <div class="slide-tech">
+                        <span>MongoDB</span><span>Express.js</span><span>React</span><span>Node.js</span><span>Chart.js</span><span>JWT</span>
+                    </div>
+                    <div class="slide-actions">
+                        <a href="https://github.com/Surender707/Task-Management" target="_blank" rel="noopener" class="btn btn-primary" id="proj1-github">
+                            <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                            View on GitHub
+                        </a>
+                    </div>
+                </div>
+                <div class="slide-right">
+                    <div class="slide-visual" style="--accent:#00d4ff">
+                        <div class="sv-num">01</div>
+                        <div class="sv-terminal">
+                            <div class="sv-term-top"><span class="sv-dot r"></span><span class="sv-dot y"></span><span class="sv-dot g"></span><span class="sv-term-title">TaskFlow — server.js</span></div>
+                            <div class="sv-term-body">
+                                <div class="sv-line"><span class="sv-kw">const</span> app = <span class="sv-fn">express</span>();</div>
+                                <div class="sv-line"><span class="sv-cm">// JWT Auth Middleware</span></div>
+                                <div class="sv-line"><span class="sv-kw">app</span>.<span class="sv-fn">use</span>(authMiddleware);</div>
+                                <div class="sv-line sv-blank"></div>
+                                <div class="sv-line"><span class="sv-str">✓</span> MongoDB connected</div>
+                                <div class="sv-line"><span class="sv-str">✓</span> Intelligence Engine ready</div>
+                                <div class="sv-line"><span class="sv-str">✓</span> Real-time sync active</div>
+                                <div class="sv-line sv-blank"></div>
+                                <div class="sv-line sv-prompt"><span class="sv-cursor">█</span></div>
+                            </div>
+                        </div>
+                        <div class="sv-glow"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ─── SLIDE 2: PLAYSTORE PULSE ─── -->
+        <section class="slide" id="slide-2" data-index="2">
+            <div class="slide-inner">
+                <div class="slide-left">
+                    <div class="slide-meta">
+                        <span class="slide-num">02</span>
+                        <span class="card-cat">FULL-STACK ML</span>
+                    </div>
+                    <h2 class="slide-title">PlayStore<br>Pulse</h2>
+                    <p class="slide-tagline">Google Play Store Analytics &amp; AI Rating Predictor</p>
+                    <p class="slide-desc">Analyses 10,000+ Google Play Store apps. Features an interactive analytics dashboard with KPI cards and category trends. Includes a Gradient Boosting ML model via Flask REST API for real-time rating predictions.</p>
+                    <div class="slide-tech">
+                        <span>Python</span><span>Flask</span><span>scikit-learn</span><span>Chart.js</span><span>Pandas</span>
+                    </div>
+                    <div class="slide-actions">
+                        <a href="https://github.com/Surender707/Play-Store" target="_blank" rel="noopener" class="btn btn-primary" id="proj2-github">
+                            <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                            View on GitHub
+                        </a>
+                    </div>
+                </div>
+                <div class="slide-right">
+                    <div class="slide-visual" style="--accent:#FFB300">
+                        <div class="sv-num">02</div>
+                        <div class="sv-terminal">
+                            <div class="sv-term-top"><span class="sv-dot r"></span><span class="sv-dot y"></span><span class="sv-dot g"></span><span class="sv-term-title">PlayStore Pulse — model.py</span></div>
+                            <div class="sv-term-body">
+                                <div class="sv-line"><span class="sv-cm"># Gradient Boosting Predictor</span></div>
+                                <div class="sv-line">Apps Analysed  <span class="sv-str">10,847</span></div>
+                                <div class="sv-line">Model Accuracy <span class="sv-str">87.3%</span></div>
+                                <div class="sv-line sv-blank"></div>
+                                <div class="sv-line"><span class="sv-cm">Rating Distribution:</span></div>
+                                <div class="sv-line">★★★★★ <span class="sv-bar" style="--w:82%"></span> 82%</div>
+                                <div class="sv-line">★★★★☆ <span class="sv-bar" style="--w:11%"></span> 11%</div>
+                                <div class="sv-line">★★★☆☆ <span class="sv-bar" style="--w:07%"></span>  7%</div>
+                                <div class="sv-line sv-blank"></div>
+                                <div class="sv-line"><span class="sv-str">→</span> Predicted Rating: <span class="sv-kw">4.6 ★</span></div>
+                            </div>
+                        </div>
+                        <div class="sv-glow"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ─── SLIDE 3: EMOTION CLASSIFIER ─── -->
+        <section class="slide" id="slide-3" data-index="3">
+            <div class="slide-inner">
+                <div class="slide-left">
+                    <div class="slide-meta">
+                        <span class="slide-num">03</span>
+                        <span class="card-cat">COMPUTER VISION</span>
+                    </div>
+                    <h2 class="slide-title">Emotion<br>Classifier</h2>
+                    <p class="slide-tagline">Real-Time Recognition with YOLOv8 &amp; PyTorch</p>
+                    <p class="slide-desc">Combines YOLOv8 face detection with a custom CNN to classify 7 emotions — angry, disgust, fear, happy, sad, surprise, neutral — via live webcam feed with real-time confidence scores.</p>
+                    <div class="slide-tech">
+                        <span>Python</span><span>PyTorch</span><span>YOLOv8</span><span>OpenCV</span><span>CNN</span>
+                    </div>
+                    <div class="slide-actions">
+                        <a href="https://github.com/Surender707/Emotion-Classifier" target="_blank" rel="noopener" class="btn btn-primary" id="proj3-github">
+                            <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                            View on GitHub
+                        </a>
+                    </div>
+                </div>
+                <div class="slide-right">
+                    <div class="slide-visual" style="--accent:#7c3aed">
+                        <div class="sv-num">03</div>
+                        <div class="sv-terminal">
+                            <div class="sv-term-top"><span class="sv-dot r"></span><span class="sv-dot y"></span><span class="sv-dot g"></span><span class="sv-term-title">Emotion Classifier — live.py</span></div>
+                            <div class="sv-term-body">
+                                <div class="sv-line"><span class="sv-cm">YOLO v8 · Face Detection</span></div>
+                                <div class="sv-line">FACE  <span class="sv-str">DETECTED ████████</span></div>
+                                <div class="sv-line sv-blank"></div>
+                                <div class="sv-line"><span class="sv-cm">Emotion Probabilities:</span></div>
+                                <div class="sv-line">happy    <span class="sv-bar" style="--w:89%"></span> <span class="sv-kw">89.2%</span></div>
+                                <div class="sv-line">neutral  <span class="sv-bar" style="--w:08%"></span>  8.1%</div>
+                                <div class="sv-line">surprise <span class="sv-bar" style="--w:03%"></span>  2.7%</div>
+                                <div class="sv-line sv-blank"></div>
+                                <div class="sv-line">FPS <span class="sv-str">24</span> · Landmarks <span class="sv-str">68/68</span></div>
+                            </div>
+                        </div>
+                        <div class="sv-glow"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ─── SLIDE 4: HAND GESTURE MOUSE ─── -->
+        <section class="slide" id="slide-4" data-index="4">
+            <div class="slide-inner">
+                <div class="slide-left">
+                    <div class="slide-meta">
+                        <span class="slide-num">04</span>
+                        <span class="card-cat">COMPUTER VISION</span>
+                    </div>
+                    <h2 class="slide-title">Hand Gesture<br>Virtual Mouse</h2>
+                    <p class="slide-tagline">Control Your Computer with Hand Movements</p>
+                    <p class="slide-desc">Transforms hand movements into virtual mouse controls via webcam. Supports cursor movement, left/right/double clicks, scrolling, pinch-zoom and drag-and-drop via fist clenching — powered by Google's MediaPipe.</p>
+                    <div class="slide-tech">
+                        <span>Python</span><span>MediaPipe</span><span>OpenCV</span><span>PyAutoGUI</span>
+                    </div>
+                    <div class="slide-actions">
+                        <a href="https://github.com/Surender707/Hand-Detector" target="_blank" rel="noopener" class="btn btn-primary" id="proj4-github">
+                            <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                            View on GitHub
+                        </a>
+                    </div>
+                </div>
+                <div class="slide-right">
+                    <div class="slide-visual" style="--accent:#10b981">
+                        <div class="sv-num">04</div>
+                        <div class="sv-terminal">
+                            <div class="sv-term-top"><span class="sv-dot r"></span><span class="sv-dot y"></span><span class="sv-dot g"></span><span class="sv-term-title">Hand Gesture Mouse — detect.py</span></div>
+                            <div class="sv-term-body">
+                                <div class="sv-line"><span class="sv-cm">MediaPipe · Hand Landmarks</span></div>
+                                <div class="sv-line">Landmarks  <span class="sv-str">21 / 21</span></div>
+                                <div class="sv-line">Confidence <span class="sv-str">98.4%</span></div>
+                                <div class="sv-line sv-blank"></div>
+                                <div class="sv-line"><span class="sv-cm">Live Output:</span></div>
+                                <div class="sv-line">GESTURE  <span class="sv-kw">POINT → MOVE</span></div>
+                                <div class="sv-line">Cursor   <span class="sv-str">x=847  y=423</span></div>
+                                <div class="sv-line">Action   <span class="sv-str">CLICK ✓</span></div>
+                                <div class="sv-line sv-blank"></div>
+                                <div class="sv-line">FPS <span class="sv-str">24</span> · Latency <span class="sv-str">~8ms</span></div>
+                            </div>
+                        </div>
+                        <div class="sv-glow"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ─── SLIDE 5: TEXT SUMMARIZER ─── -->
+        <section class="slide" id="slide-5" data-index="5">
+            <div class="slide-inner">
+                <div class="slide-left">
+                    <div class="slide-meta">
+                        <span class="slide-num">05</span>
+                        <span class="card-cat">NLP &amp; DEEP LEARNING</span>
+                    </div>
+                    <h2 class="slide-title">Text<br>Summarizer</h2>
+                    <p class="slide-tagline">Dual-Model Abstractive Text Summarization</p>
+                    <p class="slide-desc">Custom LSTM Encoder-Decoder with Multi-Head Attention trained on CNN/DailyMail dataset, plus a pre-trained HuggingFace T5 transformer. Compare both summaries side-by-side via an elegant Flask interface.</p>
+                    <div class="slide-tech">
+                        <span>Python</span><span>TensorFlow</span><span>Flask</span><span>HuggingFace</span><span>LSTM</span>
+                    </div>
+                    <div class="slide-actions">
+                        <a href="https://github.com/Surender707/SUMMARIZER" target="_blank" rel="noopener" class="btn btn-primary" id="proj5-github">
+                            <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                            View on GitHub
+                        </a>
+                    </div>
+                    <!-- Page nav only on last slide -->
+                    <div class="slide-page-nav">
+                        <a href="resume.html" class="page-nav-arrow page-nav-next" style="margin-top:24px;display:inline-flex">RESUME →</a>
+                    </div>
+                </div>
+                <div class="slide-right">
+                    <div class="slide-visual" style="--accent:#f43f5e">
+                        <div class="sv-num">05</div>
+                        <div class="sv-terminal">
+                            <div class="sv-term-top"><span class="sv-dot r"></span><span class="sv-dot y"></span><span class="sv-dot g"></span><span class="sv-term-title">Text Summarizer — compare.py</span></div>
+                            <div class="sv-term-body">
+                                <div class="sv-line">Input    <span class="sv-str">342 words</span></div>
+                                <div class="sv-line sv-blank"></div>
+                                <div class="sv-line"><span class="sv-cm">MODEL 1: LSTM + Attention</span></div>
+                                <div class="sv-line">Output   <span class="sv-str">48 words</span></div>
+                                <div class="sv-line">ROUGE-L  <span class="sv-kw">0.821</span></div>
+                                <div class="sv-line sv-blank"></div>
+                                <div class="sv-line"><span class="sv-cm">MODEL 2: HuggingFace T5</span></div>
+                                <div class="sv-line">Output   <span class="sv-str">52 words</span></div>
+                                <div class="sv-line">ROUGE-L  <span class="sv-kw">0.847</span></div>
+                                <div class="sv-line sv-blank"></div>
+                                <div class="sv-line"><span class="sv-str">✓</span> Both models ready</div>
+                            </div>
+                        </div>
+                        <div class="sv-glow"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div><!-- /slides-wrapper -->
+
+    <!-- PREV/NEXT ARROWS -->
+    <button class="slide-arrow slide-arrow-up" id="slideArrowUp" title="Previous (↑)" aria-label="Previous slide">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><polyline points="18 15 12 9 6 15"/></svg>
+    </button>
+    <button class="slide-arrow slide-arrow-down" id="slideArrowDown" title="Next (↓)" aria-label="Next slide">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+
+    <!-- ROBOT GUIDE -->
+    <div class="r-guide" id="rGuide">
+        <div class="r-bubble" id="rBubble"><button class="r-mute" id="rMute">🔊</button><button class="r-close" id="rClose">✕</button><p id="rText"></p></div>
+        <div class="r-char" id="rChar" role="button" tabindex="0">
+            <div class="r-ant"><span class="r-ant-ball"></span></div>
+            <div class="r-head"><div class="r-visor"><span class="r-eye"><span class="r-pupil"></span></span><span class="r-eye"><span class="r-pupil"></span></span></div><span class="r-smile" id="rMouth"></span></div>
+            <div class="r-body"><div class="r-leds"><span></span><span></span><span></span></div><span class="r-arm r-al"></span><span class="r-arm r-ar"></span></div>
+            <div class="r-feet"><span class="r-foot"></span><span class="r-foot"></span></div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

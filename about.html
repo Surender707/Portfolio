@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="About Surender Singh — B.Tech AI&DS student at MITRC, passionate about ML, Computer Vision, and Full-Stack Development.">
+    <title>About — Surender Singh</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="about" class="page-inner">
+
+    <div class="page-overlay" id="pageOverlay"></div>
+    <div id="scrollBar"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+    <canvas id="galaxyCanvas"></canvas>
+    <div class="noise-overlay"></div>
+
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo" id="nav-logo">S<span class="logo-dot">.</span></a>
+            <div class="nav-email">surenderchoudhary07072004@gmail.com</div>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                <span class="hamburger-line"></span><span class="hamburger-line"></span><span class="hamburger-line"></span>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="about.html"          class="nav-link nav-active" id="nav-about">ABOUT</a></li>
+                <li><a href="skills.html"         class="nav-link" id="nav-skills">SKILLS</a></li>
+                <li><a href="projects.html"       class="nav-link" id="nav-projects">WORK</a></li>
+                <li><a href="resume.html"         class="nav-link" id="nav-resume">RESUME</a></li>
+                <li><a href="certifications.html" class="nav-link" id="nav-certs">CERTS</a></li>
+                <li><a href="contact.html"        class="nav-link" id="nav-contact">CONTACT</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="inner-main">
+        <div class="page-hero-header reveal-up">
+            <span class="section-tag">WHO I AM</span>
+            <h1 class="page-hero-title">About Me</h1>
+        </div>
+
+        <section class="section about" id="about" style="padding-top:0">
+            <div class="about-3d-deco">
+                <div class="deco-cube-wrap cw1"><div class="deco-cube c1"><div class="dc-face dc-f"></div><div class="dc-face dc-b"></div><div class="dc-face dc-l"></div><div class="dc-face dc-r"></div><div class="dc-face dc-t"></div><div class="dc-face dc-bot"></div></div></div>
+                <div class="deco-cube-wrap cw2"><div class="deco-cube c2"><div class="dc-face dc-f"></div><div class="dc-face dc-b"></div><div class="dc-face dc-l"></div><div class="dc-face dc-r"></div><div class="dc-face dc-t"></div><div class="dc-face dc-bot"></div></div></div>
+            </div>
+            <div class="container">
+                <div class="about-grid">
+                    <div class="about-text reveal-left">
+                        <p class="about-lead">
+                            I'm a passionate <strong>B.Tech AI&amp;DS</strong> student in my 7th semester at the
+                            <strong>Modern Institute of Technology and Research Center (MITRC)</strong>, driven by a deep
+                            curiosity for how machines learn and how technology can solve real-world problems.
+                        </p>
+                        <p>
+                            My journey spans across <strong>Machine Learning</strong>, <strong>Full-Stack Web Development</strong>,
+                            and <strong>Computer Vision</strong> — from training neural networks on large datasets to building
+                            interactive web dashboards. I love turning complex ideas into elegant, working solutions.
+                        </p>
+                        <p>
+                            I'm currently seeking <strong>internship and job opportunities</strong> where I can apply my skills,
+                            learn from experienced professionals, and contribute to impactful projects.
+                        </p>
+                    </div>
+                    <div class="about-stats stagger-parent reveal-right">
+                        <div class="stat-card stagger-child">
+                            <span class="stat-number" data-count="5">0</span>
+                            <span class="stat-label">Featured Projects</span>
+                        </div>
+                        <div class="stat-card stagger-child">
+                            <span class="stat-number" data-count="10">0</span><span class="stat-plus">+</span>
+                            <span class="stat-label">Technologies</span>
+                        </div>
+                        <div class="stat-card stagger-child">
+                            <span class="stat-number" data-count="3">0</span>
+                            <span class="stat-label">Focus Areas</span>
+                        </div>
+                        <div class="stat-card stagger-child">
+                            <span class="stat-number" data-count="7">0</span><span class="stat-plus">th</span>
+                            <span class="stat-label">Semester</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Page Navigation -->
+    <div class="page-nav-strip">
+        <a href="index.html"    class="page-nav-arrow page-nav-prev">← HOME</a>
+        <div class="page-dots">
+            <a href="index.html"          class="pdot" title="Home"></a>
+            <a href="about.html"          class="pdot pdot-active" title="About"></a>
+            <a href="skills.html"         class="pdot" title="Skills"></a>
+            <a href="projects.html"       class="pdot" title="Work"></a>
+            <a href="resume.html"         class="pdot" title="Resume"></a>
+            <a href="certifications.html" class="pdot" title="Certs"></a>
+            <a href="contact.html"        class="pdot" title="Contact"></a>
+        </div>
+        <a href="skills.html"   class="page-nav-arrow page-nav-next">SKILLS →</a>
+    </div>
+
+    <!-- Robot Guide -->
+    <div class="r-guide" id="rGuide">
+        <div class="r-bubble" id="rBubble">
+            <button class="r-mute" id="rMute" title="Mute / Unmute">🔊</button>
+            <button class="r-close" id="rClose" aria-label="Close">✕</button>
+            <p id="rText"></p>
+        </div>
+        <div class="r-char" id="rChar" role="button" tabindex="0" title="Click me — I'll guide you!">
+            <div class="r-ant"><span class="r-ant-ball"></span></div>
+            <div class="r-head"><div class="r-visor"><span class="r-eye"><span class="r-pupil"></span></span><span class="r-eye"><span class="r-pupil"></span></span></div><span class="r-smile" id="rMouth"></span></div>
+            <div class="r-body"><div class="r-leds"><span></span><span></span><span></span></div><span class="r-arm r-al"></span><span class="r-arm r-ar"></span></div>
+            <div class="r-feet"><span class="r-foot"></span><span class="r-foot"></span></div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container"><div class="footer-content">
+            <p>Designed &amp; Built by <strong>Surender Singh</strong></p>
+            <p class="footer-year">© 2026</p>
+        </div></div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
