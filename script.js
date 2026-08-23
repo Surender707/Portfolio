@@ -144,15 +144,23 @@ document.addEventListener('DOMContentLoaded', () => {
   let lenis = null;
   if (typeof Lenis !== 'undefined') {
     lenis = new Lenis({
-      duration:  1.2,
-      easing:    (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smooth:    true,
-      direction: 'vertical',
+      lerp:            0.07,   // 0=butter smooth / 1=instant
+      smoothWheel:     true,
+      wheelMultiplier: 1.1,
+      touchMultiplier: 1.8,
+      infinite:        false,
+      orientation:     'vertical',
+      gestureOrientation: 'vertical',
     });
     if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
       lenis.on('scroll', ScrollTrigger.update);
       gsap.ticker.add((time) => { lenis.raf(time * 1000); });
       gsap.ticker.lagSmoothing(0);
+    }
+    // Pause lenis on mobile (touch handles its own momentum)
+    if (window.matchMedia('(pointer: coarse)').matches) {
+      lenis.destroy();
+      lenis = null;
     }
   }
 
@@ -163,18 +171,24 @@ document.addEventListener('DOMContentLoaded', () => {
   const cursorRing = document.getElementById('cursorRing');
   let cx = 0, cy = 0;
   let rx = 0, ry = 0;
+  // Only run cursor on non-touch devices
+  const isTouch = window.matchMedia('(pointer: coarse)').matches;
 
-  document.addEventListener('mousemove', (e) => {
-    cx = e.clientX; cy = e.clientY;
-    cursorDot.style.left = cx + 'px';
-    cursorDot.style.top  = cy + 'px';
-  });
+  if (!isTouch) {
+    document.addEventListener('mousemove', (e) => {
+      cx = e.clientX; cy = e.clientY;
+      // Dot follows instantly (hardware-smooth)
+      cursorDot.style.transform = `translate(calc(${cx}px - 50%), calc(${cy}px - 50%))`;
+    });
+  }
 
   function animateRing() {
-    rx += (cx - rx) * 0.12;
-    ry += (cy - ry) * 0.12;
-    cursorRing.style.left = rx + 'px';
-    cursorRing.style.top  = ry + 'px';
+    if (!isTouch) {
+      // Ring follows with gentle lag (lerp 0.09 = silky smooth)
+      rx += (cx - rx) * 0.09;
+      ry += (cy - ry) * 0.09;
+      cursorRing.style.transform = `translate(calc(${rx}px - 50%), calc(${ry}px - 50%))`;
+    }
     requestAnimationFrame(animateRing);
   }
   animateRing();
@@ -549,82 +563,219 @@ document.addEventListener('DOMContentLoaded', () => {
   initSkillsSphere();
 
   /* ════════════════════════════════════════════
-     13. GSAP SCROLL ANIMATIONS
+     13. GSAP SCROLL ANIMATIONS — RICH VERSION
   ════════════════════════════════════════════ */
   function initAnimations() {
     if (typeof gsap === 'undefined') return;
     gsap.registerPlugin(ScrollTrigger);
 
-    // Hero scroll hint
+    const ease1 = 'power3.out';
+    const easeBounce = 'back.out(1.8)';
+
+    // ── Hero: scroll hint fade ──
     gsap.to('.hero-scroll-hint', {
-      opacity: 0,
-      scrollTrigger: { trigger: '#hero', start: 'top top', end: '+=200', scrub: true }
+      opacity: 0, y: -10,
+      scrollTrigger: { trigger: '#hero', start: 'top top', end: '+=150', scrub: true }
     });
 
-    // About section title
+    // ── Hero: avatar parallax (floats up slightly as you scroll) ──
+    gsap.to('#heroAvatar', {
+      y: -60,
+      scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 1.5 }
+    });
+
+    // ── Hero: text parallax ──
+    gsap.to('.hero-left', {
+      y: -30,
+      scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 1.2 }
+    });
+
+    // ── Hero: stats bar parallax ──
+    gsap.to('.hero-stats-bar', {
+      y: -20,
+      scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 1 }
+    });
+
+    // ── ABOUT: section tag + title stagger ──
+    gsap.fromTo('#about .section-tag',
+      { opacity: 0, y: 20, letterSpacing: '6px' },
+      { opacity: 1, y: 0, letterSpacing: '3px', duration: 0.7, ease: ease1,
+        scrollTrigger: { trigger: '#about', start: 'top 82%' }
+      }
+    );
     gsap.fromTo('#about .section-title',
-      { opacity: 0, y: 40 },
-      { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out',
-        scrollTrigger: { trigger: '#about', start: 'top 80%' }
+      { opacity: 0, y: 50, skewX: -2 },
+      { opacity: 1, y: 0, skewX: 0, duration: 0.9, ease: ease1,
+        scrollTrigger: { trigger: '#about', start: 'top 78%' }
+      }
+    );
+    // Bento cards stagger
+    gsap.fromTo('.bento-card',
+      { opacity: 0, y: 40, scale: 0.97 },
+      { opacity: 1, y: 0, scale: 1,
+        duration: 0.65, ease: easeBounce, stagger: 0.1,
+        scrollTrigger: { trigger: '.about-bento', start: 'top 80%' }
       }
     );
 
-    // Skills sphere scale
-    gsap.fromTo('#skillsSphereWrap',
-      { opacity: 0, scale: 0.7 },
-      { opacity: 1, scale: 1, duration: 1, ease: 'back.out(1.5)',
-        scrollTrigger: { trigger: '#skills', start: 'top 70%' }
+    // ── SKILLS ──
+    gsap.fromTo('#skills .section-tag',
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.7, ease: ease1,
+        scrollTrigger: { trigger: '#skills', start: 'top 82%' }
       }
     );
-
-    // Skills title
     gsap.fromTo('#skills .section-title',
-      { opacity: 0, y: 40 },
-      { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out',
-        scrollTrigger: { trigger: '#skills', start: 'top 80%' }
+      { opacity: 0, y: 50, skewX: -2 },
+      { opacity: 1, y: 0, skewX: 0, duration: 0.9, ease: ease1,
+        scrollTrigger: { trigger: '#skills', start: 'top 78%' }
+      }
+    );
+    gsap.fromTo('#skillsSphereWrap',
+      { opacity: 0, scale: 0.75, rotationY: -15 },
+      { opacity: 1, scale: 1, rotationY: 0, duration: 1.1, ease: easeBounce,
+        scrollTrigger: { trigger: '#skills', start: 'top 72%' }
+      }
+    );
+    gsap.fromTo('.skill-cat-card',
+      { opacity: 0, x: -36 },
+      { opacity: 1, x: 0, duration: 0.6, ease: ease1, stagger: 0.13,
+        scrollTrigger: { trigger: '.skills-cats', start: 'top 82%' }
+      }
+    );
+    gsap.fromTo('.tech-marquee-wrap',
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.8, ease: ease1,
+        scrollTrigger: { trigger: '.tech-marquee-wrap', start: 'top 88%' }
       }
     );
 
-    // Certs title
+    // ── PROJECTS: slide-intro reveal ──
+    gsap.fromTo('.slide-intro-content',
+      { opacity: 0, y: 60 },
+      { opacity: 1, y: 0, duration: 1, ease: ease1,
+        scrollTrigger: { trigger: '#projects', start: 'top 80%' }
+      }
+    );
+
+    // ── CERTS ──
+    gsap.fromTo('#certs .section-tag',
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.7, ease: ease1,
+        scrollTrigger: { trigger: '#certs', start: 'top 82%' }
+      }
+    );
     gsap.fromTo('#certs .section-title',
-      { opacity: 0, y: 40 },
-      { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out',
-        scrollTrigger: { trigger: '#certs', start: 'top 80%' }
+      { opacity: 0, y: 50, skewX: -2 },
+      { opacity: 1, y: 0, skewX: 0, duration: 0.9, ease: ease1,
+        scrollTrigger: { trigger: '#certs', start: 'top 78%' }
+      }
+    );
+    gsap.fromTo('.cert-card',
+      { opacity: 0, y: 50, scale: 0.95 },
+      { opacity: 1, y: 0, scale: 1,
+        duration: 0.75, ease: easeBounce, stagger: 0.18,
+        scrollTrigger: { trigger: '.cert-grid', start: 'top 80%' }
       }
     );
 
-    // Resume title
+    // ── RESUME ──
+    gsap.fromTo('#resume .section-tag',
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.7, ease: ease1,
+        scrollTrigger: { trigger: '#resume', start: 'top 82%' }
+      }
+    );
     gsap.fromTo('#resume .section-title',
-      { opacity: 0, y: 40 },
-      { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out',
-        scrollTrigger: { trigger: '#resume', start: 'top 80%' }
+      { opacity: 0, y: 50, skewX: -2 },
+      { opacity: 1, y: 0, skewX: 0, duration: 0.9, ease: ease1,
+        scrollTrigger: { trigger: '#resume', start: 'top 78%' }
+      }
+    );
+    gsap.fromTo('.rb-item',
+      { opacity: 0, x: -24 },
+      { opacity: 1, x: 0, duration: 0.55, ease: ease1, stagger: 0.1,
+        scrollTrigger: { trigger: '.resume-layout', start: 'top 80%' }
+      }
+    );
+    gsap.fromTo('.resume-download-card',
+      { opacity: 0, y: 40, scale: 0.96 },
+      { opacity: 1, y: 0, scale: 1, duration: 0.8, ease: easeBounce,
+        scrollTrigger: { trigger: '.resume-right', start: 'top 80%' }
+      }
+    );
+    gsap.fromTo('.resume-highlights',
+      { opacity: 0, y: 24 },
+      { opacity: 1, y: 0, duration: 0.6, ease: ease1, delay: 0.2,
+        scrollTrigger: { trigger: '.resume-right', start: 'top 80%' }
       }
     );
 
-    // Contact title
+    // ── CONTACT ──
+    gsap.fromTo('#contact .section-tag',
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.7, ease: ease1,
+        scrollTrigger: { trigger: '#contact', start: 'top 82%' }
+      }
+    );
     gsap.fromTo('#contact .section-title',
-      { opacity: 0, y: 40 },
-      { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out',
-        scrollTrigger: { trigger: '#contact', start: 'top 80%' }
+      { opacity: 0, y: 50, skewX: -2 },
+      { opacity: 1, y: 0, skewX: 0, duration: 0.9, ease: ease1,
+        scrollTrigger: { trigger: '#contact', start: 'top 78%' }
       }
     );
-
-    // Contact left text
-    gsap.fromTo('.contact-left',
-      { opacity: 0, x: -40 },
-      { opacity: 1, x: 0, duration: 0.9, ease: 'power2.out',
-        scrollTrigger: { trigger: '#contact', start: 'top 75%' }
+    gsap.fromTo('.contact-lead, .contact-email-block, .contact-edu-block, .contact-cta',
+      { opacity: 0, y: 30 },
+      { opacity: 1, y: 0, duration: 0.65, ease: ease1, stagger: 0.12,
+        scrollTrigger: { trigger: '.contact-left', start: 'top 78%' }
       }
     );
-
-    // Contact right
-    gsap.fromTo('.contact-right',
+    gsap.fromTo('.social-link',
       { opacity: 0, x: 40 },
-      { opacity: 1, x: 0, duration: 0.9, ease: 'power2.out', delay: 0.15,
-        scrollTrigger: { trigger: '#contact', start: 'top 75%' }
+      { opacity: 1, x: 0, duration: 0.6, ease: easeBounce, stagger: 0.12,
+        scrollTrigger: { trigger: '.contact-right', start: 'top 80%' }
       }
     );
+
+    // ── 3D CARD TILT (desktop only) ──
+    if (!window.matchMedia('(pointer: coarse)').matches) {
+      const tiltCards = document.querySelectorAll('.bento-card, .cert-card, .resume-download-card');
+      tiltCards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+          const r = card.getBoundingClientRect();
+          const mx = (e.clientX - r.left) / r.width  - 0.5;  // -0.5 to +0.5
+          const my = (e.clientY - r.top)  / r.height - 0.5;
+          gsap.to(card, {
+            rotationY:   mx * 8,
+            rotationX:  -my * 8,
+            transformPerspective: 800,
+            ease: 'power2.out',
+            duration: 0.4,
+          });
+        });
+        card.addEventListener('mouseleave', () => {
+          gsap.to(card, {
+            rotationY: 0, rotationX: 0,
+            ease: 'elastic.out(1, 0.5)',
+            duration: 0.8,
+          });
+        });
+      });
+
+      // Social links slide-tilt
+      document.querySelectorAll('.social-link').forEach(link => {
+        link.addEventListener('mousemove', (e) => {
+          const r = link.getBoundingClientRect();
+          const mx = (e.clientX - r.left) / r.width - 0.5;
+          gsap.to(link, { rotationY: mx * 6, transformPerspective: 600, duration: 0.35, ease: 'power2.out' });
+        });
+        link.addEventListener('mouseleave', () => {
+          gsap.to(link, { rotationY: 0, duration: 0.6, ease: 'elastic.out(1, 0.5)' });
+        });
+      });
+    }
   }
+
 
   /* ════════════════════════════════════════════
      14. ANCHOR SCROLL — hero scroll hint
