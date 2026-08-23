@@ -1,1082 +1,675 @@
-/* ═══════════════════════════════════════════════════════════════════
-   SURENDER SINGH — PORTFOLIO SCRIPT
-   World-class 3D Cinematic Portfolio
-   Features: Three.js Galaxy • Three.js Skills Sphere • Lenis Smooth Scroll
-             GSAP ScrollTrigger Reveals • Magnetic Cursor • 3D Card Tilt
-             Preloader • Physics Orbs • Role Rotator • Stat Counters
-═══════════════════════════════════════════════════════════════════ */
+/* ============================================================
+   SURENDER SINGH — PORTFOLIO 2026
+   Main Script: Three.js Galaxy · GSAP · Lenis · Interactions
+   ============================================================ */
+
 'use strict';
 
-/* ─── GSAP PLUGIN REGISTRATION ─────────────────────────────────── */
-gsap.registerPlugin(ScrollTrigger);
+/* ── WAIT FOR DOM ── */
+document.addEventListener('DOMContentLoaded', () => {
 
-/* ─── GLOBALS ───────────────────────────────────────────────────── */
-let lenis;
-let galaxyRAF;
+  /* ════════════════════════════════════════════
+     1. PRELOADER
+  ════════════════════════════════════════════ */
+  const preloader     = document.getElementById('preloader');
+  const preloaderFill = document.getElementById('preloaderFill');
+  const preloaderCount = document.getElementById('preloaderCount');
 
-/* ═══════════════════════════════════════════════════════════════
-   1. PRELOADER
-═══════════════════════════════════════════════════════════════ */
-function initPreloader() {
-    return new Promise(resolve => {
-        const preloader  = document.getElementById('preloader');
-        const counter    = document.getElementById('preloaderCount');
-        const fill       = document.getElementById('preloaderFill');
-        const label      = document.getElementById('preloaderLabel');
+  let count = 0;
+  const preloaderInterval = setInterval(() => {
+    count += Math.floor(Math.random() * 4) + 1;
+    if (count >= 100) count = 100;
+    preloaderFill.style.width  = count + '%';
+    preloaderCount.textContent = count;
+    if (count === 100) {
+      clearInterval(preloaderInterval);
+      setTimeout(() => {
+        preloader.classList.add('hidden');
+        initAnimations();
+      }, 400);
+    }
+  }, 30);
 
-        const labels = ['INITIALIZING', 'LOADING ASSETS', 'BUILDING 3D SPACE', 'READY'];
-        let count = 0;
-        const totalDuration = 2400; // ms
-        const stepMs = totalDuration / 100;
-
-        const timer = setInterval(() => {
-            count++;
-            if (counter) counter.textContent = count;
-            if (fill)    fill.style.width = count + '%';
-
-            if (label) {
-                if (count < 25)  label.textContent = labels[0];
-                else if (count < 60) label.textContent = labels[1];
-                else if (count < 85) label.textContent = labels[2];
-                else             label.textContent = labels[3];
-            }
-
-            if (count >= 100) {
-                clearInterval(timer);
-                setTimeout(() => {
-                    gsap.timeline()
-                        .to('.preloader-inner', { opacity:0, y:-20, duration:.5, ease:'power2.in' })
-                        .to(preloader, {
-                            scaleY: 0,
-                            transformOrigin: 'top',
-                            duration: .8,
-                            ease: 'power4.inOut',
-                            onComplete: () => {
-                                preloader.style.display = 'none';
-                                resolve();
-                            }
-                        });
-                }, 300);
-            }
-        }, stepMs);
-    });
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   2. THREE.JS GOLDEN BLACK HOLE  — Large · Natural · 3-D
-   Event horizon · glow shells · accretion disk (22 k pts) ·
-   gravitational lensing arcs · photon ring · jets · star field
-═══════════════════════════════════════════════════════════════ */
-function initGalaxy() {
-    const canvas = document.getElementById('galaxyCanvas');
+  /* ════════════════════════════════════════════
+     2. THREE.JS GALAXY / BLACK HOLE BACKGROUND
+  ════════════════════════════════════════════ */
+  function initGalaxy() {
+    const canvas   = document.getElementById('galaxyCanvas');
     if (!canvas || typeof THREE === 'undefined') return;
-
-    const scene = new THREE.Scene();
-
-    /* ── Camera — lower angle, closer → feels larger & immersive ── */
-    const camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 0.1, 500);
-    camera.position.set(1.5, 3.2, 8.5);
-    camera.lookAt(0.5, 0, 0);
-
-    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: false });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
-    /* ── Root group — offset right so hero text isn't blocked ── */
-    const bhGroup = new THREE.Group();
-    bhGroup.position.x = 1.2;
-    scene.add(bhGroup);
-
-    /* ═══════════════════════
-       A.  EVENT HORIZON
-    ═══════════════════════ */
-    const EH_R = 1.6;
-    bhGroup.add(new THREE.Mesh(
-        new THREE.SphereGeometry(EH_R, 96, 96),
-        new THREE.MeshBasicMaterial({ color: 0x000000 })
-    ));
-
-    /* ═══════════════════════
-       B.  GLOW SHELLS
-       Layered BackSide spheres produce the warm
-       orange-gold photon halo that spills outward.
-    ═══════════════════════ */
-    [
-        { r: EH_R * 1.08, op: 0.45, color: 0xFFCC00 },
-        { r: EH_R * 1.20, op: 0.22, color: 0xFFAA00 },
-        { r: EH_R * 1.50, op: 0.10, color: 0xFF8800 },
-        { r: EH_R * 2.10, op: 0.05, color: 0xFFCC55 },
-        { r: EH_R * 3.20, op: 0.02, color: 0xFFDD88 },
-    ].forEach(({ r, op, color }) => {
-        bhGroup.add(new THREE.Mesh(
-            new THREE.SphereGeometry(r, 48, 48),
-            new THREE.MeshBasicMaterial({
-                color, transparent: true, opacity: op,
-                side: THREE.BackSide, depthWrite: false,
-                blending: THREE.AdditiveBlending
-            })
-        ));
-    });
-
-    /* ═══════════════════════
-       C.  ACCRETION DISK
-       22 000 particles · 22° tilt
-       Palette: white-hot core → gold → amber → deep orange → ember
-    ═══════════════════════ */
-    const diskGroup = new THREE.Group();
-    diskGroup.rotation.x = THREE.MathUtils.degToRad(22);
-    bhGroup.add(diskGroup);
-
-    const DISK_N  = 22000;
-    const INNER_R = EH_R * 1.12;
-    const OUTER_R = 11.5;
-
-    const pal = [
-        new THREE.Color('#FFFFFF'),   // 0 – white-hot inner
-        new THREE.Color('#FFFACD'),   // 1 – lemon-white
-        new THREE.Color('#FFE566'),   // 2 – warm white-gold
-        new THREE.Color('#FFD700'),   // 3 – pure gold
-        new THREE.Color('#FFB300'),   // 4 – amber
-        new THREE.Color('#FF8C00'),   // 5 – deep gold-orange
-        new THREE.Color('#FF5500'),   // 6 – outer orange
-        new THREE.Color('#6B1A00'),   // 7 – distant ember
-    ];
-
-    const dPos = new Float32Array(DISK_N * 3);
-    const dCol = new Float32Array(DISK_N * 3);
-    const dSiz = new Float32Array(DISK_N);
-
-    for (let i = 0; i < DISK_N; i++) {
-        /* Quadratic bias → dense inner ring, sparse outer */
-        const t   = Math.pow(Math.random(), 2.4);
-        const r   = INNER_R + t * (OUTER_R - INNER_R);
-        const ang = Math.random() * Math.PI * 2;
-
-        /* Gaussian vertical scatter — thin near BH, flares outward */
-        const sigma = 0.05 + t * 0.22;
-        const y     = (Math.random() - 0.5) * sigma * 2.5 *
-                      (1 - Math.exp(-r / (OUTER_R * 0.15)));
-
-        /* Slight radial scatter for texture */
-        const jit = (Math.random() - 0.5) * 0.09 * (0.2 + t);
-
-        dPos[i * 3]     = (r + jit) * Math.cos(ang);
-        dPos[i * 3 + 1] = y;
-        dPos[i * 3 + 2] = (r + jit) * Math.sin(ang);
-
-        /* Interpolate palette */
-        const ct  = t * (pal.length - 1);
-        const cLo = Math.floor(ct);
-        const cHi = Math.min(cLo + 1, pal.length - 1);
-        const col = pal[cLo].clone().lerp(pal[cHi], ct - cLo);
-
-        /* Inner-edge brightness burst */
-        const boost  = t < 0.06 ? 2.2 : t < 0.15 ? 1.4 : 1.0;
-        const bright = (0.5 + Math.random() * 0.5) * boost;
-
-        dCol[i * 3]     = Math.min(col.r * bright, 1);
-        dCol[i * 3 + 1] = Math.min(col.g * bright, 1);
-        dCol[i * 3 + 2] = Math.min(col.b * bright, 1);
-
-        /* Larger points near the bright inner edge */
-        dSiz[i] = t < 0.12 ? 0.05 : 0.03;
-    }
-
-    const diskGeom = new THREE.BufferGeometry();
-    diskGeom.setAttribute('position', new THREE.BufferAttribute(dPos, 3));
-    diskGeom.setAttribute('color',    new THREE.BufferAttribute(dCol, 3));
-    const disk = new THREE.Points(diskGeom, new THREE.PointsMaterial({
-        size: 0.038, vertexColors: true, transparent: true, opacity: 0.97,
-        blending: THREE.AdditiveBlending, depthWrite: false, sizeAttenuation: true
-    }));
-    diskGroup.add(disk);
-
-    /* ═══════════════════════
-       D.  PHOTON RING (torus)
-       Sharp bright ring right at the event horizon edge.
-    ═══════════════════════ */
-    diskGroup.add(new THREE.Mesh(
-        new THREE.TorusGeometry(INNER_R, 0.038, 12, 200),
-        new THREE.MeshBasicMaterial({
-            color: 0xFFEE44, transparent: true, opacity: 0.98,
-            blending: THREE.AdditiveBlending, depthWrite: false
-        })
-    ));
-    /* Softer outer halo ring */
-    diskGroup.add(new THREE.Mesh(
-        new THREE.TorusGeometry(INNER_R * 1.22, 0.016, 8, 200),
-        new THREE.MeshBasicMaterial({
-            color: 0xFFAA22, transparent: true, opacity: 0.55,
-            blending: THREE.AdditiveBlending, depthWrite: false
-        })
-    ));
-
-    /* ═══════════════════════
-       E.  GRAVITATIONAL LENSING ARCS
-       The "back" of the disk appears bent above & below
-       the event horizon — the iconic Interstellar look.
-    ═══════════════════════ */
-    const LENS_N = 3500;
-    const lPos   = new Float32Array(LENS_N * 3);
-    const lCol   = new Float32Array(LENS_N * 3);
-
-    for (let i = 0; i < LENS_N; i++) {
-        const topArc  = i < LENS_N / 2;
-        /* Only sample the "back" half of the disk (π .. 2π) */
-        const ang = Math.PI + Math.random() * Math.PI;
-        /* Tight ring close to event horizon */
-        const r   = INNER_R + Math.pow(Math.random(), 2.5) * (INNER_R * 1.6);
-        /* Lensing lifts particles away from disk plane */
-        const liftBase   = 0.18 + (1 - r / (INNER_R * 2.5)) * 0.9;
-        const liftScatter = Math.random() * 0.25;
-        const y = (topArc ? 1 : -1) * (liftBase + liftScatter);
-
-        lPos[i * 3]     = r * Math.cos(ang);
-        lPos[i * 3 + 1] = y;
-        lPos[i * 3 + 2] = r * Math.sin(ang);
-
-        const lc = new THREE.Color('#FFD700').lerp(new THREE.Color('#FF8800'), Math.random() * 0.7);
-        const lb = 0.35 + Math.random() * 0.55;
-        lCol[i * 3]     = Math.min(lc.r * lb, 1);
-        lCol[i * 3 + 1] = Math.min(lc.g * lb, 1);
-        lCol[i * 3 + 2] = Math.min(lc.b * lb, 1);
-    }
-
-    const lensGeom = new THREE.BufferGeometry();
-    lensGeom.setAttribute('position', new THREE.BufferAttribute(lPos, 3));
-    lensGeom.setAttribute('color',    new THREE.BufferAttribute(lCol, 3));
-    /* Lensing arcs rotate in the same plane as the disk */
-    const lensPoints = new THREE.Points(lensGeom, new THREE.PointsMaterial({
-        size: 0.034, vertexColors: true, transparent: true, opacity: 0.82,
-        blending: THREE.AdditiveBlending, depthWrite: false
-    }));
-    diskGroup.add(lensPoints);
-
-    /* ═══════════════════════
-       F.  RELATIVISTIC JETS
-       Golden polar beams, wider base, longer reach.
-    ═══════════════════════ */
-    const JET_N = 1800;
-    const jPos  = new Float32Array(JET_N * 3);
-    const jCol  = new Float32Array(JET_N * 3);
-    for (let i = 0; i < JET_N; i++) {
-        const up  = i < JET_N / 2 ? 1 : -1;
-        const t   = Math.random();
-        const yy  = up * (EH_R * 1.05 + t * 13.0);
-        const rr  = (0.05 + (1 - t) * 0.22) * Math.random();
-        const aa  = Math.random() * Math.PI * 2;
-        jPos[i * 3]     = rr * Math.cos(aa);
-        jPos[i * 3 + 1] = yy;
-        jPos[i * 3 + 2] = rr * Math.sin(aa);
-
-        const jC = new THREE.Color('#FFE066').lerp(new THREE.Color('#FF7700'), t * 0.85);
-        const jB = (1 - t * 0.7) * (0.45 + Math.random() * 0.55);
-        jCol[i * 3]     = Math.min(jC.r * jB, 1);
-        jCol[i * 3 + 1] = Math.min(jC.g * jB, 1);
-        jCol[i * 3 + 2] = Math.min(jC.b * jB, 1);
-    }
-    const jetGeom = new THREE.BufferGeometry();
-    jetGeom.setAttribute('position', new THREE.BufferAttribute(jPos, 3));
-    jetGeom.setAttribute('color',    new THREE.BufferAttribute(jCol, 3));
-    bhGroup.add(new THREE.Points(jetGeom, new THREE.PointsMaterial({
-        size: 0.06, vertexColors: true, transparent: true, opacity: 0.7,
-        blending: THREE.AdditiveBlending, depthWrite: false
-    })));
-
-    /* ═══════════════════════
-       G.  WARM STAR FIELD
-    ═══════════════════════ */
-    const STAR_N = 3200;
-    const sPos   = new Float32Array(STAR_N * 3);
-    const sCol   = new Float32Array(STAR_N * 3);
-    for (let i = 0; i < STAR_N; i++) {
-        const theta = Math.random() * Math.PI * 2;
-        const phi   = Math.acos(2 * Math.random() - 1);
-        const sr    = 60 + Math.random() * 120;
-        sPos[i * 3]     = sr * Math.sin(phi) * Math.cos(theta);
-        sPos[i * 3 + 1] = sr * Math.sin(phi) * Math.sin(theta);
-        sPos[i * 3 + 2] = sr * Math.cos(phi);
-        const warm = Math.random() > 0.5;
-        sCol[i * 3]     = warm ? 1.0  : 0.85 + Math.random() * 0.15;
-        sCol[i * 3 + 1] = warm ? 0.9  : 0.88 + Math.random() * 0.12;
-        sCol[i * 3 + 2] = warm ? 0.4  : 0.95 + Math.random() * 0.05;
-    }
-    const starGeom = new THREE.BufferGeometry();
-    starGeom.setAttribute('position', new THREE.BufferAttribute(sPos, 3));
-    starGeom.setAttribute('color',    new THREE.BufferAttribute(sCol, 3));
-    scene.add(new THREE.Points(starGeom, new THREE.PointsMaterial({
-        size: 0.13, vertexColors: true, transparent: true, opacity: 0.6,
-        blending: THREE.AdditiveBlending, depthWrite: false
-    })));
-
-    /* ── Mouse parallax ── */
-    let mX = 0, mY = 0, tRX = 0, tRY = 0;
-    document.addEventListener('mousemove', e => {
-        mX = (e.clientX / window.innerWidth  - 0.5) * 0.35;
-        mY = (e.clientY / window.innerHeight - 0.5) * 0.22;
-    });
-
-    /* ── Render loop ── */
-    const clock = new THREE.Clock();
-    function animateGalaxy() {
-        galaxyRAF = requestAnimationFrame(animateGalaxy);
-        const elapsed = clock.getElapsedTime();
-
-        /* Disk + lensing arcs rotate together */
-        diskGroup.rotation.y = elapsed * 0.16;
-
-        /* Smooth parallax */
-        tRX += (mY  - tRX) * 0.02;
-        tRY += (mX  - tRY) * 0.02;
-        bhGroup.rotation.x = tRX;
-        bhGroup.rotation.y = tRY;
-
-        /* Subtle pulse of inner glow opacity */
-        const pulse = 0.42 + Math.sin(elapsed * 1.4) * 0.06;
-        bhGroup.children[1].material.opacity = pulse; // first glow shell
-
-        renderer.render(scene, camera);
-    }
-    animateGalaxy();
-
-    window.addEventListener('resize', () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-    });
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   3. SKILLS SPHERE  (no-op on non-skills pages — canvas absent)
-═══════════════════════════════════════════════════════════════ */
-function initSkillsSphere() {
-    /* The actual Three.js sphere is embedded directly in skills.html.
-       This stub exists so main() can call it safely on all pages. */
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   5. CUSTOM CURSOR
-═══════════════════════════════════════════════════════════════ */
-function initCursor() {
-    const dot  = document.getElementById('cursorDot');
-    const ring = document.getElementById('cursorRing');
-    if (!dot || !ring) return;
-
-    let dotX = 0, dotY = 0, ringX = 0, ringY = 0;
-
-    document.addEventListener('mousemove', e => {
-        dotX = e.clientX;
-        dotY = e.clientY;
-        dot.style.transform = `translate(${dotX - 3}px, ${dotY - 3}px)`;
-    });
-
-    /* Ring follows with lerp for smooth trailing */
-    (function animateRing() {
-        ringX += (dotX - ringX) * 0.13;
-        ringY += (dotY - ringY) * 0.13;
-        ring.style.transform = `translate(${ringX - 18}px, ${ringY - 18}px)`;
-        requestAnimationFrame(animateRing);
-    })();
-
-    /* Cursor state changes */
-    const interactables = document.querySelectorAll(
-        'a, button, .btn, .nav-link, .project-card, .social-link, .cert-btn, .tech-orb, .stat-card, .skill-cat'
-    );
-    interactables.forEach(el => {
-        el.addEventListener('mouseenter', () => ring.classList.add('hovered'));
-        el.addEventListener('mouseleave', () => ring.classList.remove('hovered'));
-    });
-
-    document.addEventListener('mousedown', () => ring.classList.add('clicking'));
-    document.addEventListener('mouseup',   () => ring.classList.remove('clicking'));
-    document.addEventListener('mouseleave',() => { dot.classList.add('hidden'); ring.classList.add('hidden'); });
-    document.addEventListener('mouseenter',() => { dot.classList.remove('hidden'); ring.classList.remove('hidden'); });
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   6. HERO ANIMATIONS — text char reveal with GSAP
-═══════════════════════════════════════════════════════════════ */
-function splitChars(el) {
-    const text = el.textContent;
-    el.innerHTML = '';
-    text.split('').forEach(ch => {
-        const span = document.createElement('span');
-        span.className = 'char';
-        span.style.cssText = 'display:inline-block; overflow:hidden;';
-        const inner = document.createElement('span');
-        inner.className = 'char-inner';
-        inner.style.display = 'inline-block';
-        inner.textContent = ch === ' ' ? '\u00a0' : ch;
-        span.appendChild(inner);
-        el.appendChild(span);
-    });
-    return el.querySelectorAll('.char-inner');
-}
-
-function animateHero() {
-    const line1 = document.getElementById('heroLine1');
-    const line2 = document.getElementById('heroLine2');
-    const chars1 = line1 ? splitChars(line1) : [];
-    const chars2 = line2 ? splitChars(line2) : [];
-
-    const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-
-    tl.from('.hero-greeting', { opacity:0, y:20, duration:.7 }, 0)
-      .from(chars1, { y:'110%', opacity:0, stagger:.04, duration:.8, ease:'back.out(1.4)' }, .2)
-      .from(chars2, { y:'110%', opacity:0, stagger:.04, duration:.8, ease:'back.out(1.4)' }, .35)
-      .from('.hero-role-wrapper', { opacity:0, y:20, duration:.6 }, .6)
-      .from('.hero-sub',          { opacity:0, y:15, duration:.6 }, .72)
-      .from('.hero-actions',      { opacity:0, y:20, duration:.6 }, .84)
-      .from('.hero-right',        { opacity:0, x:50, duration:.9 }, .3)
-      .from('.hero-scroll-hint',  { opacity:0, duration:.5 }, 1.1);
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   7. ROLE ROTATOR
-═══════════════════════════════════════════════════════════════ */
-function initRoleRotator() {
-    const items = document.querySelectorAll('.role-item');
-    if (!items.length) return;
-    let current = 0;
-    setInterval(() => {
-        items[current].classList.remove('active');
-        items[current].classList.add('exiting');
-        const prev = current;
-        setTimeout(() => items[prev].classList.remove('exiting'), 500);
-        current = (current + 1) % items.length;
-        items[current].classList.add('active');
-    }, 2600);
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   8. NAVBAR — URL-based active link for multi-page
-═══════════════════════════════════════════════════════════════ */
-function initNav() {
-    const navbar  = document.getElementById('navbar');
-    const toggle  = document.getElementById('navToggle');
-    const navMenu = document.getElementById('navLinks');
-    const links   = document.querySelectorAll('.nav-link');
-    const isInner = document.body.classList.contains('page-inner');
-
-    /* On inner pages navbar is always glassmorphic */
-    if (isInner && navbar) navbar.classList.add('scrolled');
-
-    /* Scroll updates for hero page only */
-    if (!isInner) {
-        window.addEventListener('scroll', () => {
-            navbar.classList.toggle('scrolled', window.scrollY > 60);
-            const pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100;
-            const bar = document.getElementById('scrollBar');
-            if (bar) bar.style.width = pct + '%';
-        }, { passive: true });
-    } else {
-        window.addEventListener('scroll', () => {
-            const pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100;
-            const bar = document.getElementById('scrollBar');
-            if (bar) bar.style.width = pct + '%';
-        }, { passive: true });
-    }
-
-    if (toggle && navMenu) {
-        toggle.addEventListener('click', () => {
-            toggle.classList.toggle('active');
-            navMenu.classList.toggle('open');
-        });
-        links.forEach(l => l.addEventListener('click', () => {
-            if (!l.getAttribute('href').startsWith('#')) {
-                toggle.classList.remove('active');
-                navMenu.classList.remove('open');
-            }
-        }));
-    }
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   8b. PAGE TRANSITIONS
-═══════════════════════════════════════════════════════════════ */
-function initPageTransition() {
-    const overlay = document.getElementById('pageOverlay');
-    if (!overlay) return;
-
-    /* Fade in on page load */
-    requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-            overlay.classList.add('fade-out');
-            setTimeout(() => {
-                overlay.style.pointerEvents = 'none';
-            }, 600);
-        });
-    });
-
-    /* Fade out on internal navigation */
-    document.querySelectorAll('a[href]').forEach(link => {
-        const href = link.getAttribute('href');
-        if (!href) return;
-        /* Skip anchor-only, external, mailto/tel, download links */
-        if (href.startsWith('#') || href.startsWith('http') ||
-            href.startsWith('mailto') || href.startsWith('tel') ||
-            link.hasAttribute('download') || link.target === '_blank') return;
-
-        link.addEventListener('click', e => {
-            e.preventDefault();
-            overlay.style.pointerEvents = 'all';
-            overlay.classList.remove('fade-out');
-            setTimeout(() => { window.location.href = href; }, 580);
-        });
-    });
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   9. GSAP SCROLL REVEALS
-═══════════════════════════════════════════════════════════════ */
-function initScrollReveal() {
-    /* Generic reveals */
-    ['reveal-up', 'reveal-left', 'reveal-right', 'reveal-scale'].forEach(cls => {
-        document.querySelectorAll('.' + cls).forEach(el => {
-            ScrollTrigger.create({
-                trigger: el,
-                start: 'top 87%',
-                onEnter: () => el.classList.add('revealed'),
-                once: true
-            });
-        });
-    });
-
-    /* Stagger children */
-    document.querySelectorAll('.stagger-parent').forEach(parent => {
-        const children = parent.querySelectorAll('.stagger-child');
-        ScrollTrigger.create({
-            trigger: parent,
-            start: 'top 82%',
-            onEnter: () => {
-                children.forEach((child, i) => {
-                    setTimeout(() => child.classList.add('revealed'), i * 100);
-                });
-            },
-            once: true
-        });
-    });
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   10. STAT COUNTERS
-═══════════════════════════════════════════════════════════════ */
-function initCounters() {
-    document.querySelectorAll('[data-count]').forEach(el => {
-        const target = parseInt(el.dataset.count);
-        let triggered = false;
-
-        ScrollTrigger.create({
-            trigger: el,
-            start: 'top 80%',
-            once: true,
-            onEnter: () => {
-                if (triggered) return;
-                triggered = true;
-                gsap.to({ val: 0 }, {
-                    val: target,
-                    duration: 1.8,
-                    ease: 'power2.out',
-                    onUpdate: function() {
-                        el.textContent = Math.round(this.targets()[0].val);
-                    }
-                });
-            }
-        });
-    });
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   11. PROJECT CARD 3D TILT
-═══════════════════════════════════════════════════════════════ */
-function initCardTilt() {
-    const isMobile = window.matchMedia('(max-width:768px)').matches;
-    if (isMobile) return;
-
-    document.querySelectorAll('.project-card').forEach(card => {
-        const shine = card.querySelector('.card-shine');
-
-        card.addEventListener('mousemove', e => {
-            const rect = card.getBoundingClientRect();
-            const x = (e.clientX - rect.left) / rect.width;
-            const y = (e.clientY - rect.top)  / rect.height;
-
-            const rotX = (y - 0.5) * -16;
-            const rotY = (x - 0.5) *  16;
-
-            gsap.to(card, {
-                rotateX: rotX, rotateY: rotY,
-                transformPerspective: 800,
-                transformOrigin: 'center center',
-                duration: .25,
-                ease: 'power1.out'
-            });
-
-            if (shine) {
-                shine.style.opacity = '1';
-                shine.style.background = `radial-gradient(circle at ${x*100}% ${y*100}%, rgba(255,255,255,0.13), transparent 55%)`;
-            }
-        });
-
-        card.addEventListener('mouseleave', () => {
-            gsap.to(card, { rotateX:0, rotateY:0, duration:.5, ease:'power2.out' });
-            if (shine) shine.style.opacity = '0';
-        });
-    });
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   12. MAGNETIC BUTTONS
-═══════════════════════════════════════════════════════════════ */
-function initMagneticButtons() {
-    const isMobile = window.matchMedia('(max-width:768px)').matches;
-    if (isMobile) return;
-
-    document.querySelectorAll('.btn, .cert-btn-primary').forEach(btn => {
-        btn.addEventListener('mousemove', e => {
-            const rect = btn.getBoundingClientRect();
-            const x = e.clientX - rect.left - rect.width  / 2;
-            const y = e.clientY - rect.top  - rect.height / 2;
-            gsap.to(btn, { x: x * 0.18, y: y * 0.18, duration:.25, ease:'power1.out' });
-        });
-        btn.addEventListener('mouseleave', () => {
-            gsap.to(btn, { x:0, y:0, duration:.5, ease:'elastic.out(1, 0.4)' });
-        });
-    });
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   13. TECH ORBS PHYSICS (skills section)
-═══════════════════════════════════════════════════════════════ */
-function initOrbsPhysics() {
-    const arena     = document.getElementById('orbsArena');
-    const container = document.getElementById('orbsContainer');
-    if (!arena || !container) return;
-
-    const orbs = [...container.querySelectorAll('.tech-orb')];
-    if (!orbs.length) return;
-
-    let W = arena.clientWidth;
-    let H = arena.clientHeight;
-    const ORB_R = 44; // half of orb width (88px)
-
-    /* Initial positions in a circle */
-    const state = orbs.map((_, i) => {
-        const angle = (i / orbs.length) * Math.PI * 2;
-        const r     = Math.min(W, H) * 0.31;
-        const px    = W / 2 + Math.cos(angle) * r;
-        const py    = H / 2 + Math.sin(angle) * r * 0.65;
-        return { x: px, y: py, vx: (Math.random()-.5)*.5, vy: (Math.random()-.5)*.5, tx: px, ty: py };
-    });
-
-    orbs.forEach((orb, i) => {
-        orb.style.left = state[i].x + 'px';
-        orb.style.top  = state[i].y + 'px';
-    });
-
-    let mouseX = -9999, mouseY = -9999;
-    arena.addEventListener('mousemove', e => {
-        const rect = arena.getBoundingClientRect();
-        mouseX = e.clientX - rect.left;
-        mouseY = e.clientY - rect.top;
-    });
-    arena.addEventListener('mouseleave', () => { mouseX = -9999; mouseY = -9999; });
-
-    let active = true;
-    const observer = new IntersectionObserver(entries => {
-        active = entries[0].isIntersecting;
-    }, { threshold: 0.1 });
-    observer.observe(arena);
-
-    (function tick() {
-        requestAnimationFrame(tick);
-        if (!active) return;
-
-        orbs.forEach((orb, i) => {
-            const s = state[i];
-
-            /* Spring to target */
-            s.vx += (s.tx - s.x) * 0.016;
-            s.vy += (s.ty - s.y) * 0.016;
-
-            /* Mouse repulsion */
-            const mdx = s.x - mouseX;
-            const mdy = s.y - mouseY;
-            const md  = Math.sqrt(mdx * mdx + mdy * mdy) || 1;
-            const repR = 130;
-            if (md < repR) {
-                const f = ((repR - md) / repR) * 3.2;
-                s.vx += (mdx / md) * f;
-                s.vy += (mdy / md) * f;
-            }
-
-            /* Orb-orb repulsion */
-            for (let j = i + 1; j < orbs.length; j++) {
-                const sj = state[j];
-                const ox  = s.x - sj.x;
-                const oy  = s.y - sj.y;
-                const od  = Math.sqrt(ox * ox + oy * oy) || 1;
-                const minD = ORB_R * 2 + 10;
-                if (od < minD) {
-                    const f = ((minD - od) / minD) * 0.9;
-                    const fx = (ox / od) * f;
-                    const fy = (oy / od) * f;
-                    s.vx += fx;  s.vy += fy;
-                    sj.vx -= fx; sj.vy -= fy;
-                }
-            }
-
-            /* Damping */
-            s.vx *= 0.83;
-            s.vy *= 0.83;
-
-            s.x += s.vx;
-            s.y += s.vy;
-
-            /* Boundary */
-            if (s.x < ORB_R)     { s.x = ORB_R;     s.vx *= -0.4; }
-            if (s.x > W - ORB_R) { s.x = W - ORB_R; s.vx *= -0.4; }
-            if (s.y < ORB_R)     { s.y = ORB_R;      s.vy *= -0.4; }
-            if (s.y > H - ORB_R) { s.y = H - ORB_R;  s.vy *= -0.4; }
-
-            orb.style.left = s.x + 'px';
-            orb.style.top  = s.y + 'px';
-        });
-    })();
-
-    window.addEventListener('resize', () => {
-        W = arena.clientWidth;
-        H = arena.clientHeight;
-        const r = Math.min(W, H) * 0.31;
-        state.forEach((s, i) => {
-            const angle = (i / orbs.length) * Math.PI * 2;
-            s.tx = W / 2 + Math.cos(angle) * r;
-            s.ty = H / 2 + Math.sin(angle) * r * 0.65;
-        });
-    });
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   14. PARALLAX HERO AVATAR on mouse
-═══════════════════════════════════════════════════════════════ */
-function initHeroParallax() {
-    const avatar = document.getElementById('heroAvatar');
-    if (!avatar) return;
-
-    document.addEventListener('mousemove', e => {
-        const x = (e.clientX / window.innerWidth  - 0.5) * 16;
-        const y = (e.clientY / window.innerHeight - 0.5) * 10;
-        gsap.to(avatar, { rotateY: x, rotateX: -y, duration:.6, ease:'power1.out', transformPerspective:800 });
-    });
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   15. SCROLL TOP BUTTON
-═══════════════════════════════════════════════════════════════ */
-function initScrollTop() {
-    const btn = document.getElementById('scrollTopBtn');
-    if (!btn) return;
-    btn.addEventListener('click', e => {
-        e.preventDefault();
-        if (lenis) lenis.scrollTo(0, { duration: 1.5 });
-        else window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   16. SECTION PARALLAX BACKGROUNDS via ScrollTrigger
-═══════════════════════════════════════════════════════════════ */
-function initParallax() {
-    if (window.matchMedia('(max-width:768px)').matches) return;
-
-    gsap.utils.toArray('.section').forEach(section => {
-        const deco = section.querySelector('[class*="3d-deco"]');
-        if (!deco) return;
-        gsap.to(deco, {
-            yPercent: -15,
-            ease: 'none',
-            scrollTrigger: {
-                trigger: section,
-                start: 'top bottom',
-                end: 'bottom top',
-                scrub: true
-            }
-        });
-    });
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   17. GLITCH HOVER on section titles
-═══════════════════════════════════════════════════════════════ */
-function initGlitchTitles() {
-    const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*';
-
-    document.querySelectorAll('.section-title').forEach(el => {
-        const original = el.textContent;
-        let timeout;
-
-        el.addEventListener('mouseenter', () => {
-            clearTimeout(timeout);
-            let iter = 0;
-            const interval = setInterval(() => {
-                el.textContent = original.split('').map((ch, i) => {
-                    if (ch === ' ') return ' ';
-                    if (i < iter)   return original[i];
-                    return CHARS[Math.floor(Math.random() * CHARS.length)];
-                }).join('');
-                if (iter >= original.length) {
-                    clearInterval(interval);
-                    el.textContent = original;
-                }
-                iter += 0.5;
-            }, 35);
-        });
-    });
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   18. CURSOR TRAIL (sparkle particles)
-═══════════════════════════════════════════════════════════════ */
-function initCursorTrail() {
-    const isMobile = window.matchMedia('(max-width:768px)').matches;
-    if (isMobile) return;
-
-    document.addEventListener('mousemove', e => {
-        if (Math.random() > 0.35) return; // throttle
-        const dot = document.createElement('div');
-        const size = 3 + Math.random() * 4;
-        dot.style.cssText = `
-            position:fixed; border-radius:50%; pointer-events:none; z-index:99997;
-            width:${size}px; height:${size}px;
-            background:rgba(0,212,255,${0.3 + Math.random() * 0.4});
-            box-shadow:0 0 ${size * 2}px rgba(0,212,255,0.5);
-            left:${e.clientX - size/2}px; top:${e.clientY - size/2}px;
-            transform:scale(1);
-        `;
-        document.body.appendChild(dot);
-        gsap.to(dot, {
-            opacity: 0, scale: 0,
-            x: (Math.random() - .5) * 30,
-            y: (Math.random() - .5) * 30,
-            duration: .5 + Math.random() * .3,
-            ease: 'power2.out',
-            onComplete: () => dot.remove()
-        });
-    });
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   19. STAGGERED SECTION HEADING REVEAL
-═══════════════════════════════════════════════════════════════ */
-function initHeadingReveal() {
-    document.querySelectorAll('.section-header').forEach(header => {
-        gsap.from(header.querySelector('.section-tag'), {
-            opacity: 0, y: 20, duration: .6, ease: 'power2.out',
-            scrollTrigger: { trigger: header, start: 'top 85%', once: true }
-        });
-        gsap.from(header.querySelector('.section-title'), {
-            opacity: 0, y: 30, duration: .8, ease: 'power3.out', delay: .15,
-            scrollTrigger: { trigger: header, start: 'top 85%', once: true }
-        });
-    });
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   19. ROBOT GUIDE — Per-Page Speaking Bot
-═══════════════════════════════════════════════════════════════ */
-function initRobotGuide() {
-    const guide  = document.getElementById('rGuide');
-    const bubble = document.getElementById('rBubble');
-    const rChar  = document.getElementById('rChar');
-    const rText  = document.getElementById('rText');
-    const rMute  = document.getElementById('rMute');
-    const rClose = document.getElementById('rClose');
-    const rMouth = document.getElementById('rMouth');
-    if (!guide || !rChar) return;
-
-    const scripts = {
-        hero:           "Hi there! 👋 I'm your AI guide. This portfolio belongs to Surender Singh — a Data Scientist, ML Engineer, and Full-Stack Developer. Use the dots below or nav links to explore each page!",
-        about:          "Welcome to the About page! Surender is a B.Tech AI & Data Science student at MITRC, 7th semester. Passionate about Machine Learning, Computer Vision, and Full-Stack Development — actively seeking internship opportunities!",
-        skills:         "Skills page! Surender works with Python, React, TensorFlow, PyTorch, Node.js, MongoDB, and more. Hover the floating orbs to see his full tech stack!",
-        projects:       "Work page! 5 featured projects — TaskFlow is a MERN productivity app, PlayStore Pulse uses ML to predict app ratings, plus emotion recognition, hand gesture mouse, and a dual-model text summarizer!",
-        resume:         "Resume page! You can download or open Surender's resume directly here. He's skilled and ready for exciting opportunities!",
-        certifications: "Certificates page! Surender completed a Data Science internship at CODSOFT and a Full-Stack MERN internship at Web Stack Academy — both in 2026 with wonderful remarks!",
-        contact:        "Contact page! Reach Surender on GitHub as Surender707, on LinkedIn as Surender Choudhary, or send him an email. He's always open to new collaborations!"
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    const scene  = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.set(0, 2, 4);
+    camera.lookAt(0, 0, 0);
+
+    // Galaxy parameters
+    const params = {
+      count:           80000,
+      size:            0.004,
+      radius:          6,
+      branches:        3,
+      spin:            1.2,
+      randomness:      0.25,
+      randomnessPower: 3,
+      insideColor:     '#d4a853',  // warm gold
+      outsideColor:    '#1a2a5c',  // deep navy
     };
 
-    let muted = false, bubbleOpen = false, typeInterval = null;
-    const synth = window.speechSynthesis || null;
-    const currentPage = document.body.dataset.page || 'hero';
+    let galaxyGeometry = null;
+    let galaxyMaterial = null;
+    let galaxy         = null;
 
-    function stopSpeech() {
-        if (synth) synth.cancel();
-        rChar && rChar.classList.remove('talking');
-        rMouth && rMouth.classList.remove('speaking');
-    }
-    function speak(text) {
-        stopSpeech();
-        if (muted || !synth) return;
-        const utt = new SpeechSynthesisUtterance(text);
-        utt.rate = 0.92; utt.pitch = 1.1;
-        utt.onstart = () => { rChar && rChar.classList.add('talking'); rMouth && rMouth.classList.add('speaking'); };
-        utt.onend = utt.onerror = () => { rChar && rChar.classList.remove('talking'); rMouth && rMouth.classList.remove('speaking'); };
-        synth.speak(utt);
-    }
-    function typeText(text) {
-        if (!rText) return;
-        if (typeInterval) clearInterval(typeInterval);
-        rText.textContent = '';
-        let i = 0;
-        typeInterval = setInterval(() => {
-            rText.textContent += text[i++];
-            if (i >= text.length) clearInterval(typeInterval);
-        }, 22);
-    }
-    function openBubble(msg) {
-        bubbleOpen = true; bubble.classList.add('visible');
-        typeText(msg); speak(msg);
-    }
-    function closeBubble() {
-        bubbleOpen = false; bubble.classList.remove('visible'); stopSpeech();
-    }
+    function generateGalaxy() {
+      if (galaxy) { scene.remove(galaxy); galaxyGeometry.dispose(); galaxyMaterial.dispose(); }
 
-    /* Click robot character */
-    rChar.addEventListener('click', () => {
-        if (bubbleOpen) closeBubble();
-        else openBubble(scripts[currentPage] || scripts.hero);
+      galaxyGeometry = new THREE.BufferGeometry();
+      const positions = new Float32Array(params.count * 3);
+      const colors    = new Float32Array(params.count * 3);
+
+      const colorInside  = new THREE.Color(params.insideColor);
+      const colorOutside = new THREE.Color(params.outsideColor);
+
+      for (let i = 0; i < params.count; i++) {
+        const i3 = i * 3;
+        const radius     = Math.random() * params.radius;
+        const spinAngle  = radius * params.spin;
+        const branchAngle = (i % params.branches) / params.branches * Math.PI * 2;
+
+        const rx = Math.pow(Math.random(), params.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * params.randomness * radius;
+        const ry = Math.pow(Math.random(), params.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * params.randomness * radius * 0.3;
+        const rz = Math.pow(Math.random(), params.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * params.randomness * radius;
+
+        positions[i3]     = Math.cos(branchAngle + spinAngle) * radius + rx;
+        positions[i3 + 1] = ry;
+        positions[i3 + 2] = Math.sin(branchAngle + spinAngle) * radius + rz;
+
+        const mixedColor = colorInside.clone().lerp(colorOutside, radius / params.radius);
+        colors[i3]     = mixedColor.r;
+        colors[i3 + 1] = mixedColor.g;
+        colors[i3 + 2] = mixedColor.b;
+      }
+
+      galaxyGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      galaxyGeometry.setAttribute('color',    new THREE.BufferAttribute(colors, 3));
+
+      galaxyMaterial = new THREE.PointsMaterial({
+        size:            params.size,
+        sizeAttenuation: true,
+        depthWrite:      false,
+        blending:        THREE.AdditiveBlending,
+        vertexColors:    true,
+      });
+
+      galaxy = new THREE.Points(galaxyGeometry, galaxyMaterial);
+      scene.add(galaxy);
+    }
+    generateGalaxy();
+
+    // Mouse parallax
+    let mouseX = 0, mouseY = 0;
+    window.addEventListener('mousemove', (e) => {
+      mouseX = (e.clientX / window.innerWidth - 0.5) * 0.4;
+      mouseY = (e.clientY / window.innerHeight - 0.5) * 0.2;
     });
-    rChar.addEventListener('keydown', e => { if (e.key==='Enter'||e.key===' ') rChar.click(); });
-    rMute.addEventListener('click', () => { muted=!muted; rMute.textContent=muted?'🔇':'🔊'; if(muted)stopSpeech(); });
-    rClose.addEventListener('click', closeBubble);
 
-    /* Auto greet on each page load */
-    const delay = document.body.classList.contains('page-inner') ? 1200 : 3200;
-    setTimeout(() => openBubble(scripts[currentPage] || scripts.hero), delay);
-}
+    // Render loop
+    const clock = new THREE.Clock();
+    function animate() {
+      const elapsed = clock.getElapsedTime();
+      if (galaxy) {
+        galaxy.rotation.y = elapsed * 0.04;
+        galaxy.rotation.x += (mouseY * 0.2 - galaxy.rotation.x) * 0.02;
+        galaxy.position.x += (mouseX * 0.3 - galaxy.position.x) * 0.02;
+      }
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+    }
+    animate();
 
-
-async function main() {
-    /* Wait for DOM */
-    await new Promise(r => {
-        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', r);
-        else r();
+    // Resize
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
     });
+  }
+  initGalaxy();
 
-    const isInner = document.body.classList.contains('page-inner');
-
-    /* Preloader only on hero page; inner pages use overlay fade */
-    if (!isInner) {
-        await initPreloader();
+  /* ════════════════════════════════════════════
+     3. LENIS SMOOTH SCROLL + GSAP INTEGRATION
+  ════════════════════════════════════════════ */
+  let lenis = null;
+  if (typeof Lenis !== 'undefined') {
+    lenis = new Lenis({
+      duration:  1.2,
+      easing:    (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smooth:    true,
+      direction: 'vertical',
+    });
+    if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+      gsap.ticker.lagSmoothing(0);
     }
+  }
 
-    /* Page transition overlay (works on all pages) */
-    initPageTransition();
+  /* ════════════════════════════════════════════
+     4. CUSTOM MAGNETIC CURSOR
+  ════════════════════════════════════════════ */
+  const cursorDot  = document.getElementById('cursorDot');
+  const cursorRing = document.getElementById('cursorRing');
+  let cx = 0, cy = 0;
+  let rx = 0, ry = 0;
 
-    /* Fire everything */
-    initLenis();
-    initGalaxy();
-    initSkillsSphere();
-    initCursor();
-    initNav();
-    initScrollReveal();
-    initHeadingReveal();
-    initCounters();
-    initCardTilt();
-    initMagneticButtons();
-    initOrbsPhysics();
-    initHeroParallax();
-    initScrollTop();
-    initParallax();
-    initGlitchTitles();
-    initCursorTrail();
-    animateHero();
-    initRoleRotator();
-    initRobotGuide();
+  document.addEventListener('mousemove', (e) => {
+    cx = e.clientX; cy = e.clientY;
+    cursorDot.style.left = cx + 'px';
+    cursorDot.style.top  = cy + 'px';
+  });
 
-    /* Project slide show (only on projects.html) */
-    if (document.body.dataset.page === 'projects') {
-        initProjectSlides();
-    }
+  function animateRing() {
+    rx += (cx - rx) * 0.12;
+    ry += (cy - ry) * 0.12;
+    cursorRing.style.left = rx + 'px';
+    cursorRing.style.top  = ry + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
 
-    /* Refresh ScrollTrigger after all reveals are setup */
-    ScrollTrigger.refresh();
-}
+  // Hover effects
+  const hoverTargets = document.querySelectorAll('a, button, .magnetic, .social-link, .cert-card, .bento-card, .dnav-dot, .psnav-dot');
+  hoverTargets.forEach(el => {
+    el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+    el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+  });
 
-/* ═══════════════════════════════════════════════════════════════
-   20. PROJECT SLIDES — Full-screen scroll-snap navigation
-═══════════════════════════════════════════════════════════════ */
-function initProjectSlides() {
-    const wrapper   = document.getElementById('slidesWrapper');
-    const dots      = document.querySelectorAll('.ssnav-dot');
-    const counter   = document.getElementById('scCurrent');
-    const arrowUp   = document.getElementById('slideArrowUp');
-    const arrowDown = document.getElementById('slideArrowDown');
-    const slides    = document.querySelectorAll('.slide');
-    if (!wrapper || !slides.length) return;
+  // Magnetic effect on .magnetic elements
+  document.querySelectorAll('.magnetic').forEach(el => {
+    el.addEventListener('mousemove', (e) => {
+      const rect = el.getBoundingClientRect();
+      const mx = e.clientX - rect.left - rect.width / 2;
+      const my = e.clientY - rect.top - rect.height / 2;
+      el.style.transform = `translate(${mx * 0.15}px, ${my * 0.15}px)`;
+    });
+    el.addEventListener('mouseleave', () => {
+      el.style.transform = '';
+    });
+  });
 
-    let currentIdx = 0;
-    const TOTAL = slides.length - 1; // exclude intro from numbered count
+  /* ════════════════════════════════════════════
+     5. NAVBAR SCROLL BEHAVIOUR
+  ════════════════════════════════════════════ */
+  const navbar = document.getElementById('navbar');
+  let lastScrollY = 0;
+  let scrollTimeout;
 
-    /* ── Mark active slide and update UI ── */
-    function setActive(idx) {
-        currentIdx = Math.max(0, Math.min(idx, slides.length - 1));
+  function onScroll() {
+    const y = window.scrollY;
+    // Scrolled state
+    if (y > 40) navbar.classList.add('scrolled');
+    else navbar.classList.remove('scrolled');
+    // Hide/show on direction
+    if (y > lastScrollY && y > 120) navbar.classList.add('hidden');
+    else navbar.classList.remove('hidden');
+    lastScrollY = y;
 
-        /* Active class for CSS entry animations */
-        slides.forEach((s, i) => s.classList.toggle('slide-active', i === currentIdx));
+    // Scroll progress
+    const docH = document.documentElement.scrollHeight - window.innerHeight;
+    const prog = docH > 0 ? (y / docH) * 100 : 0;
+    document.getElementById('scrollProgress').style.width = prog + '%';
 
-        /* Dot nav */
-        dots.forEach((d, i) => d.classList.toggle('active', i === currentIdx));
+    // Active section dot nav + nav links
+    updateActiveDot();
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
 
-        /* Counter: 00 for intro, 01–05 for projects */
-        if (counter) {
-            counter.textContent = currentIdx === 0 ? '00' : String(currentIdx).padStart(2, '0');
+  /* ════════════════════════════════════════════
+     6. SECTION TRACKING + DOT NAV
+  ════════════════════════════════════════════ */
+  const sections   = document.querySelectorAll('.section[data-section]');
+  const dotBtns    = document.querySelectorAll('.dnav-dot');
+  const navLinks   = document.querySelectorAll('.nav-link');
+
+  function updateActiveDot() {
+    let activeId = 'hero';
+    sections.forEach(sec => {
+      const top = sec.getBoundingClientRect().top;
+      if (top <= window.innerHeight * 0.4) activeId = sec.dataset.section;
+    });
+    dotBtns.forEach(d => d.classList.toggle('active', d.dataset.target === activeId));
+    navLinks.forEach(l => l.classList.toggle('active', l.dataset.section === activeId));
+  }
+
+  // Dot click → smooth scroll to section
+  dotBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const el = document.getElementById(btn.dataset.target);
+      if (el) {
+        if (lenis) lenis.scrollTo(el, { offset: 0, duration: 1.5 });
+        else el.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+
+  // Nav links smooth scroll
+  navLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      const href = link.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        e.preventDefault();
+        const el = document.querySelector(href);
+        if (el) {
+          if (lenis) lenis.scrollTo(el, { offset: 0, duration: 1.4 });
+          else el.scrollIntoView({ behavior: 'smooth' });
+          // Close mobile nav
+          document.getElementById('navLinks').classList.remove('open');
+          document.body.classList.remove('nav-open');
         }
+      }
+    });
+  });
 
-        /* Up/Down arrow visibility */
-        if (arrowUp)   arrowUp.style.opacity   = currentIdx === 0 ? '0.2' : '1';
-        if (arrowDown) arrowDown.style.opacity = currentIdx === slides.length - 1 ? '0.2' : '1';
+  // Logo scroll to top
+  document.getElementById('nav-logo').addEventListener('click', (e) => {
+    e.preventDefault();
+    if (lenis) lenis.scrollTo(0, { duration: 1.4 });
+    else window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  /* ════════════════════════════════════════════
+     7. MOBILE NAV TOGGLE
+  ════════════════════════════════════════════ */
+  const navToggle = document.getElementById('navToggle');
+  const navLinksEl = document.getElementById('navLinks');
+  navToggle.addEventListener('click', () => {
+    const open = navLinksEl.classList.toggle('open');
+    document.body.classList.toggle('nav-open', open);
+  });
+
+  /* ════════════════════════════════════════════
+     8. ROLE ROTATOR (HERO TYPEWRITER)
+  ════════════════════════════════════════════ */
+  const roleItems = document.querySelectorAll('.role-item');
+  let roleIdx = 0;
+  function rotateRole() {
+    roleItems[roleIdx].classList.remove('active');
+    roleItems[roleIdx].classList.add('out');
+    setTimeout(() => roleItems[roleIdx].classList.remove('out'), 600);
+    roleIdx = (roleIdx + 1) % roleItems.length;
+    roleItems[roleIdx].classList.add('active');
+  }
+  setInterval(rotateRole, 2800);
+
+  /* ════════════════════════════════════════════
+     9. ANIMATED STAT COUNTERS (ABOUT SECTION)
+  ════════════════════════════════════════════ */
+  function animateCounter(el, target, duration = 1400) {
+    let start = null;
+    function step(timestamp) {
+      if (!start) start = timestamp;
+      const progress = Math.min((timestamp - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.floor(eased * target);
+      if (progress < 1) requestAnimationFrame(step);
+      else el.textContent = target;
     }
+    requestAnimationFrame(step);
+  }
 
-    /* ── Scroll to a specific slide ── */
-    function goTo(idx) {
-        const target = slides[idx];
-        if (!target) return;
-        wrapper.scrollTo({ top: target.offsetTop, behavior: 'smooth' });
+  const statEls = document.querySelectorAll('.stat-num[data-count]');
+  let statsAnimated = false;
+  function checkStats() {
+    if (statsAnimated) return;
+    const aboutSec = document.getElementById('about');
+    if (!aboutSec) return;
+    const rect = aboutSec.getBoundingClientRect();
+    if (rect.top < window.innerHeight * 0.75) {
+      statsAnimated = true;
+      statEls.forEach(el => {
+        animateCounter(el, parseInt(el.dataset.count), 1200);
+      });
     }
+  }
+  window.addEventListener('scroll', checkStats, { passive: true });
 
-    /* ── IntersectionObserver tracks which slide is visible ── */
-    const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const idx = parseInt(entry.target.dataset.index ?? '0', 10);
-                setActive(idx);
-            }
-        });
-    }, { root: wrapper, threshold: 0.55 });
+  /* ════════════════════════════════════════════
+     10. SCROLL REVEAL (INTERSECTION OBSERVER)
+  ════════════════════════════════════════════ */
+  const revealEls = document.querySelectorAll('.reveal-up, .reveal-left, .reveal-right, .bento-card, .cert-card, .skill-cat-card, .rb-item, .social-link, .resume-download-card, .resume-highlights');
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // Stagger for bento cards
+        const delay = entry.target.style.getPropertyValue('--delay') || '0s';
+        entry.target.style.transitionDelay = delay;
+        entry.target.classList.add('in');
+        // Also add .in for card types not using reveal-* classes
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'none';
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
 
-    slides.forEach(s => observer.observe(s));
+  revealEls.forEach((el, i) => {
+    // Cards get stagger delays
+    if (el.matches('.bento-card, .cert-card')) {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(30px)';
+      el.style.transition = `opacity 0.6s ${i * 0.08}s ease, transform 0.6s ${i * 0.08}s ease`;
+    } else if (el.matches('.social-link')) {
+      el.style.opacity = '0';
+      el.style.transform = 'translateX(30px)';
+      el.style.transition = `opacity 0.5s ${i * 0.1}s ease, transform 0.5s ${i * 0.1}s ease`;
+    } else if (el.matches('.rb-item, .resume-download-card, .resume-highlights')) {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+      el.style.transition = `opacity 0.5s ease, transform 0.5s ease`;
+    } else if (el.matches('.skill-cat-card')) {
+      el.style.opacity = '0';
+      el.style.transform = 'translateX(-24px)';
+      el.style.transition = `opacity 0.5s ${i * 0.1}s ease, transform 0.5s ${i * 0.1}s ease`;
+    }
+    revealObserver.observe(el);
+  });
 
-    /* ── Dot nav click ── */
-    dots.forEach((dot, i) => {
-        dot.addEventListener('click', () => goTo(i));
+  /* ════════════════════════════════════════════
+     11. PROJECTS SECTION — STICKY SCROLL SLIDES
+  ════════════════════════════════════════════ */
+  const projSection   = document.getElementById('projects');
+  const projSlides    = document.getElementById('projSlides');
+  const projSidenav   = document.getElementById('projSidenav');
+  const projCurrent   = document.getElementById('projCurrent');
+  const projArrowUp   = document.getElementById('projArrowUp');
+  const projArrowDown = document.getElementById('projArrowDown');
+  const psnDots       = document.querySelectorAll('.psnav-dot');
+  const TOTAL_SLIDES  = 6;
+
+  let currentSlide  = 0;
+  let slideAnimating = false;
+
+  function showSlide(idx, fromScroll = false) {
+    if (idx < 0 || idx >= TOTAL_SLIDES) return;
+    if (slideAnimating && !fromScroll) return;
+    slideAnimating = true;
+    currentSlide = idx;
+
+    // Move track
+    projSlides.style.transform = `translateY(-${idx * 100}vh)`;
+
+    // Update counter
+    projCurrent.textContent = idx === 0 ? '00' : String(idx).padStart(2, '0');
+
+    // Update sidenav dots
+    psnDots.forEach((d, i) => d.classList.toggle('active', i === idx));
+
+    // Update arrow visibility
+    projArrowUp.style.opacity   = idx === 0 ? '0.3' : '1';
+    projArrowDown.style.opacity = idx === TOTAL_SLIDES - 1 ? '0.3' : '1';
+
+    setTimeout(() => { slideAnimating = false; }, 750);
+  }
+
+  // Arrow buttons
+  projArrowDown.addEventListener('click', () => {
+    if (currentSlide < TOTAL_SLIDES - 1) showSlide(currentSlide + 1);
+  });
+  projArrowUp.addEventListener('click', () => {
+    if (currentSlide > 0) showSlide(currentSlide - 1);
+  });
+
+  // Sidenav dot clicks
+  psnDots.forEach(dot => {
+    dot.addEventListener('click', () => showSlide(parseInt(dot.dataset.proj)));
+  });
+
+  // Keyboard arrow keys
+  document.addEventListener('keydown', (e) => {
+    const projRect = projSection.getBoundingClientRect();
+    const inProj = projRect.top <= 0 && projRect.bottom >= window.innerHeight;
+    if (!inProj) return;
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+      e.preventDefault();
+      if (currentSlide < TOTAL_SLIDES - 1) showSlide(currentSlide + 1);
+      else if (lenis) lenis.scrollTo(document.getElementById('certs'), { duration: 1.2 });
+    }
+    if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+      e.preventDefault();
+      if (currentSlide > 0) showSlide(currentSlide - 1);
+      else if (lenis) lenis.scrollTo(document.getElementById('skills'), { duration: 1.2 });
+    }
+  });
+
+  // Scroll-based slide advancement using ScrollTrigger
+  if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+    gsap.registerPlugin(ScrollTrigger);
+
+    ScrollTrigger.create({
+      trigger: '#projects',
+      start: 'top top',
+      end: 'bottom bottom',
+      onUpdate: (self) => {
+        const idx = Math.min(Math.floor(self.progress * TOTAL_SLIDES), TOTAL_SLIDES - 1);
+        if (idx !== currentSlide) showSlide(idx, true);
+      }
+    });
+  } else {
+    // Fallback: manual scroll tracking
+    window.addEventListener('scroll', () => {
+      if (!projSection) return;
+      const rect = projSection.getBoundingClientRect();
+      const secH = projSection.offsetHeight;
+      const scrolledIntoSec = -rect.top;
+      if (scrolledIntoSec < 0 || scrolledIntoSec > secH) return;
+      const progress = scrolledIntoSec / secH;
+      const idx = Math.min(Math.floor(progress * TOTAL_SLIDES), TOTAL_SLIDES - 1);
+      if (idx !== currentSlide) showSlide(idx, true);
+    }, { passive: true });
+  }
+
+  /* ════════════════════════════════════════════
+     12. SKILLS SPHERE CANVAS (2D particle sphere)
+  ════════════════════════════════════════════ */
+  function initSkillsSphere() {
+    const canvas = document.getElementById('skillsSphereCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    const techs = [
+      { label: '🐍 Python',      color: '#3776AB' },
+      { label: '⚛️ React',       color: '#61DAFB' },
+      { label: '⚡ JavaScript',  color: '#F7DF1E' },
+      { label: '🧠 TensorFlow',  color: '#FF6F00' },
+      { label: '🟢 Node.js',     color: '#339933' },
+      { label: '🍃 MongoDB',     color: '#47A248' },
+      { label: '🔥 PyTorch',     color: '#EE4C2C' },
+      { label: '🌐 Flask',       color: '#a8d8a8' },
+      { label: '⑂ Git',         color: '#F05032' },
+      { label: '👁 OpenCV',      color: '#5C3EE8' },
+      { label: '🗄 SQL',         color: '#00aeff' },
+      { label: 'C++ C++',        color: '#00599C' },
+    ];
+
+    const N = techs.length;
+    const points = techs.map((t, i) => {
+      const phi   = Math.acos(-1 + (2 * i) / N);
+      const theta = Math.sqrt(N * Math.PI) * phi;
+      return { ...t, phi, theta, scale: 1 };
     });
 
-    /* ── Arrow buttons ── */
-    arrowUp?.addEventListener('click',   () => goTo(currentIdx - 1));
-    arrowDown?.addEventListener('click', () => goTo(currentIdx + 1));
+    let W, H, cx, cy, R, rot = 0;
+    function resize() {
+      W = canvas.offsetWidth;
+      H = canvas.offsetHeight;
+      canvas.width  = W * window.devicePixelRatio;
+      canvas.height = H * window.devicePixelRatio;
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+      cx = W / 2; cy = H / 2;
+      R  = Math.min(W, H) * 0.38;
+    }
+    resize();
+    window.addEventListener('resize', resize);
 
-    /* ── Keyboard navigation ── */
-    document.addEventListener('keydown', e => {
-        if (e.key === 'ArrowDown' || e.key === 'PageDown') { e.preventDefault(); goTo(currentIdx + 1); }
-        if (e.key === 'ArrowUp'   || e.key === 'PageUp'  ) { e.preventDefault(); goTo(currentIdx - 1); }
-        if (e.key === 'Home') { e.preventDefault(); goTo(0); }
-        if (e.key === 'End')  { e.preventDefault(); goTo(slides.length - 1); }
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      rot += 0.004;
+
+      // Sort by z for painter's algorithm
+      const projected = points.map(p => {
+        const x3d = R * Math.sin(p.phi) * Math.cos(p.theta + rot);
+        const y3d = R * Math.cos(p.phi);
+        const z3d = R * Math.sin(p.phi) * Math.sin(p.theta + rot);
+        const scale = (z3d + R * 1.5) / (R * 2.5);
+        return { ...p, px: cx + x3d, py: cy + y3d, z3d, scale };
+      }).sort((a, b) => a.z3d - b.z3d);
+
+      projected.forEach(p => {
+        const alpha = 0.4 + p.scale * 0.6;
+        const sz    = 8 + p.scale * 10;
+
+        // Draw dot
+        ctx.beginPath();
+        ctx.arc(p.px, p.py, sz * 0.25, 0, Math.PI * 2);
+        ctx.fillStyle = p.color + Math.round(alpha * 255).toString(16).padStart(2, '0');
+        ctx.fill();
+
+        // Draw label
+        ctx.font = `${Math.round(10 + p.scale * 4)}px 'JetBrains Mono', monospace`;
+        ctx.fillStyle = `rgba(240,240,240,${alpha * 0.9})`;
+        ctx.textAlign = 'center';
+        ctx.fillText(p.label, p.px, p.py + sz * 0.4 + 14);
+      });
+
+      requestAnimationFrame(draw);
+    }
+    draw();
+  }
+  initSkillsSphere();
+
+  /* ════════════════════════════════════════════
+     13. GSAP SCROLL ANIMATIONS
+  ════════════════════════════════════════════ */
+  function initAnimations() {
+    if (typeof gsap === 'undefined') return;
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Hero scroll hint
+    gsap.to('.hero-scroll-hint', {
+      opacity: 0,
+      scrollTrigger: { trigger: '#hero', start: 'top top', end: '+=200', scrub: true }
     });
 
-    /* ── Init first slide ── */
-    setActive(0);
-}
+    // About section title
+    gsap.fromTo('#about .section-title',
+      { opacity: 0, y: 40 },
+      { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out',
+        scrollTrigger: { trigger: '#about', start: 'top 80%' }
+      }
+    );
 
-main();
+    // Skills sphere scale
+    gsap.fromTo('#skillsSphereWrap',
+      { opacity: 0, scale: 0.7 },
+      { opacity: 1, scale: 1, duration: 1, ease: 'back.out(1.5)',
+        scrollTrigger: { trigger: '#skills', start: 'top 70%' }
+      }
+    );
 
+    // Skills title
+    gsap.fromTo('#skills .section-title',
+      { opacity: 0, y: 40 },
+      { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out',
+        scrollTrigger: { trigger: '#skills', start: 'top 80%' }
+      }
+    );
 
+    // Certs title
+    gsap.fromTo('#certs .section-title',
+      { opacity: 0, y: 40 },
+      { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out',
+        scrollTrigger: { trigger: '#certs', start: 'top 80%' }
+      }
+    );
+
+    // Resume title
+    gsap.fromTo('#resume .section-title',
+      { opacity: 0, y: 40 },
+      { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out',
+        scrollTrigger: { trigger: '#resume', start: 'top 80%' }
+      }
+    );
+
+    // Contact title
+    gsap.fromTo('#contact .section-title',
+      { opacity: 0, y: 40 },
+      { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out',
+        scrollTrigger: { trigger: '#contact', start: 'top 80%' }
+      }
+    );
+
+    // Contact left text
+    gsap.fromTo('.contact-left',
+      { opacity: 0, x: -40 },
+      { opacity: 1, x: 0, duration: 0.9, ease: 'power2.out',
+        scrollTrigger: { trigger: '#contact', start: 'top 75%' }
+      }
+    );
+
+    // Contact right
+    gsap.fromTo('.contact-right',
+      { opacity: 0, x: 40 },
+      { opacity: 1, x: 0, duration: 0.9, ease: 'power2.out', delay: 0.15,
+        scrollTrigger: { trigger: '#contact', start: 'top 75%' }
+      }
+    );
+  }
+
+  /* ════════════════════════════════════════════
+     14. ANCHOR SCROLL — hero scroll hint
+  ════════════════════════════════════════════ */
+  document.querySelector('.hero-scroll-hint')?.addEventListener('click', () => {
+    const about = document.getElementById('about');
+    if (about) {
+      if (lenis) lenis.scrollTo(about, { duration: 1.4 });
+      else about.scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+
+  /* ════════════════════════════════════════════
+     15. COPY EMAIL ON CLICK
+  ════════════════════════════════════════════ */
+  const emailEl = document.getElementById('contact-email');
+  if (emailEl) {
+    emailEl.addEventListener('click', (e) => {
+      e.preventDefault();
+      navigator.clipboard.writeText('surenderchoudhary07072004@gmail.com').then(() => {
+        const orig = emailEl.textContent;
+        emailEl.textContent = '✓ Copied!';
+        emailEl.style.color = 'var(--green)';
+        setTimeout(() => {
+          emailEl.textContent = orig;
+          emailEl.style.color = '';
+        }, 2000);
+      }).catch(() => {
+        window.location.href = 'mailto:surenderchoudhary07072004@gmail.com';
+      });
+    });
+  }
+
+  /* ════════════════════════════════════════════
+     16. PAGE VISIBILITY — pause galaxy when hidden
+  ════════════════════════════════════════════ */
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden && lenis) lenis.stop();
+    else if (lenis) lenis.start();
+  });
+
+  /* ════════════════════════════════════════════
+     17. INITIAL STATE SETUP
+  ════════════════════════════════════════════ */
+  showSlide(0, true);
+  projArrowUp.style.opacity = '0.3';
+
+}); // end DOMContentLoaded
