@@ -672,4 +672,159 @@ document.addEventListener('DOMContentLoaded', () => {
   showSlide(0, true);
   projArrowUp.style.opacity = '0.3';
 
+  /* ════════════════════════════════════════════
+     18. BYTE — SPEAKING ROBOT GUIDE
+  ════════════════════════════════════════════ */
+  const rGuide  = document.getElementById('rGuide');
+  const rBubble = document.getElementById('rBubble');
+  const rText   = document.getElementById('rText');
+  const rChar   = document.getElementById('rChar');
+  const rMuteBtn = document.getElementById('rMute');
+  const rCloseBtn = document.getElementById('rClose');
+
+  // ── Section scripts (what Byte says on each section) ──
+  const BYTE_SCRIPTS = {
+    hero: "Hey there! I'm Byte 👋 — Surender's personal AI guide. Welcome to his award-winning portfolio! Surender is a Data Scientist, Machine Learning Engineer, and Full-Stack Developer currently in his 7th semester of B.Tech AI and Data Science at MITRC. Scroll down and I'll guide you through everything!",
+    about: "Great, you're on the About section! Surender is a passionate AI and Data Science student from MITRC, Alwar. He specializes in Machine Learning, Computer Vision, and Full-Stack Web Development. He's seeking internship and job opportunities, and he's currently open to exciting collaborations. He loves building things that blend intelligence with beautiful interfaces!",
+    skills: "Now we're in the Skills section! Surender's tech arsenal is seriously impressive. He codes in Python, JavaScript, and C++. On the AI side, he uses TensorFlow, PyTorch, scikit-learn, and OpenCV. For web development, he's proficient in React, Node.js, Express, and MongoDB. He's a full-spectrum engineer across three domains — Machine Learning, Computer Vision, and Full-Stack!",
+    projects: "Welcome to Surender's Projects! He has built 5 featured projects. First is TaskFlow — a full-stack MERN task manager with Kanban boards. Second is PlayStore Pulse — an ML app predicting app ratings using Random Forest. Third is an Emotion Classifier using YOLOv8 and PyTorch with real-time face detection. Fourth is a Hand Gesture Virtual Mouse using MediaPipe for touchless control. And fifth is a Dual-Model Text Summarizer using transformer models. Scroll to explore each one!",
+    certs: "These are Surender's Certifications! He completed a Data Science Internship at CODSOFT, where he worked on NLP and machine learning projects using Python and scikit-learn. He also completed a Full-Stack MERN Internship at Web Stack Academy, building complete web applications with React, Node.js, and MongoDB. Both certifications demonstrate his real-world experience!",
+    resume: "Here's Surender's Resume section! You can download his complete resume with one click. It includes his full education background at MITRC Alwar, his internship experiences at CODSOFT and Web Stack Academy, all five of his major projects, and his complete tech skill set. Don't miss it!",
+    contact: "You've reached the Contact section — the end of the tour! If you'd like to work with Surender, connect with him on GitHub at Surender 7 0 7, on LinkedIn, or drop him an email. He's actively looking for internship and job opportunities in AI, Machine Learning, and Full-Stack development. Don't be a stranger — say hello!"
+  };
+
+  let robotMuted    = false;
+  let robotClosed   = false;
+  let currentUtter  = null;
+  let activeSec     = 'hero';
+  let spokenSections = new Set();
+  let typeTimer     = null;
+
+  // ── Voice: pick best male voice ──
+  function getMaleVoice() {
+    const voices = window.speechSynthesis.getVoices();
+    // Prefer UK / US male voices
+    const preferred = ['Google UK English Male', 'Microsoft David Desktop', 'Microsoft Mark Desktop',
+                       'Google US English', 'en-GB', 'en-US'];
+    for (const name of preferred) {
+      const v = voices.find(v => v.name.includes(name) || v.lang === name);
+      if (v) return v;
+    }
+    // Fallback: any English male-sounding voice
+    return voices.find(v => v.lang.startsWith('en') && !v.name.toLowerCase().includes('female'))
+      || voices[0] || null;
+  }
+
+  // ── Typewriter effect ──
+  function typeWrite(msg, onDone) {
+    clearTimeout(typeTimer);
+    rText.textContent = '';
+    let i = 0;
+    const words = msg.split(' ');
+    function nextWord() {
+      if (i < words.length) {
+        rText.textContent += (i === 0 ? '' : ' ') + words[i];
+        i++;
+        typeTimer = setTimeout(nextWord, 65);
+      } else { if (onDone) onDone(); }
+    }
+    nextWord();
+  }
+
+  // ── Speak a message ──
+  function byteSpeak(msg) {
+    if (robotClosed) return;
+    // Show bubble
+    rBubble.classList.remove('r-hidden');
+    // Typewriter
+    typeWrite(msg);
+    // Stop any prior speech
+    window.speechSynthesis.cancel();
+    if (robotMuted) {
+      rChar.classList.remove('r-speaking');
+      return;
+    }
+    const utter = new SpeechSynthesisUtterance(msg);
+    utter.rate   = 0.95;
+    utter.pitch  = 0.85;
+    utter.volume = 1;
+    const voice = getMaleVoice();
+    if (voice) utter.voice = voice;
+    utter.onstart = () => rChar.classList.add('r-speaking');
+    utter.onend   = () => rChar.classList.remove('r-speaking');
+    utter.onerror = () => rChar.classList.remove('r-speaking');
+    currentUtter = utter;
+    // Small delay to let voices load
+    setTimeout(() => window.speechSynthesis.speak(utter), 200);
+  }
+
+  // ── Section change handler ──
+  function byteSectionChange(secId) {
+    if (secId === activeSec && spokenSections.has(secId)) return;
+    activeSec = secId;
+    if (spokenSections.has(secId)) return; // only speak once per section per visit
+    spokenSections.add(secId);
+    const msg = BYTE_SCRIPTS[secId];
+    if (msg) byteSpeak(msg);
+  }
+
+  // ── Watch active section via IntersectionObserver ──
+  const robotObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.dataset.section;
+        if (id) byteSectionChange(id);
+      }
+    });
+  }, { threshold: 0.4 });
+
+  document.querySelectorAll('.section[data-section]').forEach(s => robotObserver.observe(s));
+
+  // ── Mute / Unmute ──
+  rMuteBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    robotMuted = !robotMuted;
+    rMuteBtn.textContent = robotMuted ? '🔇' : '🔊';
+    if (robotMuted) {
+      window.speechSynthesis.cancel();
+      rChar.classList.remove('r-speaking');
+    } else {
+      // Re-speak current section
+      spokenSections.delete(activeSec);
+      byteSectionChange(activeSec);
+    }
+  });
+
+  // ── Close guide ──
+  rCloseBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    robotClosed = true;
+    window.speechSynthesis.cancel();
+    rChar.classList.remove('r-speaking');
+    rGuide.classList.add('r-hidden');
+  });
+
+  // ── Click robot to replay current section ──
+  rChar.addEventListener('click', () => {
+    if (robotClosed) return;
+    spokenSections.delete(activeSec);
+    byteSectionChange(activeSec);
+  });
+  rChar.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      spokenSections.delete(activeSec);
+      byteSectionChange(activeSec);
+    }
+  });
+
+  // ── Load voices asynchronously ──
+  window.speechSynthesis.onvoiceschanged = () => { /* voices now available */ };
+
+  // ── Greet after preloader finishes (hero speech) ──
+  // Wait 2s for preloader, then speak hero
+  setTimeout(() => {
+    if (!robotClosed) byteSectionChange('hero');
+  }, 3200);
+
 }); // end DOMContentLoaded

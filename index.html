@@ -663,6 +663,36 @@
 
     </main>
 
+    <!-- ░░ ROBOT GUIDE — BYTE ░░ -->
+    <div class="r-guide" id="rGuide" aria-live="polite" aria-label="Byte, your portfolio guide">
+        <!-- Speech bubble -->
+        <div class="r-bubble" id="rBubble">
+            <button class="r-mute" id="rMute" title="Mute / Unmute voice">🔊</button>
+            <button class="r-close" id="rClose" title="Close guide" aria-label="Close robot guide">✕</button>
+            <p id="rText">Hi! I'm <strong style="color:var(--gold)">Byte</strong> 👋 — Surender's AI guide. I'll explain each section as you scroll!</p>
+        </div>
+        <!-- Robot character -->
+        <div class="r-char" id="rChar" role="button" tabindex="0" title="Click me to hear again!">
+            <div class="r-ant"><span class="r-ant-ball"></span></div>
+            <div class="r-head">
+                <div class="r-visor">
+                    <span class="r-eye"><span class="r-pupil"></span></span>
+                    <span class="r-eye"><span class="r-pupil"></span></span>
+                </div>
+                <span class="r-smile" id="rMouth"></span>
+            </div>
+            <div class="r-body">
+                <div class="r-leds"><span></span><span></span><span></span></div>
+                <span class="r-arm r-al"></span>
+                <span class="r-arm r-ar"></span>
+            </div>
+            <div class="r-feet">
+                <span class="r-foot"></span>
+                <span class="r-foot"></span>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
