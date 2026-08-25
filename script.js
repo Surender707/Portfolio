@@ -31,112 +31,296 @@ document.addEventListener('DOMContentLoaded', () => {
   }, 30);
 
   /* ════════════════════════════════════════════
-     2. THREE.JS GALAXY / BLACK HOLE BACKGROUND
+     2. THREE.JS — SPACE SCENE
+        · Moving 3D Stars
+        · Procedural Spaceship w/ Engine Glow
+        · Galaxy
   ════════════════════════════════════════════ */
   function initGalaxy() {
-    const canvas   = document.getElementById('galaxyCanvas');
+    const canvas = document.getElementById('galaxyCanvas');
     if (!canvas || typeof THREE === 'undefined') return;
-    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: false });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    // ── Detect low-power device ──
+    const isMobile = window.matchMedia('(max-width: 768px)').matches ||
+                     /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    const DPR = Math.min(window.devicePixelRatio, isMobile ? 1 : 2);
+
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: !isMobile, powerPreference: 'high-performance' });
+    renderer.setPixelRatio(DPR);
     renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.shadowMap.enabled = false;
 
     const scene  = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(0, 2, 4);
+    const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 500);
+    camera.position.set(0, 2.5, 5);
     camera.lookAt(0, 0, 0);
 
-    // Galaxy parameters
-    const params = {
-      count:           80000,
-      size:            0.004,
-      radius:          6,
-      branches:        3,
-      spin:            1.2,
-      randomness:      0.25,
-      randomnessPower: 3,
-      insideColor:     '#d4a853',  // warm gold
-      outsideColor:    '#1a2a5c',  // deep navy
-    };
+    // ── Lighting (for spaceship mesh shading) ──
+    const ambientLight = new THREE.AmbientLight(0x111133, 0.8);
+    scene.add(ambientLight);
+    const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
+    dirLight.position.set(6, 10, 6);
+    scene.add(dirLight);
+    const fillLight = new THREE.DirectionalLight(0x0033ff, 0.4);
+    fillLight.position.set(-6, -4, -6);
+    scene.add(fillLight);
 
-    let galaxyGeometry = null;
-    let galaxyMaterial = null;
-    let galaxy         = null;
+    // ══════════════════════════════════════════
+    // A. STARFIELD — 15,000 coloured stars
+    // ══════════════════════════════════════════
+    const STAR_COUNT = isMobile ? 7000 : 15000;
+    const starGeo    = new THREE.BufferGeometry();
+    const starPos    = new Float32Array(STAR_COUNT * 3);
+    const starCol    = new Float32Array(STAR_COUNT * 3);
+    // Colour palette: white, cool-blue, warm-yellow, icy-cyan, reddish
+    const palette = [
+      [1.0, 1.0, 1.0], [0.8, 0.9, 1.0], [1.0, 0.95, 0.75],
+      [0.65, 0.85, 1.0], [1.0, 0.80, 0.72],
+    ];
 
-    function generateGalaxy() {
-      if (galaxy) { scene.remove(galaxy); galaxyGeometry.dispose(); galaxyMaterial.dispose(); }
-
-      galaxyGeometry = new THREE.BufferGeometry();
-      const positions = new Float32Array(params.count * 3);
-      const colors    = new Float32Array(params.count * 3);
-
-      const colorInside  = new THREE.Color(params.insideColor);
-      const colorOutside = new THREE.Color(params.outsideColor);
-
-      for (let i = 0; i < params.count; i++) {
-        const i3 = i * 3;
-        const radius     = Math.random() * params.radius;
-        const spinAngle  = radius * params.spin;
-        const branchAngle = (i % params.branches) / params.branches * Math.PI * 2;
-
-        const rx = Math.pow(Math.random(), params.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * params.randomness * radius;
-        const ry = Math.pow(Math.random(), params.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * params.randomness * radius * 0.3;
-        const rz = Math.pow(Math.random(), params.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * params.randomness * radius;
-
-        positions[i3]     = Math.cos(branchAngle + spinAngle) * radius + rx;
-        positions[i3 + 1] = ry;
-        positions[i3 + 2] = Math.sin(branchAngle + spinAngle) * radius + rz;
-
-        const mixedColor = colorInside.clone().lerp(colorOutside, radius / params.radius);
-        colors[i3]     = mixedColor.r;
-        colors[i3 + 1] = mixedColor.g;
-        colors[i3 + 2] = mixedColor.b;
-      }
-
-      galaxyGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-      galaxyGeometry.setAttribute('color',    new THREE.BufferAttribute(colors, 3));
-
-      galaxyMaterial = new THREE.PointsMaterial({
-        size:            params.size,
-        sizeAttenuation: true,
-        depthWrite:      false,
-        blending:        THREE.AdditiveBlending,
-        vertexColors:    true,
-      });
-
-      galaxy = new THREE.Points(galaxyGeometry, galaxyMaterial);
-      scene.add(galaxy);
+    for (let i = 0; i < STAR_COUNT; i++) {
+      // Random point on sphere shell, r = 30-180
+      const r   = 30 + Math.random() * 150;
+      const th  = Math.random() * Math.PI * 2;
+      const ph  = Math.acos(2 * Math.random() - 1);
+      starPos[i * 3]     = r * Math.sin(ph) * Math.cos(th);
+      starPos[i * 3 + 1] = r * Math.sin(ph) * Math.sin(th);
+      starPos[i * 3 + 2] = r * Math.cos(ph);
+      const c = palette[Math.floor(Math.random() * palette.length)];
+      starCol[i * 3]     = c[0];
+      starCol[i * 3 + 1] = c[1];
+      starCol[i * 3 + 2] = c[2];
     }
-    generateGalaxy();
+    starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+    starGeo.setAttribute('color',    new THREE.BufferAttribute(starCol, 3));
+    const starMat = new THREE.PointsMaterial({
+      size: isMobile ? 0.20 : 0.14,
+      sizeAttenuation: true,
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.88,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+    });
+    const starField = new THREE.Points(starGeo, starMat);
+    scene.add(starField);
 
-    // Mouse parallax
+    // ══════════════════════════════════════════
+    // B. GALAXY — gold/navy spiral arms
+    // ══════════════════════════════════════════
+    const gParams = {
+      count: isMobile ? 35000 : 80000, size: 0.004,
+      radius: 6, branches: 3, spin: 1.2,
+      randomness: 0.25, randomnessPower: 3,
+    };
+    const galGeo = new THREE.BufferGeometry();
+    const galPos = new Float32Array(gParams.count * 3);
+    const galCol = new Float32Array(gParams.count * 3);
+    const cIn    = new THREE.Color('#d4a853');
+    const cOut   = new THREE.Color('#1a2a5c');
+    for (let i = 0; i < gParams.count; i++) {
+      const i3 = i * 3;
+      const r  = Math.random() * gParams.radius;
+      const sa = r * gParams.spin;
+      const ba = (i % gParams.branches) / gParams.branches * Math.PI * 2;
+      const rp = gParams.randomnessPower;
+      const rx = Math.pow(Math.random(), rp) * (Math.random() < .5 ? 1 : -1) * gParams.randomness * r;
+      const ry = Math.pow(Math.random(), rp) * (Math.random() < .5 ? 1 : -1) * gParams.randomness * r * .3;
+      const rz = Math.pow(Math.random(), rp) * (Math.random() < .5 ? 1 : -1) * gParams.randomness * r;
+      galPos[i3]   = Math.cos(ba + sa) * r + rx;
+      galPos[i3+1] = ry;
+      galPos[i3+2] = Math.sin(ba + sa) * r + rz;
+      const mc = cIn.clone().lerp(cOut, r / gParams.radius);
+      galCol[i3] = mc.r; galCol[i3+1] = mc.g; galCol[i3+2] = mc.b;
+    }
+    galGeo.setAttribute('position', new THREE.BufferAttribute(galPos, 3));
+    galGeo.setAttribute('color',    new THREE.BufferAttribute(galCol, 3));
+    const galMat = new THREE.PointsMaterial({
+      size: gParams.size, sizeAttenuation: true,
+      depthWrite: false, blending: THREE.AdditiveBlending, vertexColors: true,
+    });
+    const galaxy = new THREE.Points(galGeo, galMat);
+    scene.add(galaxy);
+
+    // ══════════════════════════════════════════
+    // C. SPACESHIP — procedural geometry
+    // ══════════════════════════════════════════
+    function buildSpaceship() {
+      const ship = new THREE.Group();
+
+      // Material palette
+      const mDark   = new THREE.MeshPhongMaterial({ color: 0x080820, shininess: 120, specular: 0x2244aa });
+      const mAccent = new THREE.MeshPhongMaterial({ color: 0x00d4ff, shininess: 220, specular: 0x88eeff, emissive: 0x001a33 });
+      const mGold   = new THREE.MeshPhongMaterial({ color: 0xd4a853, shininess: 160, emissive: 0x221100 });
+      const mGlass  = new THREE.MeshPhongMaterial({ color: 0x001144, shininess: 260, specular: 0x4488ff, transparent: true, opacity: 0.75, side: THREE.DoubleSide });
+      const mGlowG  = new THREE.MeshBasicMaterial({ color: 0xd4a853 });
+      const mGlowB  = new THREE.MeshBasicMaterial({ color: 0x00aaff });
+
+      // ── Fuselage ──
+      const fuselageGeo = new THREE.CylinderGeometry(0.09, 0.16, 1.4, 10);
+      const fuselage = new THREE.Mesh(fuselageGeo, mDark);
+      fuselage.rotation.z = Math.PI / 2; // point along +X
+      ship.add(fuselage);
+
+      // ── Nose ──
+      const nose = new THREE.Mesh(new THREE.ConeGeometry(0.09, 0.42, 10), mAccent);
+      nose.rotation.z = Math.PI / 2;
+      nose.position.x = 0.92;
+      ship.add(nose);
+
+      // ── Cockpit dome ──
+      const cockpit = new THREE.Mesh(
+        new THREE.SphereGeometry(0.11, 12, 12, 0, Math.PI * 2, 0, Math.PI * 0.5),
+        mGlass
+      );
+      cockpit.rotation.z = Math.PI / 2;
+      cockpit.position.set(0.38, 0.09, 0);
+      ship.add(cockpit);
+
+      // ── Wings (swept-back, both sides) ──
+      const wingGeo = new THREE.BoxGeometry(0.72, 0.025, 0.55);
+      const makeWing = (side) => {
+        const wing = new THREE.Mesh(wingGeo, mDark);
+        wing.position.set(-0.12, 0, side * 0.36);
+        wing.rotation.y = side * -0.22; // sweep angle
+        ship.add(wing);
+        // Blue accent stripe on wing edge
+        const stripe = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.03, 0.03), mAccent);
+        stripe.position.set(0, 0, side * -0.265);
+        wing.add(stripe);
+      };
+      makeWing(1);
+      makeWing(-1);
+
+      // ── Engine pods ──
+      const podGeo = new THREE.CylinderGeometry(0.055, 0.08, 0.55, 8);
+      const makePod = (side) => {
+        const pod = new THREE.Mesh(podGeo, mDark);
+        pod.rotation.z = Math.PI / 2;
+        pod.position.set(-0.32, 0, side * 0.36);
+        ship.add(pod);
+        // Engine nozzle ring
+        const ring = new THREE.Mesh(new THREE.TorusGeometry(0.06, 0.012, 8, 16), mAccent);
+        ring.rotation.y = Math.PI / 2;
+        ring.position.set(-0.585, 0, side * 0.36);
+        ship.add(ring);
+        // Glow sphere
+        const glowSphere = new THREE.Mesh(new THREE.SphereGeometry(0.06, 8, 8), mGlowG);
+        glowSphere.position.set(-0.62, 0, side * 0.36);
+        ship.add(glowSphere);
+        return glowSphere;
+      };
+      const glowL = makePod(1);
+      const glowR = makePod(-1);
+
+      // ── Main centre engine ──
+      const mainRing = new THREE.Mesh(new THREE.TorusGeometry(0.09, 0.018, 8, 20), mGold);
+      mainRing.rotation.y = Math.PI / 2;
+      mainRing.position.x = -0.75;
+      ship.add(mainRing);
+
+      const mainGlow = new THREE.Mesh(new THREE.SphereGeometry(0.08, 8, 8), mGlowG);
+      mainGlow.position.x = -0.76;
+      ship.add(mainGlow);
+
+      // ── Nose light pip ──
+      const nosePip = new THREE.Mesh(new THREE.SphereGeometry(0.025, 6, 6), mGlowB);
+      nosePip.position.x = 1.33;
+      ship.add(nosePip);
+
+      // ── Lights ──
+      const engineLight = new THREE.PointLight(0xd4a853, 4, 5);
+      engineLight.position.set(-0.9, 0, 0);
+      ship.add(engineLight);
+      const noseLight = new THREE.PointLight(0x00aaff, 2, 3);
+      noseLight.position.set(1.3, 0, 0);
+      ship.add(noseLight);
+
+      return { ship, glowL, glowR, mainGlow, nosePip, engineLight };
+    }
+
+    const { ship, glowL, glowR, mainGlow, nosePip, engineLight } = buildSpaceship();
+    // Scale up so it's clearly visible
+    ship.scale.setScalar(isMobile ? 0.55 : 0.80);
+    scene.add(ship);
+
+    // ── Mouse parallax ──
     let mouseX = 0, mouseY = 0;
     window.addEventListener('mousemove', (e) => {
-      mouseX = (e.clientX / window.innerWidth - 0.5) * 0.4;
+      mouseX = (e.clientX / window.innerWidth  - 0.5) * 0.4;
       mouseY = (e.clientY / window.innerHeight - 0.5) * 0.2;
     });
 
-    // Render loop
+    // ── Animation loop ──
     const clock = new THREE.Clock();
+    let shipT = 0;
+    let paused = false;
+    document.addEventListener('visibilitychange', () => { paused = document.hidden; });
+
+    const _v3 = new THREE.Vector3();
     function animate() {
+      if (paused) { requestAnimationFrame(animate); return; }
       const elapsed = clock.getElapsedTime();
-      if (galaxy) {
-        galaxy.rotation.y = elapsed * 0.04;
-        galaxy.rotation.x += (mouseY * 0.2 - galaxy.rotation.x) * 0.02;
-        galaxy.position.x += (mouseX * 0.3 - galaxy.position.x) * 0.02;
-      }
+      const dt      = clock.getDelta ? 0.016 : 0.016; // ~60fps constant
+
+      // ── Galaxy rotation ──
+      galaxy.rotation.y = elapsed * 0.04;
+      galaxy.rotation.x += (mouseY * 0.18 - galaxy.rotation.x) * 0.02;
+      galaxy.position.x += (mouseX * 0.28 - galaxy.position.x) * 0.02;
+
+      // ── Starfield — slow drift + twinkle ──
+      starField.rotation.y  += 0.00008;
+      starField.rotation.x  += 0.00004;
+      starMat.opacity = 0.75 + Math.sin(elapsed * 1.6) * 0.13;
+
+      // ── Spaceship orbit path ──
+      shipT += isMobile ? 0.003 : 0.004;
+      const OR = 10, OZ = 7; // orbit radii
+      const sx = Math.cos(shipT) * OR;
+      const sz = Math.sin(shipT) * OZ;
+      const sy = Math.sin(shipT * 1.4) * 3.2;
+
+      ship.position.set(sx, sy, sz);
+
+      // Point ship in direction of travel (tangent of orbit)
+      const NT  = shipT + 0.015;
+      const tx  = Math.cos(NT) * OR;
+      const tz  = Math.sin(NT) * OZ;
+      const ty  = Math.sin(NT * 1.4) * 3.2;
+      _v3.set(tx, ty, tz);
+      ship.lookAt(_v3);
+      // lookAt makes -Z face target; ship points along +X so correct:
+      ship.rotateY(-Math.PI / 2);
+
+      // Subtle banking
+      ship.rotation.z = Math.sin(shipT * 2) * 0.25;
+
+      // ── Engine glow pulse ──
+      const pulse = 0.82 + Math.sin(elapsed * 9) * 0.18;
+      glowL.scale.setScalar(pulse);
+      glowR.scale.setScalar(pulse);
+      mainGlow.scale.setScalar(0.9 + Math.sin(elapsed * 7 + 1) * 0.20);
+      nosePip.scale.setScalar(0.7 + Math.sin(elapsed * 4) * 0.3);
+      engineLight.intensity = 3.5 + Math.sin(elapsed * 9) * 1.0;
+
       renderer.render(scene, camera);
       requestAnimationFrame(animate);
     }
     animate();
 
-    // Resize
-    window.addEventListener('resize', () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
+    // ── Responsive resize ──
+    function onResize() {
+      const W = window.innerWidth;
+      const H = window.innerHeight;
+      camera.aspect = W / H;
       camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1 : 2));
+      renderer.setSize(W, H);
+    }
+    window.addEventListener('resize', onResize);
   }
   initGalaxy();
+
 
   /* ════════════════════════════════════════════
      3. LENIS SMOOTH SCROLL + GSAP INTEGRATION

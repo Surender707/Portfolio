@@ -1885,3 +1885,129 @@ body.cursor-hover .cursor-ring { width: 56px; height: 56px; border-color: var(--
   from { opacity: 0; transform: scale(0.6) translateY(16px); transform-origin: bottom right; }
   to   { opacity: 1; transform: scale(1) translateY(0); }
 }
+
+/* ══════════════════════════════════════
+   STABILITY & DEVICE SAFETY LAYER
+   Covers: notched phones · landscape ·
+   wide desktop · reduced-motion · print
+══════════════════════════════════════ */
+
+/* Lock horizontal scroll on EVERY element */
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+/* Safe-area insets for iPhone X+ notch / home-bar */
+@supports (padding: max(0px)) {
+  .navbar {
+    padding-left:  max(28px, env(safe-area-inset-left));
+    padding-right: max(28px, env(safe-area-inset-right));
+  }
+  .hero-stats-bar {
+    padding-left:  max(20px, env(safe-area-inset-left));
+    padding-right: max(20px, env(safe-area-inset-right));
+  }
+  .section-container {
+    padding-left:  max(24px, env(safe-area-inset-left));
+    padding-right: max(24px, env(safe-area-inset-right));
+  }
+  .footer {
+    padding-bottom: max(20px, env(safe-area-inset-bottom));
+  }
+  .r-guide {
+    bottom: max(16px, env(safe-area-inset-bottom));
+    right:  max(14px, env(safe-area-inset-right));
+  }
+}
+
+/* All headings break cleanly on narrow screens */
+h1, h2, h3, h4, h5, h6 {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+/* Global container max-width guard */
+.section-container,
+.hero-container,
+.nav-container {
+  max-width: min(1400px, 100%);
+}
+
+/* Sections: never force a min-height that breaks mobile */
+.s-about, .s-skills, .s-certs, .s-resume, .s-contact {
+  min-height: auto;
+}
+
+/* Avatar: rings can overflow visually but not break layout */
+.hero-avatar-wrap {
+  flex-shrink: 0;
+  overflow: visible;
+}
+
+/* Card overflow guards */
+.bento-card      { min-height: 0; overflow: hidden; }
+.cert-details,
+.cert-skills     { overflow: hidden; }
+.skill-tags      { overflow: hidden; }
+.social-link     { min-width: 0; }
+.social-name,
+.social-handle   { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rb-item-title,
+.rb-item-sub,
+.rb-item-desc    { overflow-wrap: break-word; }
+.contact-email-val { overflow-wrap: anywhere; }
+
+/* ── Landscape phone (h < 500px) ── */
+@media (max-height: 500px) and (orientation: landscape) {
+  :root { --nav-h: 52px; }
+  .s-hero { min-height: auto; padding-top: var(--nav-h); }
+  .hero-container { padding: 12px 24px; gap: 16px; flex-direction: row; text-align: left; }
+  .hero-left { align-items: flex-start; }
+  .hero-right { display: none; }
+  .hero-name { font-size: clamp(1.8rem, 6vw, 3rem); }
+  .hero-stats-bar { display: none; }
+  .hero-scroll-hint { display: none; }
+  .s-about, .s-skills, .s-certs, .s-resume { padding: 40px 0; }
+  .s-contact { padding: 40px 0 0; }
+  .r-guide { display: none; }
+  .dot-nav { display: none; }
+}
+
+/* ── Large desktop (≥ 1440px): cap & centre ── */
+@media (min-width: 1440px) {
+  .hero-container,
+  .section-container { max-width: 1380px; margin-left: auto; margin-right: auto; }
+  .hero-stats-bar { max-width: 1380px; margin-left: auto; margin-right: auto; }
+}
+
+/* ── Ultra-wide (≥ 2560px) ── */
+@media (min-width: 2560px) {
+  :root { --nav-h: 88px; }
+  body { font-size: 18px; }
+  .hero-name    { font-size: clamp(7rem, 8vw, 12rem); }
+  .section-title { font-size: clamp(4rem, 5vw, 7rem); }
+}
+
+/* ── Reduced-motion: respect OS accessibility setting ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration:        0.001ms !important;
+    animation-iteration-count: 1       !important;
+    transition-duration:       0.001ms !important;
+    scroll-behavior:           auto    !important;
+  }
+  .cursor-dot, .cursor-ring { display: none !important; }
+  #galaxyCanvas { opacity: 0.3; } /* keep bg, stop animation visually */
+}
+
+/* ── Print styles ── */
+@media print {
+  #galaxyCanvas, .noise-overlay, .cursor-dot, .cursor-ring,
+  .navbar, .dot-nav, .r-guide, #scrollProgress,
+  .hero-scroll-hint, .proj-sidenav, .proj-arrow { display: none !important; }
+  body  { background: #fff !important; color: #000 !important; cursor: auto; }
+  .section { break-inside: avoid; page-break-inside: avoid; }
+  a[href]::after { content: ' (' attr(href) ')'; font-size: 0.75em; color: #555; }
+}
