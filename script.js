@@ -425,23 +425,21 @@ document.addEventListener('DOMContentLoaded', () => {
   const cursorRing = document.getElementById('cursorRing');
   let cx = window.innerWidth / 2, cy = window.innerHeight / 2;
   let rx = cx, ry = cy;
-  let cursorVisible = false;
   // Only run cursor on non-touch devices
   const isTouch = window.matchMedia('(pointer: coarse)').matches;
 
   if (!isTouch) {
-    // Show cursor elements (they start hidden until first move)
+    // Set cursor:none on body via JS (CSS starts with cursor:none but this is the safety net)
+    document.body.style.cursor = 'none';
+
+    // Position cursor at screen center immediately
     cursorDot.style.opacity = '1';
     cursorRing.style.opacity = '1';
+    cursorDot.style.transform = `translate(calc(${cx}px - 50%), calc(${cy}px - 50%))`;
+    cursorRing.style.transform = `translate(calc(${rx}px - 50%), calc(${ry}px - 50%))`;
 
     document.addEventListener('mousemove', (e) => {
       cx = e.clientX; cy = e.clientY;
-      if (!cursorVisible) {
-        cursorVisible = true;
-        cursorDot.style.opacity = '1';
-        cursorRing.style.opacity = '1';
-      }
-      // Dot follows instantly (hardware-smooth)
       cursorDot.style.transform = `translate(calc(${cx}px - 50%), calc(${cy}px - 50%))`;
     });
   } else {
@@ -453,7 +451,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function animateRing() {
     if (!isTouch) {
-      // Ring follows with gentle lag (lerp 0.09 = silky smooth)
       rx += (cx - rx) * 0.09;
       ry += (cy - ry) * 0.09;
       cursorRing.style.transform = `translate(calc(${rx}px - 50%), calc(${ry}px - 50%))`;
@@ -621,7 +618,7 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ════════════════════════════════════════════
      10. SCROLL REVEAL (INTERSECTION OBSERVER)
   ════════════════════════════════════════════ */
-  const revealEls = document.querySelectorAll('.reveal-up, .reveal-left, .reveal-right, .bento-card, .cert-card, .skill-cat-card, .rb-item, .social-link, .resume-download-card, .resume-highlights');
+  const revealEls = document.querySelectorAll('.reveal-up, .reveal-left, .reveal-right, .bento-card, .cert-card, .skill-cat-card, .rb-item, .social-link, .resume-download-card, .resume-highlights, .resume-strengths, .resume-skills-cloud');
   const revealObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -646,7 +643,7 @@ document.addEventListener('DOMContentLoaded', () => {
       el.style.opacity = '0';
       el.style.transform = 'translateX(30px)';
       el.style.transition = `opacity 0.5s ${i * 0.1}s ease, transform 0.5s ${i * 0.1}s ease`;
-    } else if (el.matches('.rb-item, .resume-download-card, .resume-highlights')) {
+    } else if (el.matches('.rb-item, .resume-download-card, .resume-highlights, .resume-strengths, .resume-skills-cloud')) {
       el.style.opacity = '0';
       el.style.transform = 'translateY(20px)';
       el.style.transition = `opacity 0.5s ease, transform 0.5s ease`;
@@ -732,15 +729,11 @@ document.addEventListener('DOMContentLoaded', () => {
     ScrollTrigger.create({
       trigger: '#projects',
       start: 'top top',
-      end: `+=${(TOTAL_SLIDES) * 100}vh`,
-      pin: false,
-      scrub: 0.5,
+      end: 'bottom bottom',
       onUpdate: (self) => {
-        // Distribute slides evenly: each gets 1/TOTAL_SLIDES of the scroll
-        const p = self.progress; // 0 to 1
-        let idx;
-        if (p >= 0.99) idx = TOTAL_SLIDES - 1;
-        else idx = Math.floor(p * TOTAL_SLIDES);
+        // Distribute slides evenly across the 6*100vh section height
+        const p = Math.min(self.progress, 0.999);
+        const idx = Math.min(Math.floor(p * TOTAL_SLIDES), TOTAL_SLIDES - 1);
         if (idx !== currentSlide) showSlide(idx, true);
       }
     });
