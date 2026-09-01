@@ -423,17 +423,32 @@ document.addEventListener('DOMContentLoaded', () => {
   ════════════════════════════════════════════ */
   const cursorDot  = document.getElementById('cursorDot');
   const cursorRing = document.getElementById('cursorRing');
-  let cx = 0, cy = 0;
-  let rx = 0, ry = 0;
+  let cx = window.innerWidth / 2, cy = window.innerHeight / 2;
+  let rx = cx, ry = cy;
+  let cursorVisible = false;
   // Only run cursor on non-touch devices
   const isTouch = window.matchMedia('(pointer: coarse)').matches;
 
   if (!isTouch) {
+    // Show cursor elements (they start hidden until first move)
+    cursorDot.style.opacity = '1';
+    cursorRing.style.opacity = '1';
+
     document.addEventListener('mousemove', (e) => {
       cx = e.clientX; cy = e.clientY;
+      if (!cursorVisible) {
+        cursorVisible = true;
+        cursorDot.style.opacity = '1';
+        cursorRing.style.opacity = '1';
+      }
       // Dot follows instantly (hardware-smooth)
       cursorDot.style.transform = `translate(calc(${cx}px - 50%), calc(${cy}px - 50%))`;
     });
+  } else {
+    // Hide custom cursor on touch devices
+    cursorDot.style.display = 'none';
+    cursorRing.style.display = 'none';
+    document.body.style.cursor = 'auto';
   }
 
   function animateRing() {
@@ -717,9 +732,15 @@ document.addEventListener('DOMContentLoaded', () => {
     ScrollTrigger.create({
       trigger: '#projects',
       start: 'top top',
-      end: 'bottom bottom',
+      end: `+=${(TOTAL_SLIDES) * 100}vh`,
+      pin: false,
+      scrub: 0.5,
       onUpdate: (self) => {
-        const idx = Math.min(Math.floor(self.progress * TOTAL_SLIDES), TOTAL_SLIDES - 1);
+        // Distribute slides evenly: each gets 1/TOTAL_SLIDES of the scroll
+        const p = self.progress; // 0 to 1
+        let idx;
+        if (p >= 0.99) idx = TOTAL_SLIDES - 1;
+        else idx = Math.floor(p * TOTAL_SLIDES);
         if (idx !== currentSlide) showSlide(idx, true);
       }
     });
