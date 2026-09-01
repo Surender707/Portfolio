@@ -244,6 +244,45 @@ document.addEventListener('DOMContentLoaded', () => {
     ship.scale.setScalar(isMobile ? 0.55 : 0.80);
     scene.add(ship);
 
+    // ══════════════════════════════════════════
+    // D. SHOOTING STARS — fast-moving streaks
+    // ══════════════════════════════════════════
+    const SHOOT_COUNT = isMobile ? 3 : 6;
+    const shootGeo = new THREE.BufferGeometry();
+    const shootPos = new Float32Array(SHOOT_COUNT * 6); // 2 verts per line
+    shootGeo.setAttribute('position', new THREE.BufferAttribute(shootPos, 3));
+    const shootMat = new THREE.LineBasicMaterial({
+      color: 0xffffff, transparent: true, opacity: 0.6,
+      blending: THREE.AdditiveBlending, depthWrite: false,
+    });
+    const shootLines = new THREE.LineSegments(shootGeo, shootMat);
+    scene.add(shootLines);
+
+    // Each shooting star: position, velocity, life, maxLife
+    const shootStars = [];
+    function spawnShootStar() {
+      const angle = Math.random() * Math.PI * 2;
+      const elev = (Math.random() - 0.5) * Math.PI * 0.6;
+      const dist = 40 + Math.random() * 60;
+      const speed = 1.5 + Math.random() * 2.5;
+      return {
+        x: Math.cos(angle) * Math.cos(elev) * dist,
+        y: Math.sin(elev) * dist,
+        z: Math.sin(angle) * Math.cos(elev) * dist,
+        vx: -Math.cos(angle) * speed * 0.8,
+        vy: -Math.sin(elev) * speed * 0.3 - 0.5,
+        vz: -Math.sin(angle) * speed * 0.8,
+        life: 0,
+        maxLife: 40 + Math.random() * 80,
+        tailLen: 2.5 + Math.random() * 3,
+      };
+    }
+    for (let i = 0; i < SHOOT_COUNT; i++) {
+      const s = spawnShootStar();
+      s.life = Math.random() * s.maxLife; // stagger
+      shootStars.push(s);
+    }
+
     // ── Mouse parallax ──
     let mouseX = 0, mouseY = 0;
     window.addEventListener('mousemove', (e) => {
@@ -255,13 +294,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const clock = new THREE.Clock();
     let shipT = 0;
     let paused = false;
+    let lastFrame = 0;
     document.addEventListener('visibilitychange', () => { paused = document.hidden; });
 
     const _v3 = new THREE.Vector3();
-    function animate() {
+    function animate(now) {
       if (paused) { requestAnimationFrame(animate); return; }
+
+      // Frame budget: skip if less than 12ms since last frame (cap ~83fps)
+      if (now - lastFrame < 12) { requestAnimationFrame(animate); return; }
+      lastFrame = now;
+
       const elapsed = clock.getElapsedTime();
-      const dt      = clock.getDelta ? 0.016 : 0.016; // ~60fps constant
 
       // ── Galaxy rotation ──
       galaxy.rotation.y = elapsed * 0.04;
@@ -273,12 +317,38 @@ document.addEventListener('DOMContentLoaded', () => {
       starField.rotation.x  += 0.00004;
       starMat.opacity = 0.75 + Math.sin(elapsed * 1.6) * 0.13;
 
+      // ── Shooting stars update ──
+      const sAttr = shootGeo.attributes.position;
+      for (let i = 0; i < SHOOT_COUNT; i++) {
+        const s = shootStars[i];
+        s.life++;
+        if (s.life >= s.maxLife) {
+          shootStars[i] = spawnShootStar();
+          shootStars[i].life = 0;
+        }
+        const ss = shootStars[i];
+        ss.x += ss.vx;
+        ss.y += ss.vy;
+        ss.z += ss.vz;
+        // Head
+        sAttr.array[i * 6]     = ss.x;
+        sAttr.array[i * 6 + 1] = ss.y;
+        sAttr.array[i * 6 + 2] = ss.z;
+        // Tail
+        sAttr.array[i * 6 + 3] = ss.x - ss.vx * ss.tailLen;
+        sAttr.array[i * 6 + 4] = ss.y - ss.vy * ss.tailLen;
+        sAttr.array[i * 6 + 5] = ss.z - ss.vz * ss.tailLen;
+      }
+      sAttr.needsUpdate = true;
+      // Fade shooting stars in/out
+      shootMat.opacity = 0.3 + Math.sin(elapsed * 2.4) * 0.2;
+
       // ── Spaceship orbit path ──
       shipT += isMobile ? 0.003 : 0.004;
-      const OR = 10, OZ = 7; // orbit radii
+      const OR = isMobile ? 7 : 10, OZ = isMobile ? 5 : 7;
       const sx = Math.cos(shipT) * OR;
       const sz = Math.sin(shipT) * OZ;
-      const sy = Math.sin(shipT * 1.4) * 3.2;
+      const sy = Math.sin(shipT * 1.4) * (isMobile ? 2.2 : 3.2);
 
       ship.position.set(sx, sy, sz);
 
@@ -286,7 +356,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const NT  = shipT + 0.015;
       const tx  = Math.cos(NT) * OR;
       const tz  = Math.sin(NT) * OZ;
-      const ty  = Math.sin(NT * 1.4) * 3.2;
+      const ty  = Math.sin(NT * 1.4) * (isMobile ? 2.2 : 3.2);
       _v3.set(tx, ty, tz);
       ship.lookAt(_v3);
       // lookAt makes -Z face target; ship points along +X so correct:
@@ -306,7 +376,7 @@ document.addEventListener('DOMContentLoaded', () => {
       renderer.render(scene, camera);
       requestAnimationFrame(animate);
     }
-    animate();
+    requestAnimationFrame(animate);
 
     // ── Responsive resize ──
     function onResize() {
