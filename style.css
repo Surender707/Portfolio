@@ -457,19 +457,20 @@ body.cursor-hover .cursor-ring { width: 56px; height: 56px; border-color: rgba(7
 }
 .hero-name {
   font-family: var(--font-h);
-  font-size: clamp(3.5rem, 7vw, 7.5rem);
+  font-size: clamp(3.8rem, 8vw, 8.5rem);
   font-weight: 800;
-  line-height: 0.92;
-  letter-spacing: -4px;
+  line-height: 1;
+  letter-spacing: -3px;
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 0.05em;
 }
 .name-word {
   display: block;
   opacity: 0;
   transform: translateY(60px);
   animation: slideUp 0.9s var(--ease-bounce) forwards;
+  white-space: nowrap;
 }
 .name-word:nth-child(1) { animation-delay: 0.7s; }
 .name-word:nth-child(2) { animation-delay: 0.85s; }
