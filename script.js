@@ -722,33 +722,33 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Scroll-based slide advancement using ScrollTrigger
+  // ── Robust project slide tracking (native scroll, always reliable) ──
+  function updateProjectSlide() {
+    if (!projSection) return;
+    const rect      = projSection.getBoundingClientRect();
+    const secH      = projSection.offsetHeight;
+    const scrolled  = -rect.top; // px scrolled from section top
+    if (scrolled < 0 || scrolled > secH) return;
+    // Scrollable distance = section height - one viewport
+    const scrollable = Math.max(secH - window.innerHeight, 1);
+    const progress  = Math.min(scrolled / scrollable, 1);
+    const idx       = Math.min(Math.floor(progress * TOTAL_SLIDES), TOTAL_SLIDES - 1);
+    if (idx !== currentSlide) showSlide(idx, true);
+  }
+
+  // Attach to native window scroll (works always)
+  window.addEventListener('scroll', updateProjectSlide, { passive: true });
+  // Also attach to Lenis if active (virtual scroll may differ from native)
+  if (lenis) lenis.on('scroll', updateProjectSlide);
+  // Belt-and-suspenders: also hook into GSAP ticker if available
   if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger);
-
     ScrollTrigger.create({
       trigger: '#projects',
       start: 'top top',
       end: 'bottom bottom',
-      onUpdate: (self) => {
-        // Distribute slides evenly across the 6*100vh section height
-        const p = Math.min(self.progress, 0.999);
-        const idx = Math.min(Math.floor(p * TOTAL_SLIDES), TOTAL_SLIDES - 1);
-        if (idx !== currentSlide) showSlide(idx, true);
-      }
+      onUpdate: updateProjectSlide,
     });
-  } else {
-    // Fallback: manual scroll tracking
-    window.addEventListener('scroll', () => {
-      if (!projSection) return;
-      const rect = projSection.getBoundingClientRect();
-      const secH = projSection.offsetHeight;
-      const scrolledIntoSec = -rect.top;
-      if (scrolledIntoSec < 0 || scrolledIntoSec > secH) return;
-      const progress = scrolledIntoSec / secH;
-      const idx = Math.min(Math.floor(progress * TOTAL_SLIDES), TOTAL_SLIDES - 1);
-      if (idx !== currentSlide) showSlide(idx, true);
-    }, { passive: true });
   }
 
   /* ════════════════════════════════════════════
