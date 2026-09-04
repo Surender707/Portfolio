@@ -425,26 +425,27 @@ document.addEventListener('DOMContentLoaded', () => {
   const cursorRing = document.getElementById('cursorRing');
   let cx = window.innerWidth / 2, cy = window.innerHeight / 2;
   let rx = cx, ry = cy;
-  // Only run cursor on non-touch devices
   const isTouch = window.matchMedia('(pointer: coarse)').matches;
 
   if (!isTouch) {
-    // Set cursor:none on body via JS (CSS starts with cursor:none but this is the safety net)
     document.body.style.cursor = 'none';
-
-    // Position cursor at screen center immediately
-    cursorDot.style.opacity = '1';
+    cursorDot.style.opacity  = '1';
     cursorRing.style.opacity = '1';
-    cursorDot.style.transform = `translate(calc(${cx}px - 50%), calc(${cy}px - 50%))`;
-    cursorRing.style.transform = `translate(calc(${rx}px - 50%), calc(${ry}px - 50%))`;
+
+    // Use left/top directly — NO transform conflict possible
+    cursorDot.style.left  = cx + 'px';
+    cursorDot.style.top   = cy + 'px';
+    cursorRing.style.left = rx + 'px';
+    cursorRing.style.top  = ry + 'px';
 
     document.addEventListener('mousemove', (e) => {
-      cx = e.clientX; cy = e.clientY;
-      cursorDot.style.transform = `translate(calc(${cx}px - 50%), calc(${cy}px - 50%))`;
+      cx = e.clientX;
+      cy = e.clientY;
+      cursorDot.style.left = cx + 'px';
+      cursorDot.style.top  = cy + 'px';
     });
   } else {
-    // Hide custom cursor on touch devices
-    cursorDot.style.display = 'none';
+    cursorDot.style.display  = 'none';
     cursorRing.style.display = 'none';
     document.body.style.cursor = 'auto';
   }
@@ -453,7 +454,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!isTouch) {
       rx += (cx - rx) * 0.09;
       ry += (cy - ry) * 0.09;
-      cursorRing.style.transform = `translate(calc(${rx}px - 50%), calc(${ry}px - 50%))`;
+      cursorRing.style.left = rx + 'px';
+      cursorRing.style.top  = ry + 'px';
     }
     requestAnimationFrame(animateRing);
   }
