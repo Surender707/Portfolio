@@ -419,64 +419,45 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* ════════════════════════════════════════════
-     4. CUSTOM MAGNETIC CURSOR
+     4. CUSTOM MAGNETIC CURSOR (always visible + luxury follower)
   ════════════════════════════════════════════ */
   const cursorDot  = document.getElementById('cursorDot');
   const cursorRing = document.getElementById('cursorRing');
-  let cx = window.innerWidth / 2, cy = window.innerHeight / 2;
-  let rx = cx, ry = cy;
-  const isTouch = window.matchMedia('(pointer: coarse)').matches;
+  let cx = -100, cy = -100;
+  let rx = -100, ry = -100;
 
-  if (!isTouch) {
-    document.body.style.cursor = 'none';
-    cursorDot.style.opacity  = '1';
-    cursorRing.style.opacity = '1';
-
-    // Use left/top directly — NO transform conflict possible
-    cursorDot.style.left  = cx + 'px';
-    cursorDot.style.top   = cy + 'px';
-    cursorRing.style.left = rx + 'px';
-    cursorRing.style.top  = ry + 'px';
+  if (cursorDot && cursorRing) {
+    cursorDot.style.pointerEvents  = 'none';
+    cursorRing.style.pointerEvents = 'none';
 
     document.addEventListener('mousemove', (e) => {
       cx = e.clientX;
       cy = e.clientY;
       cursorDot.style.left = cx + 'px';
       cursorDot.style.top  = cy + 'px';
-      // Ensure custom cursor is visible when mouse re-enters
-      cursorDot.style.display  = '';
-      cursorRing.style.display = '';
-      document.body.style.cursor = 'none';
+      cursorDot.style.opacity  = '1';
+      cursorRing.style.opacity = '1';
     });
 
-    // Restore system cursor when mouse leaves the page (e.g. to browser chrome/scrollbar)
     document.addEventListener('mouseleave', () => {
-      cursorDot.style.display  = 'none';
-      cursorRing.style.display = 'none';
-      document.body.style.cursor = 'auto';
+      cursorDot.style.opacity  = '0';
+      cursorRing.style.opacity = '0';
     });
 
     document.addEventListener('mouseenter', () => {
-      cursorDot.style.display  = '';
-      cursorRing.style.display = '';
-      document.body.style.cursor = 'none';
+      cursorDot.style.opacity  = '1';
+      cursorRing.style.opacity = '1';
     });
-  } else {
-    cursorDot.style.display  = 'none';
-    cursorRing.style.display = 'none';
-    document.body.style.cursor = 'auto';
-  }
 
-  function animateRing() {
-    if (!isTouch) {
-      rx += (cx - rx) * 0.09;
-      ry += (cy - ry) * 0.09;
+    function animateRing() {
+      rx += (cx - rx) * 0.14;
+      ry += (cy - ry) * 0.14;
       cursorRing.style.left = rx + 'px';
       cursorRing.style.top  = ry + 'px';
+      requestAnimationFrame(animateRing);
     }
-    requestAnimationFrame(animateRing);
+    animateRing();
   }
-  animateRing();
 
   // Hover effects
   const hoverTargets = document.querySelectorAll('a, button, .magnetic, .social-link, .cert-card, .bento-card, .dnav-dot, .psnav-dot');
@@ -676,100 +657,86 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   /* ════════════════════════════════════════════
-     11. PROJECTS SECTION — STICKY SCROLL SLIDES
+     11. PROJECTS SECTION — INTERACTIVE SHOWCASE
   ════════════════════════════════════════════ */
   const projSection   = document.getElementById('projects');
-  const projSlides    = document.getElementById('projSlides');
-  const projSidenav   = document.getElementById('projSidenav');
+  const projSlides    = document.querySelectorAll('.proj-slide');
   const projCurrent   = document.getElementById('projCurrent');
   const projArrowUp   = document.getElementById('projArrowUp');
   const projArrowDown = document.getElementById('projArrowDown');
   const psnDots       = document.querySelectorAll('.psnav-dot');
-  const TOTAL_SLIDES  = 6;
+  const projTabs      = document.querySelectorAll('.proj-tab');
+  const TOTAL_SLIDES  = projSlides.length || 6;
 
-  let currentSlide  = 0;
-  let slideAnimating = false;
+  let currentSlide = 0;
 
-  function showSlide(idx, fromScroll = false) {
+  function showSlide(idx) {
     if (idx < 0 || idx >= TOTAL_SLIDES) return;
-    if (slideAnimating && !fromScroll) return;
-    slideAnimating = true;
     currentSlide = idx;
 
-    // Move track
-    projSlides.style.transform = `translateY(-${idx * 100}vh)`;
+    // Toggle active class on slides
+    projSlides.forEach((s, i) => {
+      s.classList.toggle('active', i === idx);
+    });
+
+    // Update tab buttons
+    projTabs.forEach((t, i) => {
+      t.classList.toggle('active', i === idx);
+    });
 
     // Update counter
-    projCurrent.textContent = idx === 0 ? '00' : String(idx).padStart(2, '0');
+    if (projCurrent) {
+      projCurrent.textContent = idx === 0 ? '00' : String(idx).padStart(2, '0');
+    }
 
     // Update sidenav dots
     psnDots.forEach((d, i) => d.classList.toggle('active', i === idx));
 
     // Update arrow visibility
-    projArrowUp.style.opacity   = idx === 0 ? '0.3' : '1';
-    projArrowDown.style.opacity = idx === TOTAL_SLIDES - 1 ? '0.3' : '1';
-
-    setTimeout(() => { slideAnimating = false; }, 750);
+    if (projArrowUp) projArrowUp.style.opacity   = idx === 0 ? '0.4' : '1';
+    if (projArrowDown) projArrowDown.style.opacity = idx === TOTAL_SLIDES - 1 ? '0.4' : '1';
   }
 
   // Arrow buttons
-  projArrowDown.addEventListener('click', () => {
-    if (currentSlide < TOTAL_SLIDES - 1) showSlide(currentSlide + 1);
-  });
-  projArrowUp.addEventListener('click', () => {
-    if (currentSlide > 0) showSlide(currentSlide - 1);
-  });
+  if (projArrowDown) {
+    projArrowDown.addEventListener('click', () => {
+      if (currentSlide < TOTAL_SLIDES - 1) showSlide(currentSlide + 1);
+      else showSlide(0);
+    });
+  }
+  if (projArrowUp) {
+    projArrowUp.addEventListener('click', () => {
+      if (currentSlide > 0) showSlide(currentSlide - 1);
+      else showSlide(TOTAL_SLIDES - 1);
+    });
+  }
 
   // Sidenav dot clicks
   psnDots.forEach(dot => {
     dot.addEventListener('click', () => showSlide(parseInt(dot.dataset.proj)));
   });
 
-  // Keyboard arrow keys
+  // Tab clicks
+  projTabs.forEach(tab => {
+    tab.addEventListener('click', () => showSlide(parseInt(tab.dataset.proj)));
+  });
+
+  // Keyboard navigation when viewing projects
   document.addEventListener('keydown', (e) => {
-    const projRect = projSection.getBoundingClientRect();
-    const inProj = projRect.top <= 0 && projRect.bottom >= window.innerHeight;
+    if (!projSection) return;
+    const r = projSection.getBoundingClientRect();
+    const inProj = r.top <= window.innerHeight * 0.6 && r.bottom >= window.innerHeight * 0.4;
     if (!inProj) return;
-    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
-      e.preventDefault();
-      if (currentSlide < TOTAL_SLIDES - 1) showSlide(currentSlide + 1);
-      else if (lenis) lenis.scrollTo(document.getElementById('certs'), { duration: 1.2 });
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      if (currentSlide < TOTAL_SLIDES - 1) { e.preventDefault(); showSlide(currentSlide + 1); }
     }
-    if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
-      e.preventDefault();
-      if (currentSlide > 0) showSlide(currentSlide - 1);
-      else if (lenis) lenis.scrollTo(document.getElementById('skills'), { duration: 1.2 });
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      if (currentSlide > 0) { e.preventDefault(); showSlide(currentSlide - 1); }
     }
   });
 
-  // ── Robust project slide tracking (native scroll, always reliable) ──
-  function updateProjectSlide() {
-    if (!projSection) return;
-    const rect      = projSection.getBoundingClientRect();
-    const secH      = projSection.offsetHeight;
-    const scrolled  = -rect.top; // px scrolled from section top
-    if (scrolled < 0 || scrolled > secH) return;
-    // Scrollable distance = section height - one viewport
-    const scrollable = Math.max(secH - window.innerHeight, 1);
-    const progress  = Math.min(scrolled / scrollable, 1);
-    const idx       = Math.min(Math.floor(progress * TOTAL_SLIDES), TOTAL_SLIDES - 1);
-    if (idx !== currentSlide) showSlide(idx, true);
-  }
-
-  // Attach to native window scroll (works always)
-  window.addEventListener('scroll', updateProjectSlide, { passive: true });
-  // Also attach to Lenis if active (virtual scroll may differ from native)
-  if (lenis) lenis.on('scroll', updateProjectSlide);
-  // Belt-and-suspenders: also hook into GSAP ticker if available
-  if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
-    gsap.registerPlugin(ScrollTrigger);
-    ScrollTrigger.create({
-      trigger: '#projects',
-      start: 'top top',
-      end: 'bottom bottom',
-      onUpdate: updateProjectSlide,
-    });
-  }
+  // Initialize with slide 0
+  showSlide(0);
 
   /* ════════════════════════════════════════════
      12. SKILLS SPHERE CANVAS (2D particle sphere)
