@@ -3,16 +3,6 @@ import React from 'react'
 export default function Hero() {
   return (
     <section className="section s-hero" id="hero" data-section="hero">
-      <div className="hero-nav">
-        <a href="#" className="hero-logo">SURENDER.</a>
-        <nav className="hero-nav-links">
-          <a href="#about" className="nav-link">ABOUT</a>
-          <a href="#projects" className="nav-link">PROJECTS</a>
-          <a href="#skills" className="nav-link">SKILLS</a>
-          <a href="#contact" className="nav-link">CONTACT</a>
-        </nav>
-        <a href="#contact" className="hero-cta">LET&apos;S TALK ↗</a>
-      </div>
       <div className="hero-container">
         <div className="hero-left">
           <p className="hero-greeting">I BUILD</p>
