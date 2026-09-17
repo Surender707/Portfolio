@@ -783,18 +783,15 @@ function initPortfolio() {
   ════════════════════════════════════════════ */
   const navToggle  = document.getElementById('navToggle');
   const navLinksEl = document.getElementById('navLinks');
-  const navOverlay = document.getElementById('navOverlay');
 
   function closeMobileNav() {
     if (navLinksEl) navLinksEl.classList.remove('open');
     document.body.classList.remove('nav-open');
-    if (navOverlay) navOverlay.classList.remove('open');
   }
 
   function openMobileNav() {
     if (navLinksEl) navLinksEl.classList.add('open');
     document.body.classList.add('nav-open');
-    if (navOverlay) navOverlay.classList.add('open');
   }
 
   if (navToggle && navLinksEl) {
@@ -806,9 +803,14 @@ function initPortfolio() {
     });
   }
 
-  if (navOverlay) {
-    navOverlay.addEventListener('click', closeMobileNav);
-  }
+  // Close when clicking anywhere outside of the mobile drawer
+  document.addEventListener('click', (e) => {
+    if (navLinksEl && navLinksEl.classList.contains('open')) {
+      if (!navLinksEl.contains(e.target) && navToggle && !navToggle.contains(e.target)) {
+        closeMobileNav();
+      }
+    }
+  });
 
   window.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeMobileNav();
