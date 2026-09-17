@@ -3,6 +3,7 @@ import React from 'react'
 export default function Navbar() {
   return (
     <>
+      <div className="nav-overlay" id="navOverlay" aria-hidden="true"></div>
       <nav className="navbar" id="navbar">
         <div className="nav-container">
           <a href="#hero" className="nav-logo" id="nav-logo">
