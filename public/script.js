@@ -23,11 +23,15 @@ function initPortfolio() {
         setTimeout(() => {
           preloader.classList.add('hidden');
           initAnimations();
-        }, 400);
+          window.__portfolioLoaded = true;
+          window.dispatchEvent(new CustomEvent('portfolio:ready'));
+        }, 450);
       }
     }, 30);
   } else {
     initAnimations();
+    window.__portfolioLoaded = true;
+    window.dispatchEvent(new CustomEvent('portfolio:ready'));
   }
 
   /* ════════════════════════════════════════════
@@ -698,11 +702,10 @@ function initPortfolio() {
     const y = window.scrollY;
     if (navbar) {
       // Scrolled state
-      if (y > 40) navbar.classList.add('scrolled');
+      if (y > 30) navbar.classList.add('scrolled');
       else navbar.classList.remove('scrolled');
-      // Hide/show on direction
-      if (y > lastScrollY && y > 120) navbar.classList.add('hidden');
-      else navbar.classList.remove('hidden');
+      // Keep navbar permanently sticky as requested
+      navbar.classList.remove('hidden');
     }
     lastScrollY = y;
 
@@ -758,8 +761,7 @@ function initPortfolio() {
           if (lenis) lenis.scrollTo(el, { offset: 0, duration: 1.4 });
           else el.scrollIntoView({ behavior: 'smooth' });
           // Close mobile nav
-          document.getElementById('navLinks').classList.remove('open');
-          document.body.classList.remove('nav-open');
+          closeMobileNav();
         }
       }
     });
@@ -770,6 +772,7 @@ function initPortfolio() {
   if (navLogo) {
     navLogo.addEventListener('click', (e) => {
       e.preventDefault();
+      closeMobileNav();
       if (lenis) lenis.scrollTo(0, { duration: 1.4 });
       else window.scrollTo({ top: 0, behavior: 'smooth' });
     });
@@ -778,14 +781,38 @@ function initPortfolio() {
   /* ════════════════════════════════════════════
      7. MOBILE NAV TOGGLE
   ════════════════════════════════════════════ */
-  const navToggle = document.getElementById('navToggle');
+  const navToggle  = document.getElementById('navToggle');
   const navLinksEl = document.getElementById('navLinks');
+  const navOverlay = document.getElementById('navOverlay');
+
+  function closeMobileNav() {
+    if (navLinksEl) navLinksEl.classList.remove('open');
+    document.body.classList.remove('nav-open');
+    if (navOverlay) navOverlay.classList.remove('open');
+  }
+
+  function openMobileNav() {
+    if (navLinksEl) navLinksEl.classList.add('open');
+    document.body.classList.add('nav-open');
+    if (navOverlay) navOverlay.classList.add('open');
+  }
+
   if (navToggle && navLinksEl) {
-    navToggle.addEventListener('click', () => {
-      const open = navLinksEl.classList.toggle('open');
-      document.body.classList.toggle('nav-open', open);
+    navToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = navLinksEl.classList.contains('open');
+      if (isOpen) closeMobileNav();
+      else openMobileNav();
     });
   }
+
+  if (navOverlay) {
+    navOverlay.addEventListener('click', closeMobileNav);
+  }
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeMobileNav();
+  });
 
   /* ════════════════════════════════════════════
      8. ROLE ROTATOR (HERO TYPEWRITER)
@@ -1418,6 +1445,7 @@ function initPortfolio() {
 
     // ── Section change handler ──
     function byteSectionChange(secId) {
+      if (!window.__portfolioLoaded) return; // Never speak while preloader is active!
       if (secId === activeSec && spokenSections.has(secId)) return;
       activeSec = secId;
       if (spokenSections.has(secId)) return; // only speak once per section per visit
@@ -1431,7 +1459,7 @@ function initPortfolio() {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           const id = entry.target.dataset.section;
-          if (id) byteSectionChange(id);
+          if (id && window.__portfolioLoaded) byteSectionChange(id);
         }
       });
     }, { threshold: 0.4 });
@@ -1479,11 +1507,20 @@ function initPortfolio() {
     // ── Load voices asynchronously ──
     window.speechSynthesis.onvoiceschanged = () => { /* voices now available */ };
 
-    // ── Greet after preloader finishes (hero speech) ──
-    // Wait 2s for preloader, then speak hero
-    setTimeout(() => {
-      if (!robotClosed) byteSectionChange('hero');
-    }, 3200);
+    // ── Greet ONLY after preloader finishes (hero speech) ──
+    function triggerHeroVoice() {
+      setTimeout(() => {
+        if (!robotClosed && !robotMuted) {
+          byteSectionChange('hero');
+        }
+      }, 800);
+    }
+
+    if (window.__portfolioLoaded) {
+      triggerHeroVoice();
+    } else {
+      window.addEventListener('portfolio:ready', triggerHeroVoice, { once: true });
+    }
   }
 
   // ══════════════════════════════════════════
