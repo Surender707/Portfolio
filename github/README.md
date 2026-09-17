@@ -1,100 +1,111 @@
 <div align="center">
 
-# 💫 Hey there, I'm Surender Singh!
+<!-- Animated Waving Hero Banner -->
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:050505,35:151208,75:8A6D20,100:D4AF37&height=230&section=header&text=SURENDER%20SINGH&fontSize=46&fontColor=ffffff&fontAlignY=38&desc=Data%20Scientist%20%E2%80%A2%20ML%20Engineer%20%E2%80%A2%20Full-Stack%20Architect&descFontSize=17&descAlignY=58&descAlign=50&animation=fadeIn" width="100%"/>
 
+<!-- Animated Typing SVG Subtitle -->
 <a href="https://surender-portfolio-sigma.vercel.app">
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=24&pause=1200&color=D4AF37&background=00000000&center=true&vCenter=true&width=620&lines=Data+Scientist+%26+ML+Engineer;Full-Stack+Web+Developer;Computer+Vision+%26+Deep+Learning+Enthusiast;Turning+Ideas+into+Intelligent+Solutions" alt="Typing SVG" />
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=21&pause=1200&color=D4AF37&background=00000000&center=true&vCenter=true&width=680&lines=✦+Architecting+Intelligent+Data+Science+Pipelines;✦+Building+Real-Time+Computer+Vision+%26+Deep+Learning+Systems;✦+Crafting+High-Performance+60fps+React+19+Web+Apps;✦+Turning+Complex+Algorithms+Into+Seamless+Products" alt="Animated Typing Subtitle" />
 </a>
 
 <p align="center">
-  <b>B.Tech in Artificial Intelligence & Data Science</b> @ MITRC (2023–2027)<br/>
-  Specializing in Machine Learning, Computer Vision, and High-Performance Web Architectures.
+  <a href="https://surender-portfolio-sigma.vercel.app">
+    <img src="https://img.shields.io/badge/🌐_Live_Portfolio-050505?style=for-the-badge&logo=vercel&logoColor=D4AF37&labelColor=000000" alt="Portfolio" />
+  </a>
+  <a href="https://www.linkedin.com/in/surender-choudhary-2a2b46293">
+    <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white&labelColor=000000" alt="LinkedIn" />
+  </a>
+  <a href="mailto:surenderchoudhary07072004@gmail.com">
+    <img src="https://img.shields.io/badge/Email_Me-EA4335?style=for-the-badge&logo=gmail&logoColor=white&labelColor=000000" alt="Email" />
+  </a>
+  <a href="https://komarev.com/ghpvc/?username=Surender707&label=PROFILE+VIEWS&color=D4AF37&style=for-the-badge">
+    <img src="https://komarev.com/ghpvc/?username=Surender707&label=PROFILE+VIEWS&color=D4AF37&style=for-the-badge" alt="Profile Views" />
+  </a>
 </p>
-
-[![Portfolio](https://img.shields.io/badge/Live_Portfolio-000000?style=for-the-badge&logo=vercel&logoColor=D4AF37)](https://surender-portfolio-sigma.vercel.app)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/surender-choudhary-2a2b46293)
-[![Email](https://img.shields.io/badge/Email-EA4335?style=for-the-badge&logo=gmail&logoColor=white)](mailto:surenderchoudhary07072004@gmail.com)
-[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Surender707)
 
 </div>
 
 ---
 
-### 👨‍💻 About Me
+### 💫 About Me & Creative Philosophy
 
-```yaml
-name: Surender Singh
-role: Data Scientist & Full-Stack Developer
-education: B.Tech in AI & Data Science (MITRC, Alwar)
-interests: [Machine Learning, Computer Vision, Deep Learning, Full-Stack Development, 3D Web]
-currently_building: Real-time CV applications & Interactive 3D web interfaces
-open_for: [Internships, Full-Time Roles, Open Source Collaborations]
-fun_fact: "I like blending cutting-edge ML models with fluid, 60fps web experiences."
+```javascript
+const SurenderSingh = {
+  pronouns: "He / Him",
+  academics: "B.Tech in Artificial Intelligence & Data Science @ MITRC (2023–2027)",
+  specializations: [
+    "Deep Learning & Computer Vision",
+    "Full-Stack Web Architectures (MERN / React 19)",
+    "Real-Time ML Deployment & Data Pipelines"
+  ],
+  architectureMotto: "Compute intelligence in the backend, deliver elegance in the frontend.",
+  currentFocus: "High-accuracy gesture tracking and real-time multimodal AI systems",
+  openFor: ["Internships", "Software Engineering Roles", "AI / Web Collaborations"]
+};
 ```
 
-- 🔭 **Currently Focusing On**: Production-ready deep learning pipelines, computer vision tracking systems, and modern React 19 web ecosystems.
-- 🌱 **Continuously Exploring**: Advanced Transformer architectures, multimodal AI, and WebGL / Three.js graphics programming.
-- 💼 **Experience**: Completed internships at **CODSOFT** (Data Science) and **Web Stack Academy** (MERN Full-Stack) with outstanding performance ratings.
-- 💬 **Ask Me About**: Python, PyTorch, OpenCV, React, TypeScript, Node.js, and Machine Learning workflows.
+- 🔭 **What I'm Doing**: Blending deep mathematical machine learning models with fluid, cinematic web experiences.
+- ⚡ **Engineering Approach**: Clean code, modular systems, GPU-accelerated graphics (Three.js/WebGL), and production-grade architectures.
+- 🎓 **Education**: Pursuing B.Tech in **AI & Data Science** at **MITRC**, Alwar (7th Semester).
+- 🏆 **Internships**: Former Data Science Intern at **CODSOFT** & Full-Stack MERN Intern at **Web Stack Academy**.
 
 ---
 
-### 🛠️ Tech Stack & Tools
+### 🛠️ Interactive Tech Stack & Ecosystem
 
 <div align="center">
 
-#### 🧠 Machine Learning & Data Science
-<p>
-  <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python" />
-  <img src="https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white" alt="PyTorch" />
-  <img src="https://img.shields.io/badge/TensorFlow-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white" alt="TensorFlow" />
-  <img src="https://img.shields.io/badge/OpenCV-5C3EE8?style=for-the-badge&logo=opencv&logoColor=white" alt="OpenCV" />
-  <img src="https://img.shields.io/badge/Scikit_Learn-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white" alt="Scikit-Learn" />
-  <img src="https://img.shields.io/badge/Pandas-150458?style=for-the-badge&logo=pandas&logoColor=white" alt="Pandas" />
-  <img src="https://img.shields.io/badge/NumPy-013243?style=for-the-badge&logo=numpy&logoColor=white" alt="NumPy" />
-  <img src="https://img.shields.io/badge/MediaPipe-0097A7?style=for-the-badge&logo=google&logoColor=white" alt="MediaPipe" />
+#### 🧠 Machine Learning, Deep Learning & Vision
+<p align="center">
+  <img src="https://skillicons.dev/icons?i=python,pytorch,tensorflow,opencv,scikitlearn&theme=dark" alt="ML Stack" />
+</p>
+<p align="center">
+  <img src="https://img.shields.io/badge/NumPy-013243?style=flat-square&logo=numpy&logoColor=white" />
+  <img src="https://img.shields.io/badge/Pandas-150458?style=flat-square&logo=pandas&logoColor=white" />
+  <img src="https://img.shields.io/badge/MediaPipe-0097A7?style=flat-square&logo=google&logoColor=white" />
+  <img src="https://img.shields.io/badge/CNN_&_Transformers-D4AF37?style=flat-square&logo=pytorch&logoColor=black" />
+  <img src="https://img.shields.io/badge/Flask_&_FastAPI-000000?style=flat-square&logo=fastapi&logoColor=white" />
 </p>
 
-#### 💻 Full-Stack Web Development
-<p>
-  <img src="https://img.shields.io/badge/React_19-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
-  <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
-  <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript" />
-  <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white" alt="Node.js" />
-  <img src="https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=express&logoColor=white" alt="Express" />
-  <img src="https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB" />
-  <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5" />
-  <img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white" alt="CSS3" />
+<br/>
+
+#### 💻 Full-Stack Development & 3D Creative Engineering
+<p align="center">
+  <img src="https://skillicons.dev/icons?i=react,ts,js,nodejs,express,mongodb,threejs,html,css&theme=dark" alt="Full Stack & 3D" />
+</p>
+<p align="center">
+  <img src="https://img.shields.io/badge/React_19-20232A?style=flat-square&logo=react&logoColor=61DAFB" />
+  <img src="https://img.shields.io/badge/TypeScript-007ACC?style=flat-square&logo=typescript&logoColor=white" />
+  <img src="https://img.shields.io/badge/Three.js_&_WebGL-000000?style=flat-square&logo=three.js&logoColor=white" />
+  <img src="https://img.shields.io/badge/GSAP_Motion-88CE02?style=flat-square&logo=greensock&logoColor=white" />
+  <img src="https://img.shields.io/badge/JWT_Authentication-000000?style=flat-square&logo=json-web-tokens&logoColor=white" />
 </p>
 
-#### 🎨 Creative Engineering & Tools
-<p>
-  <img src="https://img.shields.io/badge/Three.js-000000?style=for-the-badge&logo=three.js&logoColor=white" alt="Three.js" />
-  <img src="https://img.shields.io/badge/GSAP-88CE02?style=for-the-badge&logo=greensock&logoColor=white" alt="GSAP" />
-  <img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite" />
-  <img src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white" alt="Git" />
-  <img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white" alt="Vercel" />
-  <img src="https://img.shields.io/badge/VS_Code-007ACC?style=for-the-badge&logo=visual-studio-code&logoColor=white" alt="VS Code" />
+<br/>
+
+#### 🔧 Developer Tooling & DevOps
+<p align="center">
+  <img src="https://skillicons.dev/icons?i=git,github,vscode,vite,postman,vercel,linux&theme=dark" alt="Dev Tools" />
 </p>
 
 </div>
 
 ---
 
-### 🚀 Featured Work & Projects
+### 🚀 Featured Systems & Highlights
 
-| Project | Tech Stack | Highlights | Links |
+| Project | Domain | Architecture & Highlights | Links |
 |:---|:---|:---|:---:|
-| **🌌 3D Interactive Portfolio** | React 19, TypeScript, Three.js, GSAP, Vite | Cinematic space starfield (25k particles), interactive AI robot voice guide ("Byte"), butter-smooth Lenis scrolling. | [Live Demo](https://surender-portfolio-sigma.vercel.app) · [Repo](https://github.com/Surender707/Portfolio) |
-| **📋 TaskFlow** | React, Node.js, Express, MongoDB | Full-stack project management platform with real-time collaboration, analytics dashboards, and Kanban boards. | [Repo](https://github.com/Surender707) |
-| **📊 PlayStore Pulse** | Python, Streamlit, Pandas, Plotly | Exploratory data analysis dashboard visualizing market trends, ratings, and metrics across 10,000+ Android apps. | [Repo](https://github.com/Surender707) |
-| **🎭 Real-Time Emotion Classifier** | PyTorch, CNN, OpenCV, Flask | Computer vision system classifying 7 facial emotion expressions in real-time at 24+ FPS via webcam stream. | [Repo](https://github.com/Surender707) |
-| **🖱️ Hand Gesture Virtual Mouse** | OpenCV, MediaPipe, PyAutoGUI | Vision-based touchless mouse utilizing hand landmark detection for cursor movement and click recognition. | [Repo](https://github.com/Surender707) |
-| **📝 NLP Text Summarizer** | HuggingFace Transformers, FastAPI, Python | Abstractive and extractive text summarization web API processing long-form documents with state-of-the-art NLP models. | [Repo](https://github.com/Surender707) |
+| 🌌 **3D Space Portfolio** | **Creative Tech / WebGL** | Dynamic 25,000 particle interactive galaxy, AI voice tour agent ("Byte"), smooth 60fps Lenis scroll mechanics. | [Live Demo](https://surender-portfolio-sigma.vercel.app) · [Code](https://github.com/Surender707/Portfolio) |
+| 📋 **TaskFlow** | **Full-Stack MERN** | Enterprise productivity hub featuring custom Intelligence Engine recommendations, real-time analytics, and JWT security. | [Repository](https://github.com/Surender707) |
+| 🎭 **Emotion Classifier** | **Computer Vision** | Real-time 7-class facial micro-expression detector powered by PyTorch CNNs streaming at 24+ FPS. | [Repository](https://github.com/Surender707) |
+| 📊 **PlayStore Pulse** | **Data Analytics** | High-dimensional exploratory data platform processing 10k+ apps with dynamic interactive Plotly distributions. | [Repository](https://github.com/Surender707) |
+| 🖱️ **Hand Gesture Mouse** | **Vision Interfacing** | Touchless human-computer interface utilizing MediaPipe hand mesh landmarks for sub-millisecond cursor controls. | [Repository](https://github.com/Surender707) |
+| 📝 **NLP Text Summarizer** | **Natural Language AI** | Multi-document summarization engine built with HuggingFace Transformer pipelines served via FastAPI. | [Repository](https://github.com/Surender707) |
 
 ---
 
-### 📊 GitHub Analytics
+### 📈 GitHub Analytics & Activity
 
 <div align="center">
 
@@ -104,31 +115,35 @@ fun_fact: "I like blending cutting-edge ML models with fluid, 60fps web experien
 <br/><br/>
 
 <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=Surender707&layout=compact&theme=tokyonight&bg_color=050505&title_color=D4AF37&text_color=E8DFD8&border_color=8C6D4F&hide_border=false" alt="Top Languages" width="48%" />
+<img src="https://github-readme-activity-graph.vercel.app/graph?username=Surender707&theme=tokyo-night&bg_color=050505&color=D4AF37&line=D4AF37&point=FFFFFF&area=true&hide_border=false&border_color=8C6D4F" alt="Activity Graph" width="48%" />
 
 </div>
 
 ---
 
-### 📬 Connect With Me
+### 🤝 Let's Build Something Extraordinary
 
 <div align="center">
 
-I am actively seeking **internship & software engineering opportunities**. Whether you have an exciting project, job opening, or want to discuss machine learning and full-stack development — feel free to reach out!
+Whether you're looking for an **AI/ML Engineer**, a **Full-Stack Developer**, or someone who bridges complex intelligence with stunning design — let's connect!
 
-<p>
+<p align="center">
   <a href="https://surender-portfolio-sigma.vercel.app">
-    <img src="https://img.shields.io/badge/🌐_Visit_My_Portfolio-D4AF37?style=for-the-badge&labelColor=000000" alt="Portfolio" />
+    <img src="https://img.shields.io/badge/Explore_Portfolio-D4AF37?style=for-the-badge&logo=vercel&logoColor=black&labelColor=1a1508" alt="Portfolio" />
   </a>
+  &nbsp;
   <a href="https://www.linkedin.com/in/surender-choudhary-2a2b46293">
-    <img src="https://img.shields.io/badge/💼_Connect_on_LinkedIn-0077B5?style=for-the-badge&labelColor=000000" alt="LinkedIn" />
+    <img src="https://img.shields.io/badge/LinkedIn_Profile-0077B5?style=for-the-badge&logo=linkedin&logoColor=white&labelColor=0a1520" alt="LinkedIn" />
   </a>
+  &nbsp;
   <a href="mailto:surenderchoudhary07072004@gmail.com">
-    <img src="https://img.shields.io/badge/✉️_Send_an_Email-EA4335?style=for-the-badge&labelColor=000000" alt="Email" />
+    <img src="https://img.shields.io/badge/Direct_Email-EA4335?style=for-the-badge&logo=gmail&logoColor=white&labelColor=200a0a" alt="Email" />
   </a>
 </p>
 
 <br/>
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=1,12,24&height=100&section=footer" width="100%"/>
+<!-- Animated Waving Footer -->
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:D4AF37,45:8A6D20,80:151208,100:050505&height=120&section=footer" width="100%"/>
 
 </div>
