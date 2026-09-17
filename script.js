@@ -1,8 +1,3 @@
-/* ============================================================
-   SURENDER SINGH — PORTFOLIO 2026
-   Main Script: Three.js Galaxy · GSAP · Lenis · Interactions
-   ============================================================ */
-
 'use strict';
 
 /* ── WAIT FOR DOM ── */
@@ -15,20 +10,24 @@ document.addEventListener('DOMContentLoaded', () => {
   const preloaderFill = document.getElementById('preloaderFill');
   const preloaderCount = document.getElementById('preloaderCount');
 
-  let count = 0;
-  const preloaderInterval = setInterval(() => {
-    count += Math.floor(Math.random() * 4) + 1;
-    if (count >= 100) count = 100;
-    preloaderFill.style.width  = count + '%';
-    preloaderCount.textContent = count;
-    if (count === 100) {
-      clearInterval(preloaderInterval);
-      setTimeout(() => {
-        preloader.classList.add('hidden');
-        initAnimations();
-      }, 400);
-    }
-  }, 30);
+  if (preloader && preloaderFill && preloaderCount) {
+    let count = 0;
+    const preloaderInterval = setInterval(() => {
+      count += Math.floor(Math.random() * 4) + 1;
+      if (count >= 100) count = 100;
+      preloaderFill.style.width  = count + '%';
+      preloaderCount.textContent = count;
+      if (count === 100) {
+        clearInterval(preloaderInterval);
+        setTimeout(() => {
+          preloader.classList.add('hidden');
+          initAnimations();
+        }, 400);
+      }
+    }, 30);
+  } else {
+    initAnimations();
+  }
 
   /* ════════════════════════════════════════════
      2. THREE.JS — SPACE SCENE
@@ -66,9 +65,9 @@ document.addEventListener('DOMContentLoaded', () => {
     scene.add(fillLight);
 
     // ══════════════════════════════════════════
-    // A. STARFIELD — 15,000 coloured stars
+    // A. STARFIELD — 50,000 coloured stars (cinematic effect)
     // ══════════════════════════════════════════
-    const STAR_COUNT = isMobile ? 7000 : 15000;
+    const STAR_COUNT = isMobile ? 25000 : 50000;
     const starGeo    = new THREE.BufferGeometry();
     const starPos    = new Float32Array(STAR_COUNT * 3);
     const starCol    = new Float32Array(STAR_COUNT * 3);
@@ -106,12 +105,12 @@ document.addEventListener('DOMContentLoaded', () => {
     scene.add(starField);
 
     // ══════════════════════════════════════════
-    // B. GALAXY — gold/navy spiral arms
+    // B. GALAXY — gold/navy spiral arms (enhanced for cinematic effect)
     // ══════════════════════════════════════════
     const gParams = {
-      count: isMobile ? 35000 : 80000, size: 0.004,
-      radius: 6, branches: 3, spin: 1.2,
-      randomness: 0.25, randomnessPower: 3,
+      count: isMobile ? 60000 : 120000, size: 0.003,
+      radius: 8, branches: 4, spin: 1.5,
+      randomness: 0.3, randomnessPower: 3,
     };
     const galGeo = new THREE.BufferGeometry();
     const galPos = new Float32Array(gParams.count * 3);
@@ -245,9 +244,77 @@ document.addEventListener('DOMContentLoaded', () => {
     scene.add(ship);
 
     // ══════════════════════════════════════════
-    // D. SHOOTING STARS — fast-moving streaks
+    // C.2 ADDITIONAL SPACESHIPS (cinematic fleet effect)
     // ══════════════════════════════════════════
-    const SHOOT_COUNT = isMobile ? 3 : 6;
+    const ships = [{ ship, glowL, glowR, mainGlow, nosePip, engineLight }];
+    const NUM_SHIPS = isMobile ? 2 : 4; // Add 3 more ships on desktop, 1 on mobile
+
+    for (let i = 1; i < NUM_SHIPS; i++) {
+      const { ship: newShip, glowL: newGlowL, glowR: newGlowR, mainGlow: newMainGlow, nosePip: newNosePip, engineLight: newEngineLight } = buildSpaceship();
+      
+      // Vary scale for depth effect
+      const scaleVar = 0.4 + Math.random() * 0.4; // 0.4-0.8
+      newShip.scale.setScalar(isMobile ? 0.35 : scaleVar);
+      
+      // Add slight color variation to engine glow
+      const hueVar = Math.random() * 0.1 - 0.05; // slight color shift
+      newGlowL.material.color.setHSL(0.12 + hueVar, 0.8, 0.5);
+      newGlowR.material.color.setHSL(0.12 + hueVar, 0.8, 0.5);
+      
+      scene.add(newShip);
+      ships.push({ 
+        ship: newShip, 
+        glowL: newGlowL, 
+        glowR: newGlowR, 
+        mainGlow: newMainGlow, 
+        nosePip: newNosePip, 
+        engineLight: newEngineLight,
+        orbitOffset: i * 2.5, // different orbit phases
+        orbitSpeed: 0.002 + Math.random() * 0.002, // varied speeds
+        orbitRadius: 8 + Math.random() * 6, // varied orbit sizes
+        orbitHeight: 2 + Math.random() * 3 // varied orbit heights
+      });
+    }
+
+    // ══════════════════════════════════════════
+    // D. FLOATING PARTICLES — ambient dust/mote effect
+    // ══════════════════════════════════════════
+    const PARTICLE_COUNT = isMobile ? 150 : 600;
+    const particleGeo = new THREE.BufferGeometry();
+    const particlePos = new Float32Array(PARTICLE_COUNT * 3);
+    const particleSizes = new Float32Array(PARTICLE_COUNT);
+    
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+      // Random positions in a sphere around camera
+      const r = 5 + Math.random() * 25;
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(2 * Math.random() - 1);
+      
+      particlePos[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+      particlePos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+      particlePos[i * 3 + 2] = r * Math.cos(phi);
+      
+      particleSizes[i] = 0.5 + Math.random() * 1.5;
+    }
+    
+    particleGeo.setAttribute('position', new THREE.BufferAttribute(particlePos, 3));
+    particleGeo.setAttribute('size', new THREE.BufferAttribute(particleSizes, 1));
+    
+    const particleMat = new THREE.PointsMaterial({
+      color: 0xd4a853,
+      size: 0.08,
+      transparent: true,
+      opacity: 0.4,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+    
+    const particles = new THREE.Points(particleGeo, particleMat);
+    scene.add(particles);
+
+    // E. SHOOTING STARS — fast-moving streaks (enhanced)
+    // ══════════════════════════════════════════
+    const SHOOT_COUNT = isMobile ? 3 : 10;
     const shootGeo = new THREE.BufferGeometry();
     const shootPos = new Float32Array(SHOOT_COUNT * 6); // 2 verts per line
     shootGeo.setAttribute('position', new THREE.BufferAttribute(shootPos, 3));
@@ -308,14 +375,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const elapsed = clock.getElapsedTime();
 
       // ── Galaxy rotation ──
-      galaxy.rotation.y = elapsed * 0.04;
-      galaxy.rotation.x += (mouseY * 0.18 - galaxy.rotation.x) * 0.02;
-      galaxy.position.x += (mouseX * 0.28 - galaxy.position.x) * 0.02;
+      galaxy.rotation.y = elapsed * 0.06;
+      galaxy.rotation.x += (mouseY * 0.22 - galaxy.rotation.x) * 0.03;
+      galaxy.position.x += (mouseX * 0.32 - galaxy.position.x) * 0.03;
 
       // ── Starfield — slow drift + twinkle ──
-      starField.rotation.y  += 0.00008;
-      starField.rotation.x  += 0.00004;
-      starMat.opacity = 0.75 + Math.sin(elapsed * 1.6) * 0.13;
+      starField.rotation.y  += 0.00012;
+      starField.rotation.x  += 0.00006;
+      starMat.opacity = 0.75 + Math.sin(elapsed * 2.0) * 0.15;
 
       // ── Shooting stars update ──
       const sAttr = shootGeo.attributes.position;
@@ -341,16 +408,35 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       sAttr.needsUpdate = true;
       // Fade shooting stars in/out
-      shootMat.opacity = 0.3 + Math.sin(elapsed * 2.4) * 0.2;
+      shootMat.opacity = 0.4 + Math.sin(elapsed * 3.0) * 0.25;
 
-      // ── Spaceship orbit path ──
-      shipT += isMobile ? 0.003 : 0.004;
+      // ── Floating particles animation ──
+      const pAttr = particleGeo.attributes.position;
+      for (let i = 0; i < PARTICLE_COUNT; i++) {
+        const i3 = i * 3;
+        // Subtle floating motion
+        pAttr.array[i3 + 1] += Math.sin(elapsed * 0.5 + i) * 0.002;
+        pAttr.array[i3] += Math.cos(elapsed * 0.3 + i) * 0.001;
+        // Keep particles in bounds
+        if (Math.abs(pAttr.array[i3]) > 30) pAttr.array[i3] *= 0.99;
+        if (Math.abs(pAttr.array[i3 + 1]) > 30) pAttr.array[i3 + 1] *= 0.99;
+        if (Math.abs(pAttr.array[i3 + 2]) > 30) pAttr.array[i3 + 2] *= 0.99;
+      }
+      pAttr.needsUpdate = true;
+      // Pulse particle opacity
+      particleMat.opacity = 0.3 + Math.sin(elapsed * 1.5) * 0.15;
+
+      // ── Spaceship orbit paths (multiple ships) ──
+      shipT += isMobile ? 0.004 : 0.005;
+      
+      // Main ship (first in array)
+      const mainShip = ships[0];
       const OR = isMobile ? 7 : 10, OZ = isMobile ? 5 : 7;
       const sx = Math.cos(shipT) * OR;
       const sz = Math.sin(shipT) * OZ;
       const sy = Math.sin(shipT * 1.4) * (isMobile ? 2.2 : 3.2);
 
-      ship.position.set(sx, sy, sz);
+      mainShip.ship.position.set(sx, sy, sz);
 
       // Point ship in direction of travel (tangent of orbit)
       const NT  = shipT + 0.015;
@@ -358,20 +444,58 @@ document.addEventListener('DOMContentLoaded', () => {
       const tz  = Math.sin(NT) * OZ;
       const ty  = Math.sin(NT * 1.4) * (isMobile ? 2.2 : 3.2);
       _v3.set(tx, ty, tz);
-      ship.lookAt(_v3);
+      mainShip.ship.lookAt(_v3);
       // lookAt makes -Z face target; ship points along +X so correct:
-      ship.rotateY(-Math.PI / 2);
+      mainShip.ship.rotateY(-Math.PI / 2);
 
       // Subtle banking
-      ship.rotation.z = Math.sin(shipT * 2) * 0.25;
+      mainShip.ship.rotation.z = Math.sin(shipT * 2) * 0.25;
 
-      // ── Engine glow pulse ──
-      const pulse = 0.82 + Math.sin(elapsed * 9) * 0.18;
-      glowL.scale.setScalar(pulse);
-      glowR.scale.setScalar(pulse);
-      mainGlow.scale.setScalar(0.9 + Math.sin(elapsed * 7 + 1) * 0.20);
-      nosePip.scale.setScalar(0.7 + Math.sin(elapsed * 4) * 0.3);
-      engineLight.intensity = 3.5 + Math.sin(elapsed * 9) * 1.0;
+      // ── Engine glow pulse (main ship) ──
+      const pulse = 0.75 + Math.sin(elapsed * 10) * 0.25;
+      mainShip.glowL.scale.setScalar(pulse);
+      mainShip.glowR.scale.setScalar(pulse);
+      mainShip.mainGlow.scale.setScalar(0.85 + Math.sin(elapsed * 8 + 1) * 0.25);
+      mainShip.nosePip.scale.setScalar(0.65 + Math.sin(elapsed * 5) * 0.35);
+      mainShip.engineLight.intensity = 4.0 + Math.sin(elapsed * 10) * 1.2;
+
+      // ── Additional ships animation ──
+      ships.slice(1).forEach((shipData, index) => {
+        const { ship: s, glowL: gl, glowR: gr, mainGlow: mg, nosePip: np, engineLight: el, orbitOffset, orbitSpeed, orbitRadius, orbitHeight } = shipData;
+        const t = shipT + orbitOffset;
+        
+        // Calculate position for each ship
+        const sOrbitR = orbitRadius;
+        const sOrbitZ = orbitRadius * 0.7;
+        const sOrbitH = orbitHeight;
+        
+        const ssx = Math.cos(t * orbitSpeed * 100) * sOrbitR;
+        const ssz = Math.sin(t * orbitSpeed * 100) * sOrbitZ;
+        const ssy = Math.sin(t * orbitSpeed * 100 * 1.3) * sOrbitH + (Math.sin(t) * 2);
+        
+        s.position.set(ssx, ssy, ssz);
+        
+        // Point ship in direction of travel
+        const sNT = t + 0.02;
+        const stx = Math.cos(sNT * orbitSpeed * 100) * sOrbitR;
+        const stz = Math.sin(sNT * orbitSpeed * 100) * sOrbitZ;
+        const sty = Math.sin(sNT * orbitSpeed * 100 * 1.3) * sOrbitH + (Math.sin(sNT) * 2);
+        
+        _v3.set(stx, sty, stz);
+        s.lookAt(_v3);
+        s.rotateY(-Math.PI / 2);
+        
+        // Banking
+        s.rotation.z = Math.sin(t * 2.5) * 0.2;
+        
+        // Glow pulse with offset
+        const sPulse = 0.75 + Math.sin(elapsed * 8 + index) * 0.15;
+        gl.scale.setScalar(sPulse);
+        gr.scale.setScalar(sPulse);
+        mg.scale.setScalar(0.85 + Math.sin(elapsed * 6 + index) * 0.18);
+        np.scale.setScalar(0.65 + Math.sin(elapsed * 3.5 + index) * 0.25);
+        el.intensity = 3 + Math.sin(elapsed * 8 + index) * 0.8;
+      });
 
       renderer.render(scene, camera);
       requestAnimationFrame(animate);
@@ -419,24 +543,37 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* ════════════════════════════════════════════
-     4. CUSTOM MAGNETIC CURSOR (always visible + luxury follower)
+     4. CUSTOM MAGNETIC CURSOR (enhanced cinematic effects)
   ════════════════════════════════════════════ */
   const cursorDot  = document.getElementById('cursorDot');
   const cursorRing = document.getElementById('cursorRing');
   let cx = -100, cy = -100;
   let rx = -100, ry = -100;
+  let cursorVelocity = 0;
+  let lastCursorX = -100, lastCursorY = -100;
 
   if (cursorDot && cursorRing) {
     cursorDot.style.pointerEvents  = 'none';
     cursorRing.style.pointerEvents = 'none';
 
     document.addEventListener('mousemove', (e) => {
+      // Calculate cursor velocity for dynamic effects
+      const dx = e.clientX - lastCursorX;
+      const dy = e.clientY - lastCursorY;
+      cursorVelocity = Math.sqrt(dx * dx + dy * dy);
+      lastCursorX = e.clientX;
+      lastCursorY = e.clientY;
+      
       cx = e.clientX;
       cy = e.clientY;
       cursorDot.style.left = cx + 'px';
       cursorDot.style.top  = cy + 'px';
       cursorDot.style.opacity  = '1';
       cursorRing.style.opacity = '1';
+      
+      // Dynamic scale based on velocity
+      const velocityScale = Math.min(1 + cursorVelocity * 0.02, 1.3);
+      cursorDot.style.transform = `scale(${velocityScale})`;
     });
 
     document.addEventListener('mouseleave', () => {
@@ -450,10 +587,21 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function animateRing() {
-      rx += (cx - rx) * 0.14;
-      ry += (cy - ry) * 0.14;
+      // More sophisticated lerp for smoother following
+      const lerpFactor = 0.12;
+      rx += (cx - rx) * lerpFactor;
+      ry += (cy - ry) * lerpFactor;
+      
       cursorRing.style.left = rx + 'px';
       cursorRing.style.top  = ry + 'px';
+      
+      // Add subtle rotation based on movement
+      const angle = Math.atan2(cy - ry, cx - rx);
+      cursorRing.style.transform = `rotate(${angle * 0.5}rad)`;
+      
+      // Decay velocity
+      cursorVelocity *= 0.9;
+      
       requestAnimationFrame(animateRing);
     }
     animateRing();
@@ -480,6 +628,27 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   /* ════════════════════════════════════════════
+     12. AMBIENT PARTICLES GENERATION
+  ════════════════════════════════════════════ */
+  function createAmbientParticles(containerId, count = 15) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    
+    for (let i = 0; i < count; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'ambient-particle';
+      particle.style.left = Math.random() * 100 + '%';
+      particle.style.top = Math.random() * 100 + '%';
+      particle.style.animationDelay = Math.random() * 8 + 's';
+      particle.style.animationDuration = (6 + Math.random() * 4) + 's';
+      container.appendChild(particle);
+    }
+  }
+  
+  // Create ambient particles for sections
+  createAmbientParticles('aboutParticles', 12);
+
+  /* ════════════════════════════════════════════
      5. NAVBAR SCROLL BEHAVIOUR
   ════════════════════════════════════════════ */
   const navbar = document.getElementById('navbar');
@@ -488,18 +657,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function onScroll() {
     const y = window.scrollY;
-    // Scrolled state
-    if (y > 40) navbar.classList.add('scrolled');
-    else navbar.classList.remove('scrolled');
-    // Hide/show on direction
-    if (y > lastScrollY && y > 120) navbar.classList.add('hidden');
-    else navbar.classList.remove('hidden');
+    if (navbar) {
+      // Scrolled state
+      if (y > 40) navbar.classList.add('scrolled');
+      else navbar.classList.remove('scrolled');
+      // Hide/show on direction
+      if (y > lastScrollY && y > 120) navbar.classList.add('hidden');
+      else navbar.classList.remove('hidden');
+    }
     lastScrollY = y;
 
-    // Scroll progress
-    const docH = document.documentElement.scrollHeight - window.innerHeight;
-    const prog = docH > 0 ? (y / docH) * 100 : 0;
-    document.getElementById('scrollProgress').style.width = prog + '%';
+    // Scroll progress (homepage only)
+    const scrollProgress = document.getElementById('scrollProgress');
+    if (scrollProgress) {
+      const docH = document.documentElement.scrollHeight - window.innerHeight;
+      const prog = docH > 0 ? (y / docH) * 100 : 0;
+      scrollProgress.style.width = prog + '%';
+    }
 
     // Active section dot nav + nav links
     updateActiveDot();
@@ -553,21 +727,26 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Logo scroll to top
-  document.getElementById('nav-logo').addEventListener('click', (e) => {
-    e.preventDefault();
-    if (lenis) lenis.scrollTo(0, { duration: 1.4 });
-    else window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
+  const navLogo = document.getElementById('nav-logo');
+  if (navLogo) {
+    navLogo.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (lenis) lenis.scrollTo(0, { duration: 1.4 });
+      else window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
 
   /* ════════════════════════════════════════════
      7. MOBILE NAV TOGGLE
   ════════════════════════════════════════════ */
   const navToggle = document.getElementById('navToggle');
   const navLinksEl = document.getElementById('navLinks');
-  navToggle.addEventListener('click', () => {
-    const open = navLinksEl.classList.toggle('open');
-    document.body.classList.toggle('nav-open', open);
-  });
+  if (navToggle && navLinksEl) {
+    navToggle.addEventListener('click', () => {
+      const open = navLinksEl.classList.toggle('open');
+      document.body.classList.toggle('nav-open', open);
+    });
+  }
 
   /* ════════════════════════════════════════════
      8. ROLE ROTATOR (HERO TYPEWRITER)
@@ -575,13 +754,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const roleItems = document.querySelectorAll('.role-item');
   let roleIdx = 0;
   function rotateRole() {
+    if (!roleItems.length) return;
     roleItems[roleIdx].classList.remove('active');
     roleItems[roleIdx].classList.add('out');
     setTimeout(() => roleItems[roleIdx].classList.remove('out'), 600);
     roleIdx = (roleIdx + 1) % roleItems.length;
     roleItems[roleIdx].classList.add('active');
   }
-  setInterval(rotateRole, 2800);
+  if (roleItems.length) setInterval(rotateRole, 2800);
 
   /* ════════════════════════════════════════════
      9. ANIMATED STAT COUNTERS (ABOUT SECTION)
@@ -1075,8 +1255,10 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ════════════════════════════════════════════
      17. INITIAL STATE SETUP
   ════════════════════════════════════════════ */
-  showSlide(0, true);
-  projArrowUp.style.opacity = '0.3';
+  if (projSection && projSlides.length) {
+    showSlide(0);
+    if (projArrowUp) projArrowUp.style.opacity = '0.3';
+  }
 
   /* ════════════════════════════════════════════
      18. BYTE — SPEAKING ROBOT GUIDE
@@ -1088,149 +1270,151 @@ document.addEventListener('DOMContentLoaded', () => {
   const rMuteBtn = document.getElementById('rMute');
   const rCloseBtn = document.getElementById('rClose');
 
-  // ── Section scripts (what Byte says on each section) ──
-  const BYTE_SCRIPTS = {
-    hero: "Hey there! I'm Byte 👋 — Surender's personal AI guide. Welcome to his award-winning portfolio! Surender is a Data Scientist, Machine Learning Engineer, and Full-Stack Developer currently in his 7th semester of B.Tech AI and Data Science at MITRC. Scroll down and I'll guide you through everything!",
-    about: "Great, you're on the About section! Surender is a passionate AI and Data Science student from MITRC, Alwar. He specializes in Machine Learning, Computer Vision, and Full-Stack Web Development. He's seeking internship and job opportunities, and he's currently open to exciting collaborations. He loves building things that blend intelligence with beautiful interfaces!",
-    skills: "Now we're in the Skills section! Surender's tech arsenal is seriously impressive. He codes in Python, JavaScript, and C++. On the AI side, he uses TensorFlow, PyTorch, scikit-learn, and OpenCV. For web development, he's proficient in React, Node.js, Express, and MongoDB. He's a full-spectrum engineer across three domains — Machine Learning, Computer Vision, and Full-Stack!",
-    projects: "Welcome to Surender's Projects! He has built 5 featured projects. First is TaskFlow — a full-stack MERN task manager with Kanban boards. Second is PlayStore Pulse — an ML app predicting app ratings using Random Forest. Third is an Emotion Classifier using YOLOv8 and PyTorch with real-time face detection. Fourth is a Hand Gesture Virtual Mouse using MediaPipe for touchless control. And fifth is a Dual-Model Text Summarizer using transformer models. Scroll to explore each one!",
-    certs: "These are Surender's Certifications! He completed a Data Science Internship at CODSOFT, where he worked on NLP and machine learning projects using Python and scikit-learn. He also completed a Full-Stack MERN Internship at Web Stack Academy, building complete web applications with React, Node.js, and MongoDB. Both certifications demonstrate his real-world experience!",
-    resume: "Here's Surender's Resume section! You can download his complete resume with one click. It includes his full education background at MITRC Alwar, his internship experiences at CODSOFT and Web Stack Academy, all five of his major projects, and his complete tech skill set. Don't miss it!",
-    contact: "You've reached the Contact section — the end of the tour! If you'd like to work with Surender, connect with him on GitHub at Surender 7 0 7, on LinkedIn, or drop him an email. He's actively looking for internship and job opportunities in AI, Machine Learning, and Full-Stack development. Don't be a stranger — say hello!"
-  };
+  if (rGuide && rBubble && rText && rChar && rMuteBtn && rCloseBtn) {
+    // ── Section scripts (what Byte says on each section) ──
+    const BYTE_SCRIPTS = {
+      hero: "Hey there! I'm Byte 👋 — Surender's personal AI guide. Welcome to his award-winning portfolio! Surender is a Data Scientist, Machine Learning Engineer, and Full-Stack Developer currently in his 7th semester of B.Tech AI and Data Science at MITRC. Scroll down and I'll guide you through everything!",
+      about: "Great, you're on the About section! Surender is a passionate AI and Data Science student from MITRC, Alwar. He specializes in Machine Learning, Computer Vision, and Full-Stack Web Development. He's seeking internship and job opportunities, and he's currently open to exciting collaborations. He loves building things that blend intelligence with beautiful interfaces!",
+      skills: "Now we're in the Skills section! Surender's tech arsenal is seriously impressive. He codes in Python, JavaScript, and C++. On the AI side, he uses TensorFlow, PyTorch, scikit-learn, and OpenCV. For web development, he's proficient in React, Node.js, Express, and MongoDB. He's a full-spectrum engineer across three domains — Machine Learning, Computer Vision, and Full-Stack!",
+      projects: "Welcome to Surender's Projects! He has built 5 featured projects. First is TaskFlow — a full-stack MERN task manager with Kanban boards. Second is PlayStore Pulse — an ML app predicting app ratings using Random Forest. Third is an Emotion Classifier using YOLOv8 and PyTorch with real-time face detection. Fourth is a Hand Gesture Virtual Mouse using MediaPipe for touchless control. And fifth is a Dual-Model Text Summarizer using transformer models. Scroll to explore each one!",
+      certs: "These are Surender's Certifications! He completed a Data Science Internship at CODSOFT, where he worked on NLP and machine learning projects using Python and scikit-learn. He also completed a Full-Stack MERN Internship at Web Stack Academy, building complete web applications with React, Node.js, and MongoDB. Both certifications demonstrate his real-world experience!",
+      resume: "Here's Surender's Resume section! You can download his complete resume with one click. It includes his full education background at MITRC Alwar, his internship experiences at CODSOFT and Web Stack Academy, all five of his major projects, and his complete tech skill set. Don't miss it!",
+      contact: "You've reached the Contact section — the end of the tour! If you'd like to work with Surender, connect with him on GitHub at Surender 7 0 7, on LinkedIn, or drop him an email. He's actively looking for internship and job opportunities in AI, Machine Learning, and Full-Stack development. Don't be a stranger — say hello!"
+    };
 
-  let robotMuted    = false;
-  let robotClosed   = false;
-  let currentUtter  = null;
-  let activeSec     = 'hero';
-  let spokenSections = new Set();
-  let typeTimer     = null;
+    let robotMuted    = false;
+    let robotClosed   = false;
+    let currentUtter  = null;
+    let activeSec     = 'hero';
+    let spokenSections = new Set();
+    let typeTimer     = null;
 
-  // ── Voice: pick best male voice ──
-  function getMaleVoice() {
-    const voices = window.speechSynthesis.getVoices();
-    // Prefer UK / US male voices
-    const preferred = ['Google UK English Male', 'Microsoft David Desktop', 'Microsoft Mark Desktop',
-                       'Google US English', 'en-GB', 'en-US'];
-    for (const name of preferred) {
-      const v = voices.find(v => v.name.includes(name) || v.lang === name);
-      if (v) return v;
+    // ── Voice: pick best male voice ──
+    function getMaleVoice() {
+      const voices = window.speechSynthesis.getVoices();
+      // Prefer UK / US male voices
+      const preferred = ['Google UK English Male', 'Microsoft David Desktop', 'Microsoft Mark Desktop',
+                         'Google US English', 'en-GB', 'en-US'];
+      for (const name of preferred) {
+        const v = voices.find(v => v.name.includes(name) || v.lang === name);
+        if (v) return v;
+      }
+      // Fallback: any English male-sounding voice
+      return voices.find(v => v.lang.startsWith('en') && !v.name.toLowerCase().includes('female'))
+        || voices[0] || null;
     }
-    // Fallback: any English male-sounding voice
-    return voices.find(v => v.lang.startsWith('en') && !v.name.toLowerCase().includes('female'))
-      || voices[0] || null;
-  }
 
-  // ── Typewriter effect ──
-  function typeWrite(msg, onDone) {
-    clearTimeout(typeTimer);
-    rText.textContent = '';
-    let i = 0;
-    const words = msg.split(' ');
-    function nextWord() {
-      if (i < words.length) {
-        rText.textContent += (i === 0 ? '' : ' ') + words[i];
-        i++;
-        typeTimer = setTimeout(nextWord, 65);
-      } else { if (onDone) onDone(); }
+    // ── Typewriter effect ──
+    function typeWrite(msg, onDone) {
+      clearTimeout(typeTimer);
+      rText.textContent = '';
+      let i = 0;
+      const words = msg.split(' ');
+      function nextWord() {
+        if (i < words.length) {
+          rText.textContent += (i === 0 ? '' : ' ') + words[i];
+          i++;
+          typeTimer = setTimeout(nextWord, 65);
+        } else { if (onDone) onDone(); }
+      }
+      nextWord();
     }
-    nextWord();
-  }
 
-  // ── Speak a message ──
-  function byteSpeak(msg) {
-    if (robotClosed) return;
-    // Show bubble
-    rBubble.classList.remove('r-hidden');
-    // Typewriter
-    typeWrite(msg);
-    // Stop any prior speech
-    window.speechSynthesis.cancel();
-    if (robotMuted) {
-      rChar.classList.remove('r-speaking');
-      return;
+    // ── Speak a message ──
+    function byteSpeak(msg) {
+      if (robotClosed) return;
+      // Show bubble
+      rBubble.classList.remove('r-hidden');
+      // Typewriter
+      typeWrite(msg);
+      // Stop any prior speech
+      window.speechSynthesis.cancel();
+      if (robotMuted) {
+        rChar.classList.remove('r-speaking');
+        return;
+      }
+      const utter = new SpeechSynthesisUtterance(msg);
+      utter.rate   = 0.95;
+      utter.pitch  = 0.85;
+      utter.volume = 1;
+      const voice = getMaleVoice();
+      if (voice) utter.voice = voice;
+      utter.onstart = () => rChar.classList.add('r-speaking');
+      utter.onend   = () => rChar.classList.remove('r-speaking');
+      utter.onerror = () => rChar.classList.remove('r-speaking');
+      currentUtter = utter;
+      // Small delay to let voices load
+      setTimeout(() => window.speechSynthesis.speak(utter), 200);
     }
-    const utter = new SpeechSynthesisUtterance(msg);
-    utter.rate   = 0.95;
-    utter.pitch  = 0.85;
-    utter.volume = 1;
-    const voice = getMaleVoice();
-    if (voice) utter.voice = voice;
-    utter.onstart = () => rChar.classList.add('r-speaking');
-    utter.onend   = () => rChar.classList.remove('r-speaking');
-    utter.onerror = () => rChar.classList.remove('r-speaking');
-    currentUtter = utter;
-    // Small delay to let voices load
-    setTimeout(() => window.speechSynthesis.speak(utter), 200);
-  }
 
-  // ── Section change handler ──
-  function byteSectionChange(secId) {
-    if (secId === activeSec && spokenSections.has(secId)) return;
-    activeSec = secId;
-    if (spokenSections.has(secId)) return; // only speak once per section per visit
-    spokenSections.add(secId);
-    const msg = BYTE_SCRIPTS[secId];
-    if (msg) byteSpeak(msg);
-  }
+    // ── Section change handler ──
+    function byteSectionChange(secId) {
+      if (secId === activeSec && spokenSections.has(secId)) return;
+      activeSec = secId;
+      if (spokenSections.has(secId)) return; // only speak once per section per visit
+      spokenSections.add(secId);
+      const msg = BYTE_SCRIPTS[secId];
+      if (msg) byteSpeak(msg);
+    }
 
-  // ── Watch active section via IntersectionObserver ──
-  const robotObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const id = entry.target.dataset.section;
-        if (id) byteSectionChange(id);
+    // ── Watch active section via IntersectionObserver ──
+    const robotObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.dataset.section;
+          if (id) byteSectionChange(id);
+        }
+      });
+    }, { threshold: 0.4 });
+
+    document.querySelectorAll('.section[data-section]').forEach(s => robotObserver.observe(s));
+
+    // ── Mute / Unmute ──
+    rMuteBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      robotMuted = !robotMuted;
+      rMuteBtn.textContent = robotMuted ? '🔇' : '🔊';
+      if (robotMuted) {
+        window.speechSynthesis.cancel();
+        rChar.classList.remove('r-speaking');
+      } else {
+        // Re-speak current section
+        spokenSections.delete(activeSec);
+        byteSectionChange(activeSec);
       }
     });
-  }, { threshold: 0.4 });
 
-  document.querySelectorAll('.section[data-section]').forEach(s => robotObserver.observe(s));
-
-  // ── Mute / Unmute ──
-  rMuteBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    robotMuted = !robotMuted;
-    rMuteBtn.textContent = robotMuted ? '🔇' : '🔊';
-    if (robotMuted) {
+    // ── Close guide ──
+    rCloseBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      robotClosed = true;
       window.speechSynthesis.cancel();
       rChar.classList.remove('r-speaking');
-    } else {
-      // Re-speak current section
+      rGuide.classList.add('r-hidden');
+    });
+
+    // ── Click robot to replay current section ──
+    rChar.addEventListener('click', () => {
+      if (robotClosed) return;
       spokenSections.delete(activeSec);
       byteSectionChange(activeSec);
-    }
-  });
+    });
+    rChar.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        spokenSections.delete(activeSec);
+        byteSectionChange(activeSec);
+      }
+    });
 
-  // ── Close guide ──
-  rCloseBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    robotClosed = true;
-    window.speechSynthesis.cancel();
-    rChar.classList.remove('r-speaking');
-    rGuide.classList.add('r-hidden');
-  });
+    // ── Load voices asynchronously ──
+    window.speechSynthesis.onvoiceschanged = () => { /* voices now available */ };
 
-  // ── Click robot to replay current section ──
-  rChar.addEventListener('click', () => {
-    if (robotClosed) return;
-    spokenSections.delete(activeSec);
-    byteSectionChange(activeSec);
-  });
-  rChar.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      spokenSections.delete(activeSec);
-      byteSectionChange(activeSec);
-    }
-  });
-
-  // ── Load voices asynchronously ──
-  window.speechSynthesis.onvoiceschanged = () => { /* voices now available */ };
-
-  // ── Greet after preloader finishes (hero speech) ──
-  // Wait 2s for preloader, then speak hero
-  setTimeout(() => {
-    if (!robotClosed) byteSectionChange('hero');
-  }, 3200);
+    // ── Greet after preloader finishes (hero speech) ──
+    // Wait 2s for preloader, then speak hero
+    setTimeout(() => {
+      if (!robotClosed) byteSectionChange('hero');
+    }, 3200);
+  }
 
 }); // end DOMContentLoaded
