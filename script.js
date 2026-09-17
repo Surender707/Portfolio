@@ -65,21 +65,29 @@ document.addEventListener('DOMContentLoaded', () => {
     scene.add(fillLight);
 
     // ══════════════════════════════════════════
-    // A. STARFIELD — 50,000 coloured stars (cinematic effect)
+    // A. STARFIELD — 250,000 coloured stars (ultra-cinematic depth effect)
     // ══════════════════════════════════════════
-    const STAR_COUNT = isMobile ? 25000 : 50000;
+    const STAR_COUNT = isMobile ? 120000 : 250000;
     const starGeo    = new THREE.BufferGeometry();
     const starPos    = new Float32Array(STAR_COUNT * 3);
     const starCol    = new Float32Array(STAR_COUNT * 3);
-    // Colour palette: white, cool-blue, warm-yellow, icy-cyan, reddish
+    // Celestial colour palette: starlight white, champagne gold, icy cyan, cosmic violet, solar amber
     const palette = [
-      [1.0, 1.0, 1.0], [0.8, 0.9, 1.0], [1.0, 0.95, 0.75],
-      [0.65, 0.85, 1.0], [1.0, 0.80, 0.72],
+      [1.0, 1.0, 1.0],      // Pure starlight
+      [0.95, 0.98, 1.0],    // Cool white
+      [1.0, 0.86, 0.45],    // Champagne gold
+      [0.45, 0.85, 1.0],    // Electric cyan
+      [0.85, 0.72, 1.0],    // Cosmic lavender
+      [1.0, 0.75, 0.50],    // Solar amber
+      [0.70, 0.90, 1.0],    // Deep cyan
     ];
 
     for (let i = 0; i < STAR_COUNT; i++) {
-      // Random point on sphere shell, r = 30-180
-      const r   = 30 + Math.random() * 150;
+      // Multi-layer distribution: dense inner cluster to wide cosmic expanse
+      const layer = Math.random();
+      const r = layer < 0.6 
+        ? (20 + Math.random() * 80)    // Core starfield
+        : (90 + Math.random() * 160);  // Deep celestial backdrop
       const th  = Math.random() * Math.PI * 2;
       const ph  = Math.acos(2 * Math.random() - 1);
       starPos[i * 3]     = r * Math.sin(ph) * Math.cos(th);
@@ -93,11 +101,11 @@ document.addEventListener('DOMContentLoaded', () => {
     starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
     starGeo.setAttribute('color',    new THREE.BufferAttribute(starCol, 3));
     const starMat = new THREE.PointsMaterial({
-      size: isMobile ? 0.20 : 0.14,
+      size: isMobile ? 0.20 : 0.15,
       sizeAttenuation: true,
       vertexColors: true,
       transparent: true,
-      opacity: 0.88,
+      opacity: 0.92,
       depthWrite: false,
       blending: THREE.AdditiveBlending,
     });
@@ -108,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // B. GALAXY — gold/navy spiral arms (enhanced for cinematic effect)
     // ══════════════════════════════════════════
     const gParams = {
-      count: isMobile ? 60000 : 120000, size: 0.003,
+      count: isMobile ? 100000 : 180000, size: 0.004,
       radius: 8, branches: 4, spin: 1.5,
       randomness: 0.3, randomnessPower: 3,
     };
@@ -244,22 +252,41 @@ document.addEventListener('DOMContentLoaded', () => {
     scene.add(ship);
 
     // ══════════════════════════════════════════
-    // C.2 ADDITIONAL SPACESHIPS (cinematic fleet effect)
+    // C.2 EXPANDED SPACESHIP FLEET (8 ships on desktop, 4 on mobile)
     // ══════════════════════════════════════════
     const ships = [{ ship, glowL, glowR, mainGlow, nosePip, engineLight }];
-    const NUM_SHIPS = isMobile ? 2 : 4; // Add 3 more ships on desktop, 1 on mobile
+    const NUM_SHIPS = isMobile ? 8 : 15; // Fleet of 15 procedural patrol ships
+
+    const fleetConfigs = [
+      { color: 0x00e5ff, noseColor: 0xffffff, scale: 0.65, r: 9, h: 2.8, speed: 0.0035, offset: 1.2, tilt: 0.3 },    // Cyan Scout
+      { color: 0xffaa00, noseColor: 0xff4400, scale: 0.72, r: 12, h: -3.2, speed: 0.0028, offset: 2.5, tilt: -0.4 },  // Solar Cruiser
+      { color: 0xb55fe6, noseColor: 0x00ffff, scale: 0.55, r: 7.5, h: 4.1, speed: 0.0042, offset: 3.8, tilt: 0.5 },   // Warp Interceptor
+      { color: 0x00ffaa, noseColor: 0xffffff, scale: 0.60, r: 14, h: 1.5, speed: 0.0022, offset: 4.7, tilt: -0.2 },   // Emerald Vanguard
+      { color: 0xff3366, noseColor: 0xffccdd, scale: 0.50, r: 6.5, h: -2.0, speed: 0.0048, offset: 0.7, tilt: 0.6 },  // Crimson Dart
+      { color: 0xffd166, noseColor: 0xffaa00, scale: 0.78, r: 11, h: 3.6, speed: 0.0030, offset: 5.4, tilt: -0.35 }, // Champagne Flagship
+      { color: 0x4cc9f0, noseColor: 0x7209b7, scale: 0.48, r: 8.5, h: -4.0, speed: 0.0045, offset: 3.1, tilt: 0.45 },// Azure Raider
+      { color: 0xe040fb, noseColor: 0xffa0ff, scale: 0.58, r: 16, h: 5.0, speed: 0.0020, offset: 6.1, tilt: 0.15 },  // Neon Phantom
+      { color: 0x00bcd4, noseColor: 0xffffff, scale: 0.42, r: 5.5, h: -1.5, speed: 0.0055, offset: 1.8, tilt: -0.55 },// Teal Whisper
+      { color: 0xff6e40, noseColor: 0xffd180, scale: 0.68, r: 13, h: -4.5, speed: 0.0025, offset: 7.2, tilt: 0.35 }, // Ember Sentinel
+      { color: 0x76ff03, noseColor: 0xccff90, scale: 0.45, r: 10, h: 3.0, speed: 0.0038, offset: 2.0, tilt: -0.28 }, // Lime Specter
+      { color: 0xaa00ff, noseColor: 0xea80fc, scale: 0.62, r: 15, h: -2.8, speed: 0.0032, offset: 4.0, tilt: 0.50 }, // Violet Marauder
+      { color: 0xffc400, noseColor: 0xfff176, scale: 0.52, r: 6.0, h: 4.8, speed: 0.0050, offset: 5.8, tilt: -0.42 },// Amber Firefly
+      { color: 0x18ffff, noseColor: 0x84ffff, scale: 0.70, r: 17, h: 1.0, speed: 0.0018, offset: 8.0, tilt: 0.22 },  // Glacier Titan
+    ];
 
     for (let i = 1; i < NUM_SHIPS; i++) {
+      const cfg = fleetConfigs[(i - 1) % fleetConfigs.length];
       const { ship: newShip, glowL: newGlowL, glowR: newGlowR, mainGlow: newMainGlow, nosePip: newNosePip, engineLight: newEngineLight } = buildSpaceship();
       
-      // Vary scale for depth effect
-      const scaleVar = 0.4 + Math.random() * 0.4; // 0.4-0.8
-      newShip.scale.setScalar(isMobile ? 0.35 : scaleVar);
+      newShip.scale.setScalar(isMobile ? cfg.scale * 0.7 : cfg.scale);
       
-      // Add slight color variation to engine glow
-      const hueVar = Math.random() * 0.1 - 0.05; // slight color shift
-      newGlowL.material.color.setHSL(0.12 + hueVar, 0.8, 0.5);
-      newGlowR.material.color.setHSL(0.12 + hueVar, 0.8, 0.5);
+      // Custom colored thruster engine glow
+      newGlowL.material = new THREE.MeshBasicMaterial({ color: cfg.color });
+      newGlowR.material = new THREE.MeshBasicMaterial({ color: cfg.color });
+      newMainGlow.material = new THREE.MeshBasicMaterial({ color: cfg.color });
+      newNosePip.material = new THREE.MeshBasicMaterial({ color: cfg.noseColor });
+      newEngineLight.color.setHex(cfg.color);
+      newEngineLight.intensity = 3.5;
       
       scene.add(newShip);
       ships.push({ 
@@ -269,17 +296,18 @@ document.addEventListener('DOMContentLoaded', () => {
         mainGlow: newMainGlow, 
         nosePip: newNosePip, 
         engineLight: newEngineLight,
-        orbitOffset: i * 2.5, // different orbit phases
-        orbitSpeed: 0.002 + Math.random() * 0.002, // varied speeds
-        orbitRadius: 8 + Math.random() * 6, // varied orbit sizes
-        orbitHeight: 2 + Math.random() * 3 // varied orbit heights
+        orbitOffset: cfg.offset,
+        orbitSpeed: cfg.speed,
+        orbitRadius: cfg.r,
+        orbitHeight: cfg.h,
+        orbitTilt: cfg.tilt
       });
     }
 
     // ══════════════════════════════════════════
     // D. FLOATING PARTICLES — ambient dust/mote effect
     // ══════════════════════════════════════════
-    const PARTICLE_COUNT = isMobile ? 150 : 600;
+    const PARTICLE_COUNT = isMobile ? 400 : 1200;
     const particleGeo = new THREE.BufferGeometry();
     const particlePos = new Float32Array(PARTICLE_COUNT * 3);
     const particleSizes = new Float32Array(PARTICLE_COUNT);
@@ -314,7 +342,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // E. SHOOTING STARS — fast-moving streaks (enhanced)
     // ══════════════════════════════════════════
-    const SHOOT_COUNT = isMobile ? 3 : 10;
+    const SHOOT_COUNT = isMobile ? 6 : 18;
     const shootGeo = new THREE.BufferGeometry();
     const shootPos = new Float32Array(SHOOT_COUNT * 6); // 2 verts per line
     shootGeo.setAttribute('position', new THREE.BufferAttribute(shootPos, 3));
@@ -459,42 +487,52 @@ document.addEventListener('DOMContentLoaded', () => {
       mainShip.nosePip.scale.setScalar(0.65 + Math.sin(elapsed * 5) * 0.35);
       mainShip.engineLight.intensity = 4.0 + Math.sin(elapsed * 10) * 1.2;
 
-      // ── Additional ships animation ──
+      // ── Additional ships animation (fleet formation) ──
       ships.slice(1).forEach((shipData, index) => {
-        const { ship: s, glowL: gl, glowR: gr, mainGlow: mg, nosePip: np, engineLight: el, orbitOffset, orbitSpeed, orbitRadius, orbitHeight } = shipData;
+        const { ship: s, glowL: gl, glowR: gr, mainGlow: mg, nosePip: np, engineLight: el, orbitOffset, orbitSpeed, orbitRadius, orbitHeight, orbitTilt } = shipData;
         const t = shipT + orbitOffset;
+        const tilt = orbitTilt || 0.2;
         
-        // Calculate position for each ship
+        // 3D elliptical tilted orbit
         const sOrbitR = orbitRadius;
-        const sOrbitZ = orbitRadius * 0.7;
-        const sOrbitH = orbitHeight;
+        const sOrbitZ = orbitRadius * 0.75;
+        const baseAngle = t * orbitSpeed * 100;
         
-        const ssx = Math.cos(t * orbitSpeed * 100) * sOrbitR;
-        const ssz = Math.sin(t * orbitSpeed * 100) * sOrbitZ;
-        const ssy = Math.sin(t * orbitSpeed * 100 * 1.3) * sOrbitH + (Math.sin(t) * 2);
+        const rawX = Math.cos(baseAngle) * sOrbitR;
+        const rawZ = Math.sin(baseAngle) * sOrbitZ;
+        const rawY = Math.sin(baseAngle * 1.3) * orbitHeight + Math.sin(t * 1.5) * 1.5;
+        
+        // Apply tilt rotation around X/Z
+        const ssx = rawX * Math.cos(tilt) - rawY * Math.sin(tilt);
+        const ssy = rawX * Math.sin(tilt) + rawY * Math.cos(tilt);
+        const ssz = rawZ;
         
         s.position.set(ssx, ssy, ssz);
         
-        // Point ship in direction of travel
-        const sNT = t + 0.02;
-        const stx = Math.cos(sNT * orbitSpeed * 100) * sOrbitR;
-        const stz = Math.sin(sNT * orbitSpeed * 100) * sOrbitZ;
-        const sty = Math.sin(sNT * orbitSpeed * 100 * 1.3) * sOrbitH + (Math.sin(sNT) * 2);
+        // Tangent target for heading
+        const sNT = baseAngle + 0.025;
+        const nextRawX = Math.cos(sNT) * sOrbitR;
+        const nextRawZ = Math.sin(sNT) * sOrbitZ;
+        const nextRawY = Math.sin(sNT * 1.3) * orbitHeight + Math.sin((t + 0.025) * 1.5) * 1.5;
+        
+        const stx = nextRawX * Math.cos(tilt) - nextRawY * Math.sin(tilt);
+        const sty = nextRawX * Math.sin(tilt) + nextRawY * Math.cos(tilt);
+        const stz = nextRawZ;
         
         _v3.set(stx, sty, stz);
         s.lookAt(_v3);
         s.rotateY(-Math.PI / 2);
         
-        // Banking
-        s.rotation.z = Math.sin(t * 2.5) * 0.2;
+        // Dynamic banking into turns
+        s.rotation.z = Math.sin(t * 2.5 + index) * 0.3;
         
-        // Glow pulse with offset
-        const sPulse = 0.75 + Math.sin(elapsed * 8 + index) * 0.15;
+        // Engine thruster pulse with index offset
+        const sPulse = 0.8 + Math.sin(elapsed * 9 + index * 1.5) * 0.25;
         gl.scale.setScalar(sPulse);
         gr.scale.setScalar(sPulse);
-        mg.scale.setScalar(0.85 + Math.sin(elapsed * 6 + index) * 0.18);
-        np.scale.setScalar(0.65 + Math.sin(elapsed * 3.5 + index) * 0.25);
-        el.intensity = 3 + Math.sin(elapsed * 8 + index) * 0.8;
+        mg.scale.setScalar(0.9 + Math.sin(elapsed * 7 + index) * 0.22);
+        np.scale.setScalar(0.7 + Math.sin(elapsed * 4 + index) * 0.3);
+        el.intensity = 3.5 + Math.sin(elapsed * 9 + index) * 1.2;
       });
 
       renderer.render(scene, camera);
@@ -1009,7 +1047,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ── Hero: scroll hint fade ──
     gsap.to('.hero-scroll-hint', {
-      opacity: 0, y: -10,
+      opacity: 0, y: -10, filter: 'blur(8px)',
       scrollTrigger: { trigger: '#hero', start: 'top top', end: '+=150', scrub: true }
     });
 
@@ -1033,36 +1071,48 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ── ABOUT: section tag + title stagger ──
     gsap.fromTo('#about .section-tag',
-      { opacity: 0, y: 20, letterSpacing: '6px' },
-      { opacity: 1, y: 0, letterSpacing: '3px', duration: 0.7, ease: ease1,
+      { opacity: 0, y: 20, letterSpacing: '6px', filter: 'blur(6px)' },
+      { opacity: 1, y: 0, letterSpacing: '3px', filter: 'blur(0px)', duration: 0.9, ease: ease1,
+        scrollTrigger: { trigger: '#about', start: 'top 82%' }
+      }
+    );
+    gsap.fromTo('#about .section-tag-line',
+      { scaleX: 0, opacity: 0 },
+      { scaleX: 1, opacity: 1, duration: 1.0, ease: ease1, delay: 0.15,
         scrollTrigger: { trigger: '#about', start: 'top 82%' }
       }
     );
     gsap.fromTo('#about .section-title',
-      { opacity: 0, y: 50, skewX: -2 },
-      { opacity: 1, y: 0, skewX: 0, duration: 0.9, ease: ease1,
+      { opacity: 0, y: 50, skewX: -2, filter: 'blur(10px)' },
+      { opacity: 1, y: 0, skewX: 0, filter: 'blur(0px)', duration: 1.1, ease: ease1,
         scrollTrigger: { trigger: '#about', start: 'top 78%' }
       }
     );
     // Bento cards stagger
     gsap.fromTo('.bento-card',
-      { opacity: 0, y: 40, scale: 0.97 },
-      { opacity: 1, y: 0, scale: 1,
-        duration: 0.65, ease: easeBounce, stagger: 0.1,
+      { opacity: 0, y: 40, scale: 0.97, filter: 'blur(8px)' },
+      { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)',
+        duration: 0.75, ease: easeBounce, stagger: 0.1,
         scrollTrigger: { trigger: '.about-bento', start: 'top 80%' }
       }
     );
 
     // ── SKILLS ──
     gsap.fromTo('#skills .section-tag',
-      { opacity: 0, y: 20 },
-      { opacity: 1, y: 0, duration: 0.7, ease: ease1,
+      { opacity: 0, y: 20, filter: 'blur(6px)' },
+      { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.9, ease: ease1,
+        scrollTrigger: { trigger: '#skills', start: 'top 82%' }
+      }
+    );
+    gsap.fromTo('#skills .section-tag-line',
+      { scaleX: 0, opacity: 0 },
+      { scaleX: 1, opacity: 1, duration: 1.0, ease: ease1, delay: 0.15,
         scrollTrigger: { trigger: '#skills', start: 'top 82%' }
       }
     );
     gsap.fromTo('#skills .section-title',
-      { opacity: 0, y: 50, skewX: -2 },
-      { opacity: 1, y: 0, skewX: 0, duration: 0.9, ease: ease1,
+      { opacity: 0, y: 50, skewX: -2, filter: 'blur(10px)' },
+      { opacity: 1, y: 0, skewX: 0, filter: 'blur(0px)', duration: 1.1, ease: ease1,
         scrollTrigger: { trigger: '#skills', start: 'top 78%' }
       }
     );
@@ -1073,8 +1123,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     );
     gsap.fromTo('.skill-cat-card',
-      { opacity: 0, x: -36 },
-      { opacity: 1, x: 0, duration: 0.6, ease: ease1, stagger: 0.13,
+      { opacity: 0, x: -36, filter: 'blur(6px)' },
+      { opacity: 1, x: 0, filter: 'blur(0px)', duration: 0.7, ease: ease1, stagger: 0.13,
         scrollTrigger: { trigger: '.skills-cats', start: 'top 82%' }
       }
     );
@@ -1095,41 +1145,53 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ── CERTS ──
     gsap.fromTo('#certs .section-tag',
-      { opacity: 0, y: 20 },
-      { opacity: 1, y: 0, duration: 0.7, ease: ease1,
+      { opacity: 0, y: 20, filter: 'blur(6px)' },
+      { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.9, ease: ease1,
+        scrollTrigger: { trigger: '#certs', start: 'top 82%' }
+      }
+    );
+    gsap.fromTo('#certs .section-tag-line',
+      { scaleX: 0, opacity: 0 },
+      { scaleX: 1, opacity: 1, duration: 1.0, ease: ease1, delay: 0.15,
         scrollTrigger: { trigger: '#certs', start: 'top 82%' }
       }
     );
     gsap.fromTo('#certs .section-title',
-      { opacity: 0, y: 50, skewX: -2 },
-      { opacity: 1, y: 0, skewX: 0, duration: 0.9, ease: ease1,
+      { opacity: 0, y: 50, skewX: -2, filter: 'blur(10px)' },
+      { opacity: 1, y: 0, skewX: 0, filter: 'blur(0px)', duration: 1.1, ease: ease1,
         scrollTrigger: { trigger: '#certs', start: 'top 78%' }
       }
     );
     gsap.fromTo('.cert-card',
-      { opacity: 0, y: 50, scale: 0.95 },
-      { opacity: 1, y: 0, scale: 1,
-        duration: 0.75, ease: easeBounce, stagger: 0.18,
+      { opacity: 0, y: 50, scale: 0.95, filter: 'blur(8px)' },
+      { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)',
+        duration: 0.85, ease: easeBounce, stagger: 0.18,
         scrollTrigger: { trigger: '.cert-grid', start: 'top 80%' }
       }
     );
 
     // ── RESUME ──
     gsap.fromTo('#resume .section-tag',
-      { opacity: 0, y: 20 },
-      { opacity: 1, y: 0, duration: 0.7, ease: ease1,
+      { opacity: 0, y: 20, filter: 'blur(6px)' },
+      { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.9, ease: ease1,
+        scrollTrigger: { trigger: '#resume', start: 'top 82%' }
+      }
+    );
+    gsap.fromTo('#resume .section-tag-line',
+      { scaleX: 0, opacity: 0 },
+      { scaleX: 1, opacity: 1, duration: 1.0, ease: ease1, delay: 0.15,
         scrollTrigger: { trigger: '#resume', start: 'top 82%' }
       }
     );
     gsap.fromTo('#resume .section-title',
-      { opacity: 0, y: 50, skewX: -2 },
-      { opacity: 1, y: 0, skewX: 0, duration: 0.9, ease: ease1,
+      { opacity: 0, y: 50, skewX: -2, filter: 'blur(10px)' },
+      { opacity: 1, y: 0, skewX: 0, filter: 'blur(0px)', duration: 1.1, ease: ease1,
         scrollTrigger: { trigger: '#resume', start: 'top 78%' }
       }
     );
     gsap.fromTo('.rb-item',
-      { opacity: 0, x: -24 },
-      { opacity: 1, x: 0, duration: 0.55, ease: ease1, stagger: 0.1,
+      { opacity: 0, x: -24, filter: 'blur(4px)' },
+      { opacity: 1, x: 0, filter: 'blur(0px)', duration: 0.6, ease: ease1, stagger: 0.1,
         scrollTrigger: { trigger: '.resume-layout', start: 'top 80%' }
       }
     );
@@ -1148,26 +1210,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ── CONTACT ──
     gsap.fromTo('#contact .section-tag',
-      { opacity: 0, y: 20 },
-      { opacity: 1, y: 0, duration: 0.7, ease: ease1,
+      { opacity: 0, y: 20, filter: 'blur(6px)' },
+      { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.9, ease: ease1,
+        scrollTrigger: { trigger: '#contact', start: 'top 82%' }
+      }
+    );
+    gsap.fromTo('#contact .section-tag-line',
+      { scaleX: 0, opacity: 0 },
+      { scaleX: 1, opacity: 1, duration: 1.0, ease: ease1, delay: 0.15,
         scrollTrigger: { trigger: '#contact', start: 'top 82%' }
       }
     );
     gsap.fromTo('#contact .section-title',
-      { opacity: 0, y: 50, skewX: -2 },
-      { opacity: 1, y: 0, skewX: 0, duration: 0.9, ease: ease1,
+      { opacity: 0, y: 50, skewX: -2, filter: 'blur(10px)' },
+      { opacity: 1, y: 0, skewX: 0, filter: 'blur(0px)', duration: 1.1, ease: ease1,
         scrollTrigger: { trigger: '#contact', start: 'top 78%' }
       }
     );
     gsap.fromTo('.contact-lead, .contact-email-block, .contact-edu-block, .contact-cta',
-      { opacity: 0, y: 30 },
-      { opacity: 1, y: 0, duration: 0.65, ease: ease1, stagger: 0.12,
+      { opacity: 0, y: 30, filter: 'blur(6px)' },
+      { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.75, ease: ease1, stagger: 0.12,
         scrollTrigger: { trigger: '.contact-left', start: 'top 78%' }
       }
     );
     gsap.fromTo('.social-link',
-      { opacity: 0, x: 40 },
-      { opacity: 1, x: 0, duration: 0.6, ease: easeBounce, stagger: 0.12,
+      { opacity: 0, x: 40, filter: 'blur(6px)' },
+      { opacity: 1, x: 0, filter: 'blur(0px)', duration: 0.7, ease: easeBounce, stagger: 0.12,
         scrollTrigger: { trigger: '.contact-right', start: 'top 80%' }
       }
     );
@@ -1416,5 +1484,76 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!robotClosed) byteSectionChange('hero');
     }, 3200);
   }
+
+  // ══════════════════════════════════════════
+  // 17. 3D HOLOGRAPHIC ABOUT CARD TILT & SPOTLIGHT
+  // ══════════════════════════════════════════
+  function initAboutHoloCard() {
+    const card = document.getElementById('aboutHoloCard');
+    const spotlight = document.getElementById('aboutSpotlight');
+    if (!card) return;
+
+    let bounds;
+
+    function onMouseEnter() {
+      bounds = card.getBoundingClientRect();
+      card.classList.add('is-hovered');
+    }
+
+    function onMouseMove(e) {
+      if (!bounds) bounds = card.getBoundingClientRect();
+      const mouseX = e.clientX - bounds.left;
+      const mouseY = e.clientY - bounds.top;
+      
+      const xPct = (mouseX / bounds.width) - 0.5;
+      const yPct = (mouseY / bounds.height) - 0.5;
+      
+      const rotX = -yPct * 18; // degrees
+      const rotY = xPct * 18;
+      
+      card.style.transform = `perspective(1200px) rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg) scale3d(1.02, 1.02, 1.02)`;
+      
+      if (spotlight) {
+        spotlight.style.background = `radial-gradient(circle 260px at ${mouseX}px ${mouseY}px, rgba(255,255,255,0.28), rgba(212,175,55,0.18), transparent 80%)`;
+        spotlight.style.opacity = '1';
+      }
+    }
+
+    function onMouseLeave() {
+      card.classList.remove('is-hovered');
+      card.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+      if (spotlight) spotlight.style.opacity = '0';
+    }
+
+    card.addEventListener('mouseenter', onMouseEnter);
+    card.addEventListener('mousemove', onMouseMove);
+    card.addEventListener('mouseleave', onMouseLeave);
+  }
+  initAboutHoloCard();
+
+  // ══════════════════════════════════════════
+  // 18. TERMINAL CONTACT FORM TRANSMISSION
+  // ══════════════════════════════════════════
+  function initContactForm() {
+    const form = document.getElementById('transmissionForm');
+    const statusBox = document.getElementById('transmissionStatus');
+    if (!form || !statusBox) return;
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const submitBtn = form.querySelector('button[type="submit"]');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span>TRANSMITTING DISPATCH...</span>';
+      }
+
+      setTimeout(() => {
+        form.style.display = 'none';
+        statusBox.style.display = 'block';
+        statusBox.classList.add('fade-in');
+      }, 800);
+    });
+  }
+  initContactForm();
 
 }); // end DOMContentLoaded
