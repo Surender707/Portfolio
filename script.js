@@ -1,7 +1,8 @@
 'use strict';
 
-/* ── WAIT FOR DOM ── */
-document.addEventListener('DOMContentLoaded', () => {
+function initPortfolio() {
+  if (window.__portfolioInitialized) return;
+  window.__portfolioInitialized = true;
 
   /* ════════════════════════════════════════════
      1. PRELOADER
@@ -1556,4 +1557,12 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   initContactForm();
 
-}); // end DOMContentLoaded
+} // end initPortfolio
+
+window.initPortfolio = initPortfolio;
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initPortfolio);
+} else {
+  setTimeout(initPortfolio, 50);
+}
