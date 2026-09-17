@@ -1,7 +1,10 @@
 {
-  "name": "portfolio",
-  "private": true,
+  "name": "surender-portfolio",
   "version": "1.0.0",
+  "description": "Interactive 3D developer portfolio built with React, TypeScript, Three.js, and Vite.",
+  "author": "Surender Singh <surenderchoudhary07072004@gmail.com>",
+  "homepage": "https://surender-portfolio-sigma.vercel.app",
+  "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite",
