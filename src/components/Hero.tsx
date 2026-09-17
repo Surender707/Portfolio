@@ -5,10 +5,10 @@ export default function Hero() {
     <section className="section s-hero" id="hero" data-section="hero">
       <div className="hero-container">
         <div className="hero-left">
-          <p className="hero-greeting">I BUILD</p>
+          <p className="hero-greeting">I&apos;M</p>
           <h1 className="hero-name">
-            <span className="name-word" id="heroWord1">DATA SCIENCE</span>
-            <span className="name-word name-accent" id="heroWord2">SOLUTIONS</span>
+            <span className="name-word" id="heroWord1">SURENDER</span>{' '}
+            <span className="name-word name-accent" id="heroWord2">SINGH</span>
           </h1>
           <div className="hero-role-wrap">
             <span className="hero-role-prefix">A </span>
