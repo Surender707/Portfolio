@@ -55,7 +55,6 @@ export default function Hero() {
             <span className="name-word name-accent">SOLUTIONS</span>
           </h1>
           <p className="hero-subtitle">DATA SCIENTIST • ML ENGINEER • FULL-STACK DEVELOPER</p>
-          <p className="hero-subtitle">DATA SCIENTIST • ML ENGINEER • FULL-STACK DEVELOPER</p>
           <p className="hero-description">
             I turn bold ideas into seamless digital experiences.
             <br />
