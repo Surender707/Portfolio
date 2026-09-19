@@ -1,29 +1,132 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 
 export default function Navbar() {
+  const [isOpen, setIsOpen] = useState(false)
+
+  // Close when pressing Escape
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsOpen(false)
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [])
+
+  // Prevent background scrolling when menu is open on mobile
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden'
+      document.body.classList.add('nav-open')
+    } else {
+      document.body.style.overflow = ''
+      document.body.classList.remove('nav-open')
+    }
+    return () => {
+      document.body.style.overflow = ''
+      document.body.classList.remove('nav-open')
+    }
+  }, [isOpen])
+
+  const navItems = [
+    { label: 'ABOUT', href: '#about', section: 'about' },
+    { label: 'SKILLS', href: '#skills', section: 'skills' },
+    { label: 'PROJECTS', href: '#projects', section: 'projects' },
+    { label: 'CERTS', href: '#certs', section: 'certs' },
+    { label: 'RESUME', href: '#resume', section: 'resume' },
+    { label: 'CONTACT', href: '#contact', section: 'contact' },
+  ]
+
+  const handleLinkClick = () => {
+    setIsOpen(false)
+  }
+
   return (
     <>
-      <nav className="navbar" id="navbar">
+      <nav className={`navbar ${isOpen ? 'nav-is-open' : ''}`} id="navbar">
         <div className="nav-container">
-          <a href="#hero" className="nav-logo" id="nav-logo">
+          <a href="#hero" className="nav-logo" id="nav-logo" onClick={handleLinkClick}>
             SURENDER<span className="logo-dot">.</span>
           </a>
-          <button className="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+
+          {/* Desktop Nav */}
+          <ul className="nav-links" id="navLinks">
+            {navItems.map((item) => (
+              <li key={item.section}>
+                <a href={item.href} className="nav-link" data-section={item.section}>
+                  {item.label}
+                </a>
+              </li>
+            ))}
+            <li>
+              <a href="#contact" className="hero-cta" style={{ marginLeft: '12px' }}>
+                LET&apos;S TALK ↗
+              </a>
+            </li>
+          </ul>
+
+          {/* Mobile Hamburger Button */}
+          <button
+            className={`nav-toggle ${isOpen ? 'active' : ''}`}
+            id="navToggle"
+            aria-label="Toggle navigation"
+            type="button"
+            onClick={() => setIsOpen(!isOpen)}
+          >
             <span className="hamburger-line"></span>
             <span className="hamburger-line"></span>
             <span className="hamburger-line"></span>
           </button>
-          <ul className="nav-links" id="navLinks">
-            <li><a href="#about" className="nav-link" data-section="about">ABOUT</a></li>
-            <li><a href="#skills" className="nav-link" data-section="skills">SKILLS</a></li>
-            <li><a href="#projects" className="nav-link" data-section="projects">PROJECTS</a></li>
-            <li><a href="#certs" className="nav-link" data-section="certs">CERTS</a></li>
-            <li><a href="#resume" className="nav-link" data-section="resume">RESUME</a></li>
-            <li><a href="#contact" className="nav-link" data-section="contact">CONTACT</a></li>
-            <li><a href="#contact" className="hero-cta" style={{ marginLeft: '12px' }}>LET&apos;S TALK ↗</a></li>
-          </ul>
         </div>
       </nav>
+
+      {/* Mobile Drawer */}
+      <div 
+        className={`mobile-drawer ${isOpen ? 'open' : ''}`}
+        id="mobileDrawer"
+      >
+        <div className="mobile-drawer-header">
+          <span className="mobile-drawer-title">NAVIGATION</span>
+          <button 
+            type="button" 
+            className="mobile-close-btn" 
+            onClick={() => setIsOpen(false)}
+            aria-label="Close menu"
+          >
+            ✕
+          </button>
+        </div>
+
+        <ul className="mobile-nav-list">
+          {navItems.map((item) => (
+            <li key={item.section}>
+              <a 
+                href={item.href} 
+                className="mobile-nav-link" 
+                onClick={handleLinkClick}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))}
+          <li style={{ marginTop: '16px' }}>
+            <a 
+              href="#contact" 
+              className="mobile-nav-cta" 
+              onClick={handleLinkClick}
+            >
+              LET&apos;S TALK ↗
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      {/* Backdrop overlay */}
+      {isOpen && (
+        <div 
+          className="mobile-backdrop-overlay" 
+          onClick={() => setIsOpen(false)}
+        />
+      )}
 
       {/* DOT NAVIGATOR */}
       <nav className="dot-nav" id="dotNav" aria-label="Section navigation">
