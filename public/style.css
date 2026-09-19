@@ -36,7 +36,7 @@ body {
   font-size: 16px;
   line-height: 1.6;
   overflow-x: hidden;
-  cursor: none; /* Hide default cursor for custom cursor */
+  cursor: auto; /* RESTORED DEFAULT CURSOR */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   selection: var(--gold-dim) var(--text);
