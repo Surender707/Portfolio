@@ -67,7 +67,7 @@ export default function Hero() {
         </div>
 
         <div className="hero-right">
-          <div className="hero-avatar-wrap">
+          <div className="hero-avatar-wrap" id="heroAvatar">
             <div className="avatar-glow" />
             <div className="avatar-ring ring-1" />
             <div className="avatar-ring ring-2" />
