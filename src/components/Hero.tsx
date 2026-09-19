@@ -66,6 +66,26 @@ export default function Hero() {
             <a href="Resume.pdf" download className="hero-btn secondary">RÉSUMÉ ↓</a>
           </div>
         </div>
+
+        <div className="hero-right">
+          <div className="hero-avatar-wrap">
+            <div className="avatar-glow" />
+            <div className="avatar-ring ring-1" />
+            <div className="avatar-ring ring-2" />
+            <div className="avatar-ring ring-3" />
+            <div className="avatar-frame">
+              <img
+                src="/profile.jpg"
+                alt="Surender Singh"
+                className="avatar-img"
+              />
+              <div className="avatar-scan" />
+            </div>
+            <div className="floating-badge badge-ml">MACHINE LEARNING</div>
+            <div className="floating-badge badge-web">FULL STACK</div>
+            <div className="floating-badge badge-cv">COMPUTER VISION</div>
+          </div>
+        </div>
       </div>
     </section>
   )
