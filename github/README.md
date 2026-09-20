@@ -96,7 +96,7 @@ const SurenderSingh = {
 
 | Project | Domain | Architecture & Highlights | Links |
 |:---|:---|:---|:---:|
-| 🌌 **3D Space Portfolio** | **Creative Tech / WebGL** | Dynamic 25,000 particle interactive galaxy, AI voice tour agent ("Byte"), smooth 60fps Lenis scroll mechanics. | [Live Demo](https://surender-portfolio-sigma.vercel.app) · [Code](https://github.com/Surender707/Portfolio) |
+| 🌌 **3D Space Portfolio** | **Creative Tech / WebGL** | Dynamic 240,000-particle silver-white interactive galaxy, AI voice tour agent ("Byte"), smooth 60fps Lenis scroll mechanics. | [Live Demo](https://surender-portfolio-sigma.vercel.app) · [Code](https://github.com/Surender707/Portfolio) |
 | 📋 **TaskFlow** | **Full-Stack MERN** | Enterprise productivity hub featuring custom Intelligence Engine recommendations, real-time analytics, and JWT security. | [Repository](https://github.com/Surender707) |
 | 🎭 **Emotion Classifier** | **Computer Vision** | Real-time 7-class facial micro-expression detector powered by PyTorch CNNs streaming at 24+ FPS. | [Repository](https://github.com/Surender707) |
 | 📊 **PlayStore Pulse** | **Data Analytics** | High-dimensional exploratory data platform processing 10k+ apps with dynamic interactive Plotly distributions. | [Repository](https://github.com/Surender707) |

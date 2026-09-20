@@ -118,18 +118,18 @@ function initPortfolio() {
     scene.add(starField);
 
     // ══════════════════════════════════════════
-    // B. GALAXY — gold/navy spiral arms (enhanced for cinematic effect)
+    // B. GALAXY — silver-blue spiral arms (enhanced for cinematic effect)
     // ══════════════════════════════════════════
     const gParams = {
-      count: isMobile ? 100000 : 180000, size: 0.004,
-      radius: 8, branches: 4, spin: 1.5,
-      randomness: 0.3, randomnessPower: 3,
+      count: isMobile ? 150000 : 240000, size: 0.009,
+      radius: 8.5, branches: 4, spin: 1.5,
+      randomness: 0.5, randomnessPower: 2.5,
     };
     const galGeo = new THREE.BufferGeometry();
     const galPos = new Float32Array(gParams.count * 3);
     const galCol = new Float32Array(gParams.count * 3);
-    const cIn    = new THREE.Color('#d4a853');
-    const cOut   = new THREE.Color('#1a2a5c');
+    const cIn    = new THREE.Color('#f4f7ff');
+    const cOut   = new THREE.Color('#526078');
     for (let i = 0; i < gParams.count; i++) {
       const i3 = i * 3;
       const r  = Math.random() * gParams.radius;
@@ -153,6 +153,32 @@ function initPortfolio() {
     });
     const galaxy = new THREE.Points(galGeo, galMat);
     scene.add(galaxy);
+
+    const galaxyCore = new THREE.Group();
+    const coreLight = new THREE.Mesh(
+      new THREE.SphereGeometry(0.42, 24, 24),
+      new THREE.MeshBasicMaterial({
+        color: 0xffffff,
+        transparent: true,
+        opacity: 0.95,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+      })
+    );
+    const coreHalo = new THREE.Mesh(
+      new THREE.SphereGeometry(1.1, 24, 24),
+      new THREE.MeshBasicMaterial({
+        color: 0xdfeaff,
+        transparent: true,
+        opacity: 0.12,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+      })
+    );
+    galaxyCore.add(coreHalo, coreLight);
+    scene.add(galaxyCore);
+    const galaxyPointLight = new THREE.PointLight(0xffffff, 2.5, 18);
+    scene.add(galaxyPointLight);
 
     // ══════════════════════════════════════════
     // C. SPACESHIP — procedural geometry
@@ -408,9 +434,14 @@ function initPortfolio() {
       const elapsed = clock.getElapsedTime();
 
       // ── Galaxy rotation ──
-      galaxy.rotation.y = elapsed * 0.06;
+      galaxy.rotation.y = elapsed * 0.09;
       galaxy.rotation.x += (mouseY * 0.22 - galaxy.rotation.x) * 0.03;
       galaxy.position.x += (mouseX * 0.32 - galaxy.position.x) * 0.03;
+      const corePulse = 0.92 + Math.sin(elapsed * 1.8) * 0.08;
+      coreLight.scale.setScalar(corePulse);
+      coreHalo.scale.setScalar(0.96 + Math.sin(elapsed * 1.8) * 0.12);
+      coreHalo.material.opacity = 0.1 + Math.sin(elapsed * 1.8) * 0.025;
+      galaxyPointLight.intensity = 2.2 + Math.sin(elapsed * 1.8) * 0.35;
 
       // ── Starfield — slow drift + twinkle ──
       starField.rotation.y  += 0.00012;

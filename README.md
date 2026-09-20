@@ -28,7 +28,7 @@ Rather than a static resume page, I wanted to build an engaging cinematic experi
 
 ### 🌟 Key Highlights
 
-- **🌌 3D Interactive Starfield & Galaxy**: Custom Three.js particle simulation featuring over 25,000 stars with dynamic depth, rotation, and procedural elements that react smoothly to user input.
+- **🌌 3D Interactive Starfield & Galaxy**: Custom Three.js particle simulation featuring over 240,000 galaxy particles and 250,000 stars with dynamic depth, silver-white rotation, and procedural elements that react smoothly to user input.
 - **🤖 Byte — The Interactive AI Guide**: An interactive desktop companion built with the browser Web Speech API that walks visitors through each section of the portfolio with real-time text typewriter effects.
 - **⚡ Physics-Based Smooth Scrolling**: Integrated **Lenis** smooth scroll engine coupled with **GSAP ScrollTrigger** for seamless parallax effects and sticky card interactions.
 - **📱 Responsive & Accessible**: Crafted to deliver 60 FPS performance across all viewports—from ultrawide monitors to mobile devices—with support for reduced motion preferences.
