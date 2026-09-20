@@ -1,8 +1,10 @@
 import React from 'react'
+import SectionBackdrop from './SectionBackdrop'
 
 export default function Certifications() {
   return (
     <section className="section s-certs" id="certs" data-section="certs">
+      <SectionBackdrop theme="certs" />
       <div className="section-glow section-glow-blue"></div>
       <div className="section-num">05</div>
       <div className="section-container">

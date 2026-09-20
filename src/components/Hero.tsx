@@ -1,8 +1,10 @@
 import React from 'react'
+import SectionBackdrop from './SectionBackdrop'
 
 export default function Hero() {
   return (
     <section className="section s-hero" id="hero" data-section="hero">
+      <SectionBackdrop theme="hero" />
       <div className="hero-container">
         <div className="hero-left">
           <p className="hero-greeting">I&apos;M</p>
@@ -41,13 +43,6 @@ export default function Hero() {
             <div className="floating-badge badge-cv">👁 CV</div>
           </div>
         </div>
-      </div>
-      <div className="hero-telemetry hero-telemetry-left" aria-hidden="true">
-        <span className="telemetry-kicker">PORTFOLIO / 01</span>
-        <div className="telemetry-row"><span>STATUS</span><strong>ONLINE</strong></div>
-        <div className="telemetry-row"><span>MODE</span><strong>BUILD</strong></div>
-        <div className="telemetry-wave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-        <span className="telemetry-foot">SYSTEM READY_</span>
       </div>
       <div className="hero-telemetry hero-telemetry-right" aria-hidden="true">
         <span className="telemetry-kicker">ENGINEERING LOG</span>

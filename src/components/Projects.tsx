@@ -1,8 +1,10 @@
 import React from 'react'
+import SectionBackdrop from './SectionBackdrop'
 
 export default function Projects() {
   return (
     <section className="section s-projects" id="projects" data-section="projects">
+      <SectionBackdrop theme="projects" />
       <div className="section-glow section-glow-gold"></div>
       <div className="proj-viewport" id="projViewport">
         {/* Slide side nav */}

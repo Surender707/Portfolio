@@ -1,8 +1,10 @@
 import React from 'react'
+import SectionBackdrop from './SectionBackdrop'
 
 export default function Resume() {
   return (
     <section className="section s-resume" id="resume" data-section="resume">
+      <SectionBackdrop theme="resume" />
       <div className="section-glow section-glow-purple"></div>
       <div className="section-num">06</div>
       <div className="section-container">

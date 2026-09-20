@@ -8,6 +8,7 @@ import Certifications from './components/Certifications'
 import Resume from './components/Resume'
 import Contact from './components/Contact'
 import ByteGuide from './components/ByteGuide'
+import BackgroundField from './components/BackgroundField'
 
 declare global {
   interface Window {
@@ -35,10 +36,8 @@ export default function App() {
         </div>
       </div>
 
-      {/* ░░ GALAXY CANVAS ░░ */}
-      <canvas id="galaxyCanvas" aria-hidden="true"></canvas>
-      <div className="noise-overlay"></div>
-      <div className="engineering-overlay" aria-hidden="true"></div>
+      {/* ░░ SHARED AMBIENT FIELD ░░ */}
+      <BackgroundField />
       <div className="pointer-glow" aria-hidden="true"></div>
 
       {/* ░░ CUSTOM CURSOR ░░ */}

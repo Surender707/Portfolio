@@ -961,6 +961,16 @@ function initPortfolio() {
 
   updateActiveDot();
 
+  // Fade each local backdrop in as its section enters the viewport.
+  const backdropObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const backdrop = entry.target.querySelector('.section-backdrop');
+      if (backdrop) backdrop.classList.toggle('is-visible', entry.isIntersecting);
+    });
+  }, { threshold: 0.2, rootMargin: '-8% 0px -8% 0px' });
+
+  sections.forEach(section => backdropObserver.observe(section));
+
   // Dot click → smooth scroll to section
   dotBtns.forEach(btn => {
     btn.addEventListener('click', () => {
