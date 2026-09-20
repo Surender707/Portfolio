@@ -565,17 +565,20 @@ function initPortfolio() {
 
     // ── Mouse parallax ──
     let mouseX = 0, mouseY = 0;
+    let targetMouseX = 0, targetMouseY = 0;
+    let scrollVelocity = 0;
+    let lastScrollY = 0;
+
     window.addEventListener('mousemove', (e) => {
-      mouseX = (e.clientX / window.innerWidth  - 0.5) * 0.4;
-      mouseY = (e.clientY / window.innerHeight - 0.5) * 0.2;
+      targetMouseX = (e.clientX / window.innerWidth  - 0.5) * 0.4;
+      targetMouseY = (e.clientY / window.innerHeight - 0.5) * 0.2;
     });
 
-    // ── Animation loop ──
-    const clock = new THREE.Clock();
-    let shipT = 0;
-    let paused = false;
-    let lastFrame = 0;
-    document.addEventListener('visibilitychange', () => { paused = document.hidden; });
+    window.addEventListener('scroll', () => {
+      const currentScrollY = window.scrollY;
+      scrollVelocity = Math.abs(currentScrollY - lastScrollY);
+      lastScrollY = currentScrollY;
+    }, { passive: true });
 
     const _v3 = new THREE.Vector3();
     function animate(now) {
@@ -587,6 +590,10 @@ function initPortfolio() {
 
       const elapsed = clock.getElapsedTime();
 
+      // Smooth mouse interpolation
+      mouseX += (targetMouseX - mouseX) * 0.05;
+      mouseY += (targetMouseY - mouseY) * 0.05;
+
       // ── Galaxy rotation ──
       galaxy.rotation.y = elapsed * 0.06;
       galaxy.rotation.x += (mouseY * 0.22 - galaxy.rotation.x) * 0.03;
@@ -597,10 +604,17 @@ function initPortfolio() {
       coreHalo.material.opacity = 0.1 + Math.sin(elapsed * 1.8) * 0.025;
       galaxyPointLight.intensity = 2.2 + Math.sin(elapsed * 1.8) * 0.35;
 
-      // ── Starfield — slow drift + twinkle ──
+      // ── Starfield — Hyper-drive effect ──
       starField.rotation.y  += 0.00012;
       starField.rotation.x  += 0.00006;
       starMat.opacity = 0.75 + Math.sin(elapsed * 2.0) * 0.15;
+
+      // Stretch stars based on scroll velocity (Warp effect)
+      const warpScale = 1 + (scrollVelocity * 0.05);
+      starField.scale.z = warpScale;
+      starField.scale.x = 1 / warpScale;
+      scrollVelocity *= 0.92; // Decay warp effect
+
 
       // ── Shooting stars update ──
       const sAttr = shootGeo.attributes.position;
@@ -773,6 +787,7 @@ function initPortfolio() {
   ════════════════════════════════════════════ */
   const cursorDot  = document.getElementById('cursorDot');
   const cursorRing = document.getElementById('cursorRing');
+  const pointerGlow = document.querySelector('.pointer-glow');
   let cx = -100, cy = -100;
   let rx = -100, ry = -100;
   let cursorVelocity = 0;
@@ -792,6 +807,11 @@ function initPortfolio() {
       
       cx = e.clientX;
       cy = e.clientY;
+      if (pointerGlow) {
+        pointerGlow.style.left = cx + 'px';
+        pointerGlow.style.top = cy + 'px';
+        pointerGlow.style.opacity = '1';
+      }
       cursorDot.style.left = cx + 'px';
       cursorDot.style.top  = cy + 'px';
       cursorDot.style.opacity  = '1';
@@ -805,6 +825,7 @@ function initPortfolio() {
     document.addEventListener('mouseleave', () => {
       cursorDot.style.opacity  = '0';
       cursorRing.style.opacity = '0';
+      if (pointerGlow) pointerGlow.style.opacity = '0';
     });
 
     document.addEventListener('mouseenter', () => {

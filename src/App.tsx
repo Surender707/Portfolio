@@ -38,6 +38,8 @@ export default function App() {
       {/* ░░ GALAXY CANVAS ░░ */}
       <canvas id="galaxyCanvas" aria-hidden="true"></canvas>
       <div className="noise-overlay"></div>
+      <div className="engineering-overlay" aria-hidden="true"></div>
+      <div className="pointer-glow" aria-hidden="true"></div>
 
       {/* ░░ CUSTOM CURSOR ░░ */}
       <div className="cursor-dot" id="cursorDot"></div>

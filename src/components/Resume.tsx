@@ -19,7 +19,7 @@ export default function Resume() {
               <h3 className="rb-title"><span className="rb-icon">🎓</span> Education</h3>
               <div className="rb-item">
                 <div className="rb-item-title">B.Tech — Artificial Intelligence &amp; Data Science</div>
-                <div className="rb-item-sub">Modern Institute of Technology and Research Center (MITRC)</div>
+                <div className="rb-item-sub"><a className="resume-inline-link" href="https://mitrc.ac.in/" target="_blank" rel="noopener noreferrer">Modern Institute of Technology and Research Center (MITRC) ↗</a></div>
                 <div className="rb-item-date">2023 – 2027 &nbsp;·&nbsp; 7th Semester</div>
               </div>
             </div>
@@ -30,7 +30,7 @@ export default function Resume() {
                   <div className="rb-item-title">Data Science Intern</div>
                   <div className="rb-item-date">April 2026 · 4 weeks</div>
                 </div>
-                <div className="rb-item-sub">CODSOFT — Virtual Internship Program</div>
+                <div className="rb-item-sub"><a className="resume-inline-link" href="https://www.codsoft.in/" target="_blank" rel="noopener noreferrer">CODSOFT — Virtual Internship Program ↗</a></div>
                 <p className="rb-item-desc">Worked on real-world data science projects involving Python, ML algorithms, and data analysis. Completed with Wonderful Remarks.</p>
               </div>
               <div className="rb-item">
@@ -38,7 +38,7 @@ export default function Resume() {
                   <div className="rb-item-title">Full Stack Web Developer Intern</div>
                   <div className="rb-item-date">Mar – Apr 2026 · 7 weeks</div>
                 </div>
-                <div className="rb-item-sub">Web Stack Academy (WSA)</div>
+                <div className="rb-item-sub"><a className="resume-inline-link" href="https://webstackacademy.com/" target="_blank" rel="noopener noreferrer">Web Stack Academy (WSA) ↗</a></div>
                 <p className="rb-item-desc">Hands-on MERN Stack development covering React, Node.js, MongoDB, and the full SDLC. Cert ID: WMS125_006</p>
               </div>
             </div>
@@ -73,6 +73,12 @@ export default function Resume() {
               <p>Download my complete résumé with all experiences, projects, and skills.</p>
               <a href="Resume.pdf" download="Surender_Singh_Resume.pdf" className="btn btn-primary magnetic" id="resume-download-btn">Download PDF ↓</a>
               <a href="Resume.pdf" target="_blank" rel="noopener noreferrer" className="btn btn-ghost magnetic" id="resume-view-btn">View Online ↗</a>
+              <div className="resume-link-row" aria-label="Professional links">
+                <a href="https://surender-portfolio-sigma.vercel.app/" target="_blank" rel="noopener noreferrer">Portfolio ↗</a>
+                <a href="https://github.com/Surender707" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+                <a href="https://www.linkedin.com/in/surender-choudhary-2a2b46293" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+                <a href="mailto:surenderchoudhary07072004@gmail.com">Gmail ↗</a>
+              </div>
             </div>
             <div className="resume-strengths">
               <h3 className="rb-title"><span className="rb-icon">🎯</span> Key Strengths</h3>

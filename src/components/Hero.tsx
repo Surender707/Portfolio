@@ -28,7 +28,7 @@ export default function Hero() {
         </div>
         <div className="hero-right">
           <div className="hero-avatar-wrap" id="heroAvatar">
-            <div className="avatar-glow"></div>
+            <div className="avatar-glow" style={{ animationDuration: '2s', filter: 'hue-rotate(180deg)' }}></div>
             <div className="avatar-ring ring-1"></div>
             <div className="avatar-ring ring-2"></div>
             <div className="avatar-ring ring-3"></div>
