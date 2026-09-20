@@ -42,6 +42,20 @@ export default function Hero() {
           </div>
         </div>
       </div>
+      <div className="hero-telemetry hero-telemetry-left" aria-hidden="true">
+        <span className="telemetry-kicker">PORTFOLIO / 01</span>
+        <div className="telemetry-row"><span>STATUS</span><strong>ONLINE</strong></div>
+        <div className="telemetry-row"><span>MODE</span><strong>BUILD</strong></div>
+        <div className="telemetry-wave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <span className="telemetry-foot">SYSTEM READY_</span>
+      </div>
+      <div className="hero-telemetry hero-telemetry-right" aria-hidden="true">
+        <span className="telemetry-kicker">ENGINEERING LOG</span>
+        <div className="telemetry-code">AI<span>+</span>WEB</div>
+        <div className="telemetry-row"><span>BUILD</span><strong>2026.09</strong></div>
+        <div className="telemetry-track"><span></span></div>
+        <span className="telemetry-foot">001 / 101 / 001</span>
+      </div>
       <div className="hero-stats-bar">
         <div className="hstat"><span className="hstat-n">5</span><span className="hstat-l">Projects</span></div>
         <div className="hstat-divider"></div>

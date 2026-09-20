@@ -974,6 +974,8 @@ body.cursor-hover .cursor-ring {
   width: 100%;
   margin: 0 auto;
   padding: 0 clamp(24px, 4vw, 60px);
+  position: relative;
+  z-index: 2;
 }
 .hero-left {
   display: flex;
@@ -1161,6 +1163,55 @@ body.cursor-hover .cursor-ring {
   opacity: 0;
   animation: fadeSlideUp 1s 1.7s forwards;
 }
+.hero-telemetry {
+  position: absolute;
+  z-index: 5;
+  width: 156px;
+  padding: 14px 12px;
+  border-top: 1px solid rgba(0,242,255,0.42);
+  border-bottom: 1px solid rgba(0,242,255,0.2);
+  background: linear-gradient(135deg, rgba(3,17,24,0.72), rgba(3,7,12,0.28));
+  backdrop-filter: blur(10px);
+  color: var(--text-sub);
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  letter-spacing: 1.4px;
+  opacity: 0;
+  animation: telemetryReveal 1s 2s var(--ease-cine) forwards;
+}
+.hero-telemetry-left { left: clamp(18px, 4vw, 56px); top: 31%; z-index: 1; }
+.hero-telemetry-right { right: clamp(18px, 4vw, 56px); top: 22%; animation-delay: 2.2s; }
+.hero-telemetry::before,
+.hero-telemetry::after {
+  content: '';
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border: 1px solid rgba(0,242,255,0.7);
+}
+.hero-telemetry::before { top: -4px; left: -4px; border-right: 0; border-bottom: 0; }
+.hero-telemetry::after { right: -4px; bottom: -4px; border-left: 0; border-top: 0; }
+.telemetry-kicker { display: block; color: var(--gold); font-size: 0.5rem; letter-spacing: 2px; margin-bottom: 13px; }
+.telemetry-row { display: flex; justify-content: space-between; gap: 12px; margin-top: 8px; }
+.telemetry-row strong { color: #f3ffff; font-weight: 400; }
+.telemetry-row strong::before { content: '• '; color: #31ffb0; }
+.telemetry-wave { display: flex; align-items: center; gap: 3px; height: 28px; margin: 14px 0 10px; }
+.telemetry-wave i { display: block; width: 3px; height: 10px; background: var(--blue); box-shadow: 0 0 8px var(--blue); animation: telemetryPulse 1.1s ease-in-out infinite alternate; }
+.telemetry-wave i:nth-child(2) { height: 18px; animation-delay: -0.2s; }
+.telemetry-wave i:nth-child(3) { height: 13px; animation-delay: -0.4s; }
+.telemetry-wave i:nth-child(4) { height: 23px; animation-delay: -0.6s; }
+.telemetry-wave i:nth-child(5) { height: 15px; animation-delay: -0.8s; }
+.telemetry-wave i:nth-child(6) { height: 25px; animation-delay: -0.3s; }
+.telemetry-wave i:nth-child(7) { height: 11px; animation-delay: -0.5s; }
+.telemetry-wave i:nth-child(8) { height: 20px; animation-delay: -0.7s; }
+.telemetry-code { color: #f3ffff; font-size: 1.12rem; letter-spacing: 3px; margin: 4px 0 13px; }
+.telemetry-code span { color: var(--gold); }
+.telemetry-track { height: 2px; margin: 15px 0 12px; background: rgba(0,242,255,0.12); overflow: hidden; }
+.telemetry-track span { display: block; width: 62%; height: 100%; background: var(--blue); box-shadow: 0 0 10px var(--blue); animation: telemetryTrack 3s ease-in-out infinite alternate; }
+.telemetry-foot { display: block; color: var(--text-muted); font-size: 0.48rem; letter-spacing: 2px; }
+@keyframes telemetryReveal { from { opacity: 0; transform: translateY(12px); } to { opacity: 0.9; transform: translateY(0); } }
+@keyframes telemetryPulse { from { transform: scaleY(0.55); opacity: 0.45; } to { transform: scaleY(1); opacity: 1; } }
+@keyframes telemetryTrack { from { transform: translateX(-25%); } to { transform: translateX(55%); } }
 
 /* Avatar */
 .hero-right {
@@ -3094,6 +3145,10 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: 20px;
   background: radial-gradient(ellipse at 50% 0%, rgba(212,175,55,0.15) 0%, transparent 70%);
   pointer-events: none;
+}
+
+@media (max-width: 640px) {
+  .hero-telemetry { display: none; }
 }
 .resume-icon {
   width: 80px;
