@@ -1,6 +1,10 @@
 'use strict';
 
 function initPortfolio() {
+  if (!document.getElementById('galaxyCanvas')) {
+    setTimeout(initPortfolio, 50);
+    return;
+  }
   if (window.__portfolioInitialized) return;
   window.__portfolioInitialized = true;
 
@@ -34,6 +38,156 @@ function initPortfolio() {
     window.dispatchEvent(new CustomEvent('portfolio:ready'));
   }
 
+  const galaxyReferenceStyles = {
+    hero:    { core: '#ffffff', arm: '#4f86c9', accent: '#8edcff', angle: '18deg', scale: '1.0' },
+    about:   { core: '#fff4d8', arm: '#7b777b', accent: '#d6c6b2', angle: '62deg', scale: '0.86' },
+    skills:  { core: '#fff7a8', arm: '#7059c8', accent: '#7fdcff', angle: '132deg', scale: '1.18' },
+    projects:{ core: '#fff5e9', arm: '#c87580', accent: '#5d8fbf', angle: '202deg', scale: '0.92' },
+    certs:   { core: '#fff8dd', arm: '#a89172', accent: '#d7d0c5', angle: '258deg', scale: '0.78' },
+    resume:  { core: '#ffffd4', arm: '#8da94e', accent: '#a8d38f', angle: '302deg', scale: '1.08' },
+    contact: { core: '#e6f7ff', arm: '#7652ba', accent: '#568fe6', angle: '344deg', scale: '1.22' },
+    footer:  { core: '#fffdf0', arm: '#a78d72', accent: '#d8d0bf', angle: '88deg', scale: '0.72' },
+  };
+  const galaxyLayer = document.getElementById('galaxyImageLayer');
+  const setReferenceBackground = (sectionId) => {
+    const style = galaxyReferenceStyles[sectionId] || galaxyReferenceStyles.hero;
+    if (!galaxyLayer) return;
+    galaxyLayer.style.setProperty('--galaxy-core', style.core);
+    galaxyLayer.style.setProperty('--galaxy-arm', style.arm);
+    galaxyLayer.style.setProperty('--galaxy-accent', style.accent);
+    galaxyLayer.style.setProperty('--galaxy-angle', style.angle);
+    galaxyLayer.style.setProperty('--galaxy-scale', style.scale);
+  };
+  window.addEventListener('portfolio:sectionchange', (event) => setReferenceBackground(event.detail?.id));
+  window.addEventListener('portfolio:footerchange', () => setReferenceBackground('footer'));
+  setReferenceBackground('hero');
+
+  function initReferenceGalaxy() {
+    const canvas = document.getElementById('galaxyCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const galaxyStyles = {
+      hero: { core: '#ffffff', arm: '#4f86c9', dust: '#8edcff', angle: 0.3, scale: 0.82, arms: 5, flatten: 0.28, curve: 0.045, speed: 0.18 },
+      about: { core: '#fff4d8', arm: '#858080', dust: '#d6c6b2', angle: 1.1, scale: 0.7, arms: 3, flatten: 0.52, curve: 0.025, speed: 0.1 },
+      skills: { core: '#fff7a8', arm: '#7059c8', dust: '#7fdcff', angle: 2.3, scale: 1.05, arms: 6, flatten: 0.38, curve: 0.06, speed: 0.24 },
+      projects: { core: '#fff5e9', arm: '#c87580', dust: '#5d8fbf', angle: 3.5, scale: 0.9, arms: 4, flatten: 0.22, curve: 0.035, speed: 0.15 },
+      certs: { core: '#fff8dd', arm: '#a89172', dust: '#d7d0c5', angle: 4.4, scale: 0.68, arms: 8, flatten: 0.46, curve: 0.018, speed: 0.08 },
+      resume: { core: '#ffffd4', arm: '#8da94e', dust: '#a8d38f', angle: 5.1, scale: 0.95, arms: 2, flatten: 0.32, curve: 0.052, speed: 0.13 },
+      contact: { core: '#e6f7ff', arm: '#7652ba', dust: '#568fe6', angle: 5.8, scale: 1.1, arms: 6, flatten: 0.62, curve: 0.07, speed: 0.2 },
+      footer: { core: '#fffdf0', arm: '#a78d72', dust: '#d8d0bf', angle: 1.5, scale: 0.62, arms: 4, flatten: 0.72, curve: 0.02, speed: 0.06 },
+    };
+    const stars = Array.from({ length: 360 }, () => ({
+      x: Math.random(), y: Math.random(), size: Math.random() * 1.8 + 0.3, phase: Math.random() * 6.28
+    }));
+    const dust = Array.from({ length: 8200 }, () => ({
+      arm: Math.random(), radius: Math.sqrt(Math.random()),
+      spread: (Math.random() - 0.5) * 0.2, size: Math.random() * 1.8 + 0.2,
+      alpha: Math.random() * 0.72 + 0.12, lane: Math.random()
+    }));
+    const nebulaClouds = Array.from({ length: 680 }, () => ({
+      arm: Math.random(), radius: Math.sqrt(Math.random()),
+      spread: (Math.random() - 0.5) * 0.3, size: Math.random() * 12 + 4,
+      alpha: Math.random() * 0.06 + 0.015
+    }));
+    let width = 0, height = 0, dpr = 1, time = 0;
+    let style = galaxyStyles.hero;
+
+    function resize() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+    }
+    function setStyle(id) { style = galaxyStyles[id] || galaxyStyles.hero; }
+    function draw() {
+      time += 0.006;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = 'rgba(1, 2, 8, 0.18)';
+      ctx.fillRect(0, 0, width, height);
+
+      stars.forEach((star) => {
+        const alpha = 0.35 + (Math.sin(time * 2 + star.phase) + 1) * 0.25;
+        ctx.fillStyle = `rgba(225,240,255,${alpha})`;
+        ctx.beginPath();
+        ctx.arc(star.x * width, star.y * height, star.size, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      const cx = width * 0.5;
+      const cy = height * 0.48;
+      const radius = Math.min(width, height) * 0.48 * style.scale;
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.globalCompositeOperation = 'lighter';
+      ctx.rotate(style.angle + time * style.speed);
+      ctx.filter = 'blur(4px)';
+      nebulaClouds.forEach((cloud) => {
+        const r = cloud.radius * radius;
+        const armIndex = Math.floor(cloud.arm * style.arms);
+        const cloudAngle = armIndex * (Math.PI * 2 / style.arms) + r * style.curve + cloud.spread;
+        const x = Math.cos(cloudAngle) * r;
+        const y = Math.sin(cloudAngle) * r * style.flatten;
+        ctx.fillStyle = `${style.dust}${Math.floor(cloud.alpha * (1 - cloud.radius * 0.55) * 255).toString(16).padStart(2, '0')}`;
+        ctx.beginPath();
+        ctx.arc(x, y, cloud.size, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      ctx.filter = 'none';
+      dust.forEach((particle) => {
+        const r = particle.radius * radius;
+        const armIndex = Math.floor(particle.arm * style.arms);
+        const armAngle = armIndex * (Math.PI * 2 / style.arms) + r * style.curve + particle.spread;
+        const x = Math.cos(armAngle) * r;
+        const y = Math.sin(armAngle) * r * (style.flatten + particle.lane * 0.1);
+        const fade = 1 - particle.radius * 0.68;
+        const laneFade = particle.lane > 0.82 ? 0.35 : 1;
+        ctx.fillStyle = `${particle.lane > 0.72 ? style.dust : style.arm}${Math.floor(particle.alpha * fade * laneFade * 255).toString(16).padStart(2, '0')}`;
+        ctx.beginPath();
+        ctx.arc(x, y, particle.size, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      ctx.globalCompositeOperation = 'source-over';
+      const glow = ctx.createRadialGradient(0, 0, 0, 0, 0, radius * 0.45);
+      glow.addColorStop(0, style.core);
+      glow.addColorStop(0.06, style.core);
+      glow.addColorStop(0.14, `${style.dust}dd`);
+      glow.addColorStop(0.3, `${style.arm}88`);
+      glow.addColorStop(0.52, `${style.arm}22`);
+      glow.addColorStop(1, 'transparent');
+      ctx.fillStyle = glow;
+      ctx.beginPath();
+      ctx.ellipse(0, 0, radius * 0.52, radius * 0.2, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = `${style.dust}44`;
+      ctx.lineWidth = Math.max(1, radius * 0.008);
+      ctx.beginPath();
+      ctx.ellipse(0, 0, radius * 0.68, radius * 0.26, 0, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+
+      if (Math.floor(time * 30) % 90 === 0) {
+        const sx = Math.random() * width;
+        const sy = Math.random() * height * 0.7;
+        const length = 30 + Math.random() * 70;
+        ctx.strokeStyle = 'rgba(255,255,255,0.8)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(sx, sy);
+        ctx.lineTo(sx - length, sy + length * 0.28);
+        ctx.stroke();
+      }
+      requestAnimationFrame(draw);
+    }
+    resize();
+    window.addEventListener('resize', resize);
+    window.addEventListener('portfolio:sectionchange', (event) => setStyle(event.detail?.id));
+    window.addEventListener('portfolio:footerchange', () => setStyle('footer'));
+    draw();
+  }
   /* ════════════════════════════════════════════
      2. THREE.JS — SPACE SCENE
         · Moving 3D Stars
@@ -118,18 +272,18 @@ function initPortfolio() {
     scene.add(starField);
 
     // ══════════════════════════════════════════
-    // B. GALAXY — silver-blue spiral arms (enhanced for cinematic effect)
+    // B. GALAXY — silver-white spiral arms with cool steel depth
     // ══════════════════════════════════════════
     const gParams = {
-      count: isMobile ? 150000 : 240000, size: 0.009,
-      radius: 8.5, branches: 4, spin: 1.5,
-      randomness: 0.5, randomnessPower: 2.5,
+      count: isMobile ? 100000 : 180000, size: 0.004,
+      radius: 8, branches: 4, spin: 1.5,
+      randomness: 0.3, randomnessPower: 3,
     };
     const galGeo = new THREE.BufferGeometry();
     const galPos = new Float32Array(gParams.count * 3);
     const galCol = new Float32Array(gParams.count * 3);
-    const cIn    = new THREE.Color('#f4f7ff');
-    const cOut   = new THREE.Color('#526078');
+    const cIn    = new THREE.Color('#f8fbff');
+    const cOut   = new THREE.Color('#46556f');
     for (let i = 0; i < gParams.count; i++) {
       const i3 = i * 3;
       const r  = Math.random() * gParams.radius;
@@ -156,7 +310,7 @@ function initPortfolio() {
 
     const galaxyCore = new THREE.Group();
     const coreLight = new THREE.Mesh(
-      new THREE.SphereGeometry(0.42, 24, 24),
+      new THREE.SphereGeometry(0.24, 24, 24),
       new THREE.MeshBasicMaterial({
         color: 0xffffff,
         transparent: true,
@@ -166,18 +320,18 @@ function initPortfolio() {
       })
     );
     const coreHalo = new THREE.Mesh(
-      new THREE.SphereGeometry(1.1, 24, 24),
+      new THREE.SphereGeometry(1.8, 32, 32),
       new THREE.MeshBasicMaterial({
         color: 0xdfeaff,
         transparent: true,
-        opacity: 0.12,
+        opacity: 0.2,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
       })
     );
     galaxyCore.add(coreHalo, coreLight);
     scene.add(galaxyCore);
-    const galaxyPointLight = new THREE.PointLight(0xffffff, 2.5, 18);
+    const galaxyPointLight = new THREE.PointLight(0xffffff, 2.8, 24);
     scene.add(galaxyPointLight);
 
     // ══════════════════════════════════════════
@@ -187,7 +341,7 @@ function initPortfolio() {
       const ship = new THREE.Group();
 
       // Material palette
-      const mDark   = new THREE.MeshPhongMaterial({ color: 0x080820, shininess: 120, specular: 0x2244aa });
+      const mDark   = new THREE.MeshPhongMaterial({ color: 0x26354a, shininess: 160, specular: 0x9fb8d8 });
       const mAccent = new THREE.MeshPhongMaterial({ color: 0x00d4ff, shininess: 220, specular: 0x88eeff, emissive: 0x001a33 });
       const mGold   = new THREE.MeshPhongMaterial({ color: 0xd4a853, shininess: 160, emissive: 0x221100 });
       const mGlass  = new THREE.MeshPhongMaterial({ color: 0x001144, shininess: 260, specular: 0x4488ff, transparent: true, opacity: 0.75, side: THREE.DoubleSide });
@@ -279,14 +433,14 @@ function initPortfolio() {
 
     const { ship, glowL, glowR, mainGlow, nosePip, engineLight } = buildSpaceship();
     // Scale up so it's clearly visible
-    ship.scale.setScalar(isMobile ? 0.55 : 0.80);
+    ship.scale.setScalar(isMobile ? 0.65 : 0.95);
     scene.add(ship);
 
     // ══════════════════════════════════════════
     // C.2 EXPANDED SPACESHIP FLEET (8 ships on desktop, 4 on mobile)
     // ══════════════════════════════════════════
     const ships = [{ ship, glowL, glowR, mainGlow, nosePip, engineLight }];
-    const NUM_SHIPS = isMobile ? 8 : 15; // Fleet of 15 procedural patrol ships
+    const NUM_SHIPS = isMobile ? 3 : 6; // Keep a small patrol fleet around the galaxy
 
     const fleetConfigs = [
       { color: 0x00e5ff, noseColor: 0xffffff, scale: 0.65, r: 9, h: 2.8, speed: 0.0035, offset: 1.2, tilt: 0.3 },    // Cyan Scout
@@ -309,7 +463,7 @@ function initPortfolio() {
       const cfg = fleetConfigs[(i - 1) % fleetConfigs.length];
       const { ship: newShip, glowL: newGlowL, glowR: newGlowR, mainGlow: newMainGlow, nosePip: newNosePip, engineLight: newEngineLight } = buildSpaceship();
       
-      newShip.scale.setScalar(isMobile ? cfg.scale * 0.7 : cfg.scale);
+      newShip.scale.setScalar(isMobile ? cfg.scale * 0.8 : cfg.scale * 1.15);
       
       // Custom colored thruster engine glow
       newGlowL.material = new THREE.MeshBasicMaterial({ color: cfg.color });
@@ -360,7 +514,7 @@ function initPortfolio() {
     particleGeo.setAttribute('size', new THREE.BufferAttribute(particleSizes, 1));
     
     const particleMat = new THREE.PointsMaterial({
-      color: 0xd4a853,
+      color: 0xb9c7dc,
       size: 0.08,
       transparent: true,
       opacity: 0.4,
@@ -434,7 +588,7 @@ function initPortfolio() {
       const elapsed = clock.getElapsedTime();
 
       // ── Galaxy rotation ──
-      galaxy.rotation.y = elapsed * 0.09;
+      galaxy.rotation.y = elapsed * 0.06;
       galaxy.rotation.x += (mouseY * 0.22 - galaxy.rotation.x) * 0.03;
       galaxy.position.x += (mouseX * 0.32 - galaxy.position.x) * 0.03;
       const corePulse = 0.92 + Math.sin(elapsed * 1.8) * 0.08;
@@ -588,8 +742,6 @@ function initPortfolio() {
     window.addEventListener('resize', onResize);
   }
   initGalaxy();
-
-
   /* ════════════════════════════════════════════
      3. LENIS SMOOTH SCROLL + GSAP INTEGRATION
   ════════════════════════════════════════════ */
@@ -750,6 +902,17 @@ function initPortfolio() {
 
     // Active section dot nav + nav links
     updateActiveDot();
+    const footer = document.querySelector('.footer');
+    if (footer) {
+      const atDocumentEnd = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 50;
+      const footerVisible = footer.getBoundingClientRect().top < window.innerHeight * 0.85 || atDocumentEnd;
+      if (footerVisible && !window.__portfolioFooterActive) {
+        window.__portfolioFooterActive = true;
+        window.dispatchEvent(new CustomEvent('portfolio:footerchange'));
+      } else if (!footerVisible) {
+        window.__portfolioFooterActive = false;
+      }
+    }
   }
   window.addEventListener('scroll', onScroll, { passive: true });
 
@@ -759,6 +922,7 @@ function initPortfolio() {
   const sections   = document.querySelectorAll('.section[data-section]');
   const dotBtns    = document.querySelectorAll('.dnav-dot');
   const navLinks   = document.querySelectorAll('.nav-link');
+  let lastGalaxySection = '';
 
   function updateActiveDot() {
     let activeId = 'hero';
@@ -768,7 +932,13 @@ function initPortfolio() {
     });
     dotBtns.forEach(d => d.classList.toggle('active', d.dataset.target === activeId));
     navLinks.forEach(l => l.classList.toggle('active', l.dataset.section === activeId));
+    if (activeId !== lastGalaxySection) {
+      lastGalaxySection = activeId;
+      window.dispatchEvent(new CustomEvent('portfolio:sectionchange', { detail: { id: activeId } }));
+    }
   }
+
+  updateActiveDot();
 
   // Dot click → smooth scroll to section
   dotBtns.forEach(btn => {

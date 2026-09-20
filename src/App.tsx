@@ -36,7 +36,7 @@ export default function App() {
       </div>
 
       {/* ░░ GALAXY CANVAS ░░ */}
-      <canvas id="galaxyCanvas"></canvas>
+      <canvas id="galaxyCanvas" aria-hidden="true"></canvas>
       <div className="noise-overlay"></div>
 
       {/* ░░ CUSTOM CURSOR ░░ */}

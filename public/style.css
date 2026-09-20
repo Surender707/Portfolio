@@ -325,13 +325,71 @@ button { background: none; border: none; }
 
 
 /* ── CANVAS & NOISE ── */
+#galaxyImageLayer,
 #galaxyCanvas {
   position: fixed;
   inset: 0;
   width: 100%;
   height: 100%;
-  z-index: 0;
   pointer-events: none;
+}
+#galaxyImageLayer {
+  z-index: 0;
+  overflow: hidden;
+  background: #02030a;
+  opacity: 0.9;
+  transform: scale(1.08);
+  transform-origin: center;
+  will-change: transform, background-position;
+  animation: galaxyPhotoDrift 28s ease-in-out infinite alternate;
+  transition: opacity 0.8s ease, background-image 0s linear 0.8s;
+}
+#galaxyImageLayer::before,
+#galaxyImageLayer::after {
+  display: none;
+  content: '';
+  position: absolute;
+  inset: -20%;
+  pointer-events: none;
+}
+#galaxyImageLayer::before {
+  background:
+    radial-gradient(ellipse at 50% 50%, var(--galaxy-core, #ffffff) 0%, transparent 9%),
+    radial-gradient(ellipse at 50% 50%, var(--galaxy-accent, #77bfff) 0%, transparent 30%),
+    repeating-conic-gradient(from var(--galaxy-angle, 20deg) at 50% 50%,
+      transparent 0deg 12deg,
+      var(--galaxy-arm, #4a6fbd) 15deg 21deg,
+      transparent 24deg 42deg),
+    radial-gradient(ellipse at 50% 50%, var(--galaxy-arm, #4a6fbd) 0%, transparent 63%);
+  filter: blur(8px) saturate(1.2);
+  opacity: 0.78;
+  transform: scale(var(--galaxy-scale, 1));
+  animation: galaxyReferenceSpin 42s linear infinite;
+}
+#galaxyImageLayer::after {
+  background:
+    radial-gradient(circle at 8% 20%, #ffffff 0 1px, transparent 2px),
+    radial-gradient(circle at 22% 72%, #cfe5ff 0 1px, transparent 2px),
+    radial-gradient(circle at 38% 12%, #ffffff 0 1px, transparent 2px),
+    radial-gradient(circle at 64% 24%, #d9d2ff 0 1px, transparent 2px),
+    radial-gradient(circle at 78% 68%, #ffffff 0 1px, transparent 2px),
+    radial-gradient(circle at 91% 34%, #bceaff 0 1px, transparent 2px),
+    radial-gradient(circle at 54% 88%, #ffffff 0 1px, transparent 2px);
+  background-size: 180px 180px, 230px 230px, 270px 270px, 210px 210px, 250px 250px, 190px 190px, 300px 300px;
+  opacity: 0.7;
+  animation: starfieldDrift 24s linear infinite;
+}
+#galaxyCanvas { z-index: 0; opacity: 1; }
+
+@keyframes galaxyPhotoDrift {
+  0% { transform: scale(1.08) translate3d(-1.5%, -1%, 0); background-position: 48% 48%; }
+  100% { transform: scale(1.16) translate3d(1.5%, 1%, 0); background-position: 54% 52%; }
+}
+@keyframes galaxyReferenceSpin {
+  to { transform: scale(var(--galaxy-scale, 1)) rotate(360deg); }
+}
+@keyframes starfieldDrift {
+  to { transform: translate3d(-3%, 2%, 0) scale(1.08); }
 }
 .noise-overlay {
   position: fixed;
@@ -2806,6 +2864,9 @@ h1, h2, h3, h4, h5, h6 {
   }
   .cursor-dot, .cursor-ring { display: none !important; }
   #galaxyCanvas { opacity: 0.3; } /* keep bg, stop animation visually */
+  #galaxyImageLayer {
+    animation: galaxyPhotoDrift 28s ease-in-out infinite alternate !important;
+  }
 }
 
 /* ── Print styles ── */
