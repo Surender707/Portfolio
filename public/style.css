@@ -3208,24 +3208,82 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   GALAXY-INSPIRED PURE CSS BACKGROUNDS (Crafted from 8 Reference Images)
-   Each section has a distinct, fully visible, rich cosmic identity:
-   1. Global / Ambient: Infinite Starry Cosmos (Ref Img 1)
-   2. Hero: Electric Neon Planets & Magenta/Cyan Aurora (Ref Img 5)
-   3. About: Andromeda Golden Spiral Galaxy (Ref Img 2)
+   CLEAR & DYNAMICALLY MOVING GALAXY BACKGROUNDS
+   Crafted from 8 Reference Images with Continuous Motion:
+   1. Global: Infinite Deep Cosmos & 3D Starfields (Ref Img 1)
+   2. Hero: Electric Neon Aurora & Orbiting Planets (Ref Img 5)
+   3. About: Andromeda Golden Spiral Galaxy Rotating Swirl (Ref Img 2)
    4. Skills: Deep Space Cyan-Teal Spiral Vortex (Ref Img 3)
-   5. Projects: Fiery Galactic Collision & Crimson Coral Flares (Ref Img 8)
-   6. Certs: Helix Nebula "Eye of God" Amber Ring (Ref Img 4)
-   7. Resume: Rainbow Cosmos & Planetary System Prisms (Ref Img 6)
+   5. Projects: Fiery Galactic Collision & Ruby Solar Flares (Ref Img 8)
+   6. Certs: Helix Nebula "Eye of God" Breathing Ring & Cyan Star (Ref Img 4)
+   7. Resume: Rainbow Cosmos & Prismatic Orbiting Systems (Ref Img 6)
    8. Contact: Burning Crimson Plasma Ring Nebula (Ref Img 7)
    ══════════════════════════════════════════════════════════════ */
 
+/* ── MOTION KEYFRAMES ── */
+@keyframes galaxySpin {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to   { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes galaxySpinReverse {
+  from { transform: translate(-50%, -50%) rotate(360deg); }
+  to   { transform: translate(-50%, -50%) rotate(0deg); }
+}
+
+@keyframes corePulseHero {
+  0%, 100% { transform: scale(1); opacity: 0.9; }
+  50%      { transform: scale(1.16); opacity: 1; filter: drop-shadow(0 0 45px rgba(236,72,153,0.85)); }
+}
+
+@keyframes corePulseAndromeda {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.95; }
+  50%      { transform: translate(-50%, -50%) scale(1.15); opacity: 1; filter: drop-shadow(0 0 55px rgba(251,191,36,0.9)); }
+}
+
+@keyframes corePulseCyan {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.9; }
+  50%      { transform: translate(-50%, -50%) scale(1.2); opacity: 1; filter: drop-shadow(0 0 50px rgba(6,182,212,0.95)); }
+}
+
+@keyframes corePulseFiery {
+  0%, 100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: 0.92; }
+  50%      { transform: translate(-50%, -50%) scale(1.18) rotate(5deg); opacity: 1; filter: drop-shadow(0 0 60px rgba(239,68,68,0.95)); }
+}
+
+@keyframes ringBreathing {
+  0%, 100% { transform: translate(-50%, -50%) scale(0.96) rotate(0deg); opacity: 0.9; }
+  50%      { transform: translate(-50%, -50%) scale(1.08) rotate(3deg); opacity: 1; filter: drop-shadow(0 0 50px rgba(245,158,11,0.8)); }
+}
+
+@keyframes auroraShift {
+  0%   { transform: translate3d(-3%, -2%, 0) scale(1) rotate(0deg); }
+  33%  { transform: translate3d(3%, 2%, 0) scale(1.06) rotate(1.5deg); }
+  66%  { transform: translate3d(-2%, 4%, 0) scale(0.98) rotate(-1deg); }
+  100% { transform: translate3d(-3%, -2%, 0) scale(1) rotate(0deg); }
+}
+
+@keyframes starDriftSlow {
+  0%   { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-90px, -60px, 0); }
+}
+
+@keyframes starDriftFast {
+  0%   { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-180px, -110px, 0); }
+}
+
+@keyframes twinkleStar {
+  0%, 100% { opacity: 0.45; transform: scale(0.92); }
+  50%      { opacity: 1; transform: scale(1.15); }
+}
+
+/* Base backdrop container — 100% visible, crisp, clean */
 .section {
   position: relative;
   overflow: hidden;
 }
 
-/* Base backdrop container — ALWAYS FULLY VISIBLE (opacity: 1) */
 .section-backdrop {
   position: absolute;
   inset: 0;
@@ -3233,208 +3291,242 @@ h1, h2, h3, h4, h5, h6 {
   pointer-events: none;
   opacity: 1;
   overflow: hidden;
-  transition: opacity 0.8s ease;
+  background: #020208;
 }
 
-.section-backdrop::before {
-  content: '';
+/* Layer Base Architecture */
+.galaxy-layer {
   position: absolute;
-  inset: 0;
-  z-index: 1;
   pointer-events: none;
+  will-change: transform;
 }
 
-.section-backdrop::after {
-  content: '';
-  position: absolute;
+/* Deep background stars — slow infinite drift */
+.galaxy-stars-deep {
+  inset: -200px;
+  background-image:
+    radial-gradient(circle, rgba(255, 255, 255, 0.95) 0.6px, transparent 0.7px),
+    radial-gradient(circle, rgba(160, 210, 255, 0.8) 0.5px, transparent 0.6px),
+    radial-gradient(circle, rgba(255, 240, 200, 0.7) 0.5px, transparent 0.6px);
+  background-size: 170px 170px, 290px 290px, 410px 410px;
+  animation: starDriftSlow 100s linear infinite;
+  opacity: 0.85;
+}
+
+/* Bright twinkling foreground stars — faster infinite drift */
+.galaxy-stars-bright {
+  inset: -250px;
+  animation: starDriftFast 55s linear infinite;
+  opacity: 0.9;
+}
+
+/* Vignette overlay — gives contrast so all text & cards are razor-sharp */
+.galaxy-overlay {
   inset: 0;
-  z-index: 2;
-  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 50%, transparent 40%, rgba(2, 2, 7, 0.65) 100%);
+  z-index: 3;
 }
 
 /* ─────────────────────────────────────────────────────────────
-   1. HERO -- Ref Img 5: Neon Planets, Electric Magenta & Cyan Aurora
-   Deep violet-indigo abyss, billowing magenta/cyan clouds, glowing planet halo & ring
+   1. HERO -- Ref Img 5: Electric Neon Aurora & Orbiting Planets
+   Bold magenta & cyan cosmic waves, glowing planetary halo, rotating stardust
    ───────────────────────────────────────────────────────────── */
 .section-backdrop-hero {
-  background:
-    radial-gradient(circle at 72% 40%, rgba(236, 72, 153, 0.45) 0%, rgba(168, 85, 247, 0.32) 22%, transparent 48%),
-    radial-gradient(circle at 25% 65%, rgba(6, 182, 212, 0.42) 0%, rgba(59, 130, 246, 0.28) 25%, transparent 52%),
-    radial-gradient(ellipse at 50% 15%, rgba(147, 51, 234, 0.35) 0%, transparent 45%),
-    radial-gradient(circle at 72% 40%, rgba(255, 255, 255, 0.95) 0%, rgba(236, 72, 153, 0.85) 2.5%, rgba(147, 51, 234, 0.4) 10%, transparent 22%),
-    radial-gradient(circle, rgba(255, 255, 255, 0.95) 0.6px, transparent 0.7px),
-    radial-gradient(circle, rgba(168, 85, 247, 0.85) 0.5px, transparent 0.6px),
-    radial-gradient(circle, rgba(6, 182, 212, 0.85) 0.5px, transparent 0.6px),
-    linear-gradient(135deg, #09021a 0%, #05010f 45%, #03010a 100%);
-  background-size: auto, auto, auto, auto, 180px 180px, 260px 260px, 340px 340px, auto;
+  background: radial-gradient(ellipse at 50% 40%, #0d041e 0%, #060110 55%, #020106 100%);
 }
-.section-backdrop-hero::before {
+
+.section-backdrop-hero .galaxy-vortex {
+  top: -15%;
+  left: -15%;
+  width: 130vw;
+  height: 130vw;
+  min-width: 1200px;
+  min-height: 1200px;
   background:
-    conic-gradient(from 215deg at 72% 40%,
+    radial-gradient(circle at 74% 38%, rgba(236, 72, 153, 0.60) 0%, rgba(168, 85, 247, 0.42) 20%, transparent 46%),
+    radial-gradient(circle at 22% 62%, rgba(6, 182, 212, 0.55) 0%, rgba(59, 130, 246, 0.35) 24%, transparent 52%),
+    radial-gradient(ellipse at 50% 18%, rgba(147, 51, 234, 0.45) 0%, transparent 44%),
+    conic-gradient(from 210deg at 74% 38%,
       transparent 0deg,
-      rgba(236, 72, 153, 0.35) 45deg,
-      rgba(168, 85, 247, 0.30) 90deg,
+      rgba(236, 72, 153, 0.40) 45deg,
+      rgba(168, 85, 247, 0.35) 90deg,
       transparent 140deg,
-      rgba(6, 182, 212, 0.30) 230deg,
-      rgba(236, 72, 153, 0.25) 300deg,
+      rgba(6, 182, 212, 0.38) 220deg,
+      rgba(236, 72, 153, 0.32) 300deg,
       transparent 360deg
-    ),
-    radial-gradient(ellipse 48% 28% at 72% 40%, transparent 18%, rgba(236, 72, 153, 0.35) 21%, transparent 24%),
-    radial-gradient(ellipse 64% 38% at 72% 40%, transparent 26%, rgba(6, 182, 212, 0.25) 29%, transparent 32%);
-  animation: nebulaBreath 12s ease-in-out infinite alternate;
-  opacity: 0.9;
-  filter: blur(2px);
+    );
+  animation: auroraShift 18s ease-in-out infinite alternate;
+  opacity: 0.95;
 }
-.section-backdrop-hero::after {
+
+.section-backdrop-hero .galaxy-core {
+  top: 38%;
+  right: 18%;
+  width: 380px;
+  height: 380px;
+  border-radius: 50%;
   background:
-    radial-gradient(circle, rgba(255, 255, 255, 1) 0.6px, transparent 0.8px),
-    radial-gradient(circle, rgba(236, 72, 153, 0.9) 0.6px, transparent 0.8px),
-    radial-gradient(circle, rgba(6, 182, 212, 0.95) 0.7px, transparent 0.9px);
-  background-size: 190px 190px, 290px 290px, 390px 390px;
-  animation: starTwinkle 3.5s ease-in-out infinite alternate;
-  opacity: 0.9;
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 1) 0%, rgba(236, 72, 153, 0.9) 10%, rgba(168, 85, 247, 0.6) 28%, rgba(6, 182, 212, 0.3) 48%, transparent 70%),
+    radial-gradient(ellipse 90% 40% at 50% 50%, transparent 35%, rgba(6, 182, 212, 0.6) 38%, rgba(236, 72, 153, 0.5) 45%, transparent 52%);
+  animation: corePulseHero 5s ease-in-out infinite alternate;
+}
+
+.section-backdrop-hero .galaxy-stars-bright {
+  background-image:
+    radial-gradient(circle, #ffffff 0.8px, transparent 1px),
+    radial-gradient(circle, rgba(236, 72, 153, 0.95) 0.8px, transparent 1.1px),
+    radial-gradient(circle, rgba(6, 182, 212, 0.95) 0.9px, transparent 1.2px);
+  background-size: 190px 190px, 280px 280px, 390px 390px;
 }
 
 /* ─────────────────────────────────────────────────────────────
    2. ABOUT -- Ref Img 2: Andromeda Golden Spiral Galaxy
-   Brilliant warm gold galactic core, sweeping icy blue spiral arms, dark interstellar dust
+   Hypnotic 360° rotating spiral arms, brilliant golden nucleus, icy blue dust
    ───────────────────────────────────────────────────────────── */
 .section-backdrop-about {
-  background:
-    radial-gradient(ellipse 65% 35% at 50% 48%, rgba(255, 247, 214, 0.95) 0%, rgba(251, 191, 36, 0.65) 10%, rgba(245, 158, 11, 0.45) 22%, rgba(56, 189, 248, 0.25) 38%, transparent 65%),
-    radial-gradient(ellipse 82% 48% at 50% 48%, rgba(14, 165, 233, 0.22) 25%, rgba(99, 102, 241, 0.18) 45%, transparent 70%),
-    radial-gradient(circle at 18% 25%, rgba(251, 191, 36, 0.25) 0%, transparent 35%),
-    radial-gradient(circle at 82% 75%, rgba(56, 189, 248, 0.28) 0%, transparent 40%),
-    repeating-linear-gradient(28deg,
-      transparent 0px,
-      rgba(251, 191, 36, 0.08) 2px,
-      transparent 4px,
-      transparent 32px
-    ),
-    radial-gradient(circle, rgba(255, 245, 210, 0.9) 0.6px, transparent 0.7px),
-    radial-gradient(circle, rgba(251, 191, 36, 0.8) 0.5px, transparent 0.6px),
-    linear-gradient(145deg, #030814 0%, #060e20 40%, #02050e 100%);
-  background-size: auto, auto, auto, auto, auto, 210px 210px, 310px 310px, auto;
+  background: radial-gradient(ellipse at 50% 50%, #060f22 0%, #030814 55%, #01040a 100%);
 }
-.section-backdrop-about::before {
+
+.section-backdrop-about .galaxy-vortex {
+  top: 50%;
+  left: 50%;
+  width: 140vw;
+  height: 140vw;
+  min-width: 1300px;
+  min-height: 1300px;
   background:
-    conic-gradient(from 140deg at 50% 48%,
+    radial-gradient(ellipse 70% 38% at 50% 50%, rgba(251, 191, 36, 0.70) 0%, rgba(245, 158, 11, 0.52) 18%, rgba(56, 189, 248, 0.38) 36%, rgba(99, 102, 241, 0.22) 55%, transparent 72%),
+    conic-gradient(from 135deg at 50% 50%,
       transparent 0deg,
-      rgba(251, 191, 36, 0.35) 30deg,
-      rgba(245, 158, 11, 0.25) 65deg,
-      transparent 110deg,
-      rgba(56, 189, 248, 0.28) 200deg,
-      rgba(99, 102, 241, 0.22) 240deg,
-      transparent 290deg,
-      rgba(251, 191, 36, 0.30) 340deg,
+      rgba(251, 191, 36, 0.55) 30deg,
+      rgba(245, 158, 11, 0.40) 70deg,
+      transparent 115deg,
+      rgba(56, 189, 248, 0.45) 190deg,
+      rgba(99, 102, 241, 0.32) 235deg,
+      transparent 285deg,
+      rgba(251, 191, 36, 0.48) 330deg,
       transparent 360deg
     ),
-    radial-gradient(ellipse 72% 32% at 50% 48%, transparent 22%, rgba(3, 7, 18, 0.85) 30%, transparent 38%);
-  animation: nebulaBreath 14s ease-in-out infinite alternate;
-  opacity: 0.95;
-  filter: blur(1.5px);
+    radial-gradient(ellipse 65% 28% at 50% 50%, transparent 22%, rgba(2, 6, 16, 0.92) 28%, transparent 35%);
+  animation: galaxySpin 75s linear infinite;
+  opacity: 0.98;
 }
-.section-backdrop-about::after {
-  background:
-    radial-gradient(circle, rgba(255, 248, 220, 1) 0.6px, transparent 0.8px),
-    radial-gradient(circle, rgba(251, 191, 36, 0.9) 0.5px, transparent 0.7px),
-    radial-gradient(circle, rgba(56, 189, 248, 0.95) 0.6px, transparent 0.8px);
-  background-size: 160px 160px, 260px 260px, 360px 360px;
-  animation: starTwinkle 4s ease-in-out infinite alternate;
-  opacity: 0.9;
+
+.section-backdrop-about .galaxy-core {
+  top: 50%;
+  left: 50%;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 1) 0%, rgba(255, 245, 200, 0.98) 12%, rgba(251, 191, 36, 0.9) 25%, rgba(245, 158, 11, 0.5) 45%, transparent 70%);
+  animation: corePulseAndromeda 4.5s ease-in-out infinite alternate;
+}
+
+.section-backdrop-about .galaxy-stars-bright {
+  background-image:
+    radial-gradient(circle, #ffffff 0.8px, transparent 1px),
+    radial-gradient(circle, rgba(251, 191, 36, 0.95) 0.8px, transparent 1.1px),
+    radial-gradient(circle, rgba(56, 189, 248, 0.95) 0.9px, transparent 1.2px);
+  background-size: 165px 165px, 275px 275px, 385px 385px;
 }
 
 /* ─────────────────────────────────────────────────────────────
    3. SKILLS -- Ref Img 3: Deep Space Cyan-Teal Spiral Vortex
-   Deep space indigo, brilliant cyan-emerald vortex arms, royal purple dust clouds
+   Counter-clockwise swirling whirlpool galaxy, emerald-cyan stardust & violet corona
    ───────────────────────────────────────────────────────────── */
 .section-backdrop-skills {
-  background:
-    radial-gradient(circle at 62% 42%, rgba(255, 255, 255, 0.95) 0%, rgba(20, 184, 166, 0.65) 8%, rgba(6, 182, 212, 0.48) 20%, rgba(99, 102, 241, 0.30) 40%, transparent 65%),
-    radial-gradient(circle at 25% 68%, rgba(13, 148, 136, 0.42) 0%, transparent 45%),
-    radial-gradient(circle at 82% 20%, rgba(147, 51, 234, 0.35) 0%, transparent 42%),
-    radial-gradient(ellipse at 40% 80%, rgba(6, 182, 212, 0.28) 0%, transparent 50%),
-    repeating-conic-gradient(from 30deg at 62% 42%,
-      transparent 0deg,
-      rgba(20, 184, 166, 0.08) 12deg,
-      transparent 24deg
-    ),
-    radial-gradient(circle, rgba(220, 255, 250, 0.9) 0.6px, transparent 0.7px),
-    radial-gradient(circle, rgba(20, 184, 166, 0.8) 0.5px, transparent 0.6px),
-    linear-gradient(135deg, #030a14 0%, #06101e 45%, #040816 100%);
-  background-size: auto, auto, auto, auto, auto, 190px 190px, 290px 290px, auto;
+  background: radial-gradient(ellipse at 55% 45%, #04121a 0%, #020912 55%, #010408 100%);
 }
-.section-backdrop-skills::before {
+
+.section-backdrop-skills .galaxy-vortex {
+  top: 48%;
+  left: 55%;
+  width: 140vw;
+  height: 140vw;
+  min-width: 1300px;
+  min-height: 1300px;
   background:
-    conic-gradient(from 75deg at 62% 42%,
+    radial-gradient(circle at 50% 50%, rgba(20, 184, 166, 0.70) 0%, rgba(6, 182, 212, 0.55) 18%, rgba(147, 51, 234, 0.38) 38%, transparent 68%),
+    conic-gradient(from 60deg at 50% 50%,
       transparent 0deg,
-      rgba(20, 184, 166, 0.38) 40deg,
-      rgba(6, 182, 212, 0.30) 95deg,
-      transparent 150deg,
-      rgba(147, 51, 234, 0.30) 220deg,
-      rgba(20, 184, 166, 0.32) 290deg,
+      rgba(20, 184, 166, 0.52) 40deg,
+      rgba(6, 182, 212, 0.42) 90deg,
+      transparent 145deg,
+      rgba(147, 51, 234, 0.42) 210deg,
+      rgba(20, 184, 166, 0.45) 280deg,
       transparent 360deg
     ),
-    radial-gradient(circle at 62% 42%, transparent 22%, rgba(20, 184, 166, 0.25) 26%, transparent 32%);
-  animation: cosmicPulse 9s ease-in-out infinite alternate;
-  opacity: 0.95;
-  filter: blur(2px);
+    radial-gradient(circle at 50% 50%, transparent 20%, rgba(20, 184, 166, 0.35) 24%, transparent 30%);
+  animation: galaxySpinReverse 60s linear infinite;
+  opacity: 0.98;
 }
-.section-backdrop-skills::after {
-  background:
-    radial-gradient(circle, rgba(255, 255, 255, 1) 0.6px, transparent 0.8px),
-    radial-gradient(circle, rgba(45, 212, 191, 0.95) 0.6px, transparent 0.8px),
-    radial-gradient(circle, rgba(168, 85, 247, 0.85) 0.5px, transparent 0.7px);
-  background-size: 175px 175px, 275px 275px, 375px 375px;
-  animation: starTwinkle 3s ease-in-out infinite alternate;
-  opacity: 0.9;
+
+.section-backdrop-skills .galaxy-core {
+  top: 48%;
+  left: 55%;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 1) 0%, rgba(45, 212, 191, 0.95) 12%, rgba(6, 182, 212, 0.8) 28%, rgba(147, 51, 234, 0.4) 50%, transparent 70%);
+  animation: corePulseCyan 4s ease-in-out infinite alternate;
+}
+
+.section-backdrop-skills .galaxy-stars-bright {
+  background-image:
+    radial-gradient(circle, #ffffff 0.8px, transparent 1px),
+    radial-gradient(circle, rgba(45, 212, 191, 0.95) 0.8px, transparent 1.1px),
+    radial-gradient(circle, rgba(168, 85, 247, 0.95) 0.9px, transparent 1.2px);
+  background-size: 175px 175px, 285px 285px, 395px 395px;
 }
 
 /* ─────────────────────────────────────────────────────────────
-   4. PROJECTS -- Ref Img 8: Fiery Galactic Collision & Crimson Coral Flares
-   White-hot gold nucleus, explosive ruby & crimson tidal streams, plasma arcs
+   4. PROJECTS -- Ref Img 8: Fiery Galactic Collision & Ruby Solar Flares
+   Explosive ruby & coral tidal tails, blazing white-gold nucleus, plasma surge
    ───────────────────────────────────────────────────────────── */
 .section-backdrop-projects {
-  background:
-    radial-gradient(ellipse 55% 45% at 52% 45%, rgba(255, 240, 200, 0.95) 0%, rgba(251, 191, 36, 0.68) 10%, rgba(244, 63, 94, 0.52) 26%, rgba(225, 29, 72, 0.35) 45%, transparent 68%),
-    radial-gradient(ellipse 75% 35% at 68% 35%, rgba(239, 68, 68, 0.42) 0%, rgba(185, 28, 28, 0.25) 30%, transparent 60%),
-    radial-gradient(circle at 22% 65%, rgba(245, 158, 11, 0.38) 0%, transparent 45%),
-    radial-gradient(circle at 85% 78%, rgba(244, 63, 94, 0.32) 0%, transparent 40%),
-    repeating-linear-gradient(145deg,
-      transparent 0px,
-      rgba(244, 63, 94, 0.08) 2px,
-      transparent 4px,
-      transparent 28px
-    ),
-    radial-gradient(circle, rgba(255, 230, 210, 0.9) 0.6px, transparent 0.7px),
-    radial-gradient(circle, rgba(251, 191, 36, 0.8) 0.5px, transparent 0.6px),
-    linear-gradient(135deg, #160408 0%, #100307 48%, #080104 100%);
-  background-size: auto, auto, auto, auto, auto, 195px 195px, 285px 285px, auto;
+  background: radial-gradient(ellipse at 50% 45%, #180308 0%, #0d0104 55%, #050002 100%);
 }
-.section-backdrop-projects::before {
+
+.section-backdrop-projects .galaxy-vortex {
+  top: 46%;
+  left: 52%;
+  width: 140vw;
+  height: 140vw;
+  min-width: 1300px;
+  min-height: 1300px;
   background:
-    conic-gradient(from 185deg at 52% 45%,
+    radial-gradient(ellipse 65% 45% at 50% 50%, rgba(251, 191, 36, 0.72) 0%, rgba(244, 63, 94, 0.60) 20%, rgba(225, 29, 72, 0.42) 38%, transparent 68%),
+    radial-gradient(circle at 25% 65%, rgba(245, 158, 11, 0.45) 0%, transparent 45%),
+    radial-gradient(circle at 78% 30%, rgba(239, 68, 68, 0.48) 0%, transparent 45%),
+    conic-gradient(from 175deg at 50% 50%,
       transparent 0deg,
-      rgba(251, 191, 36, 0.38) 35deg,
-      rgba(244, 63, 94, 0.35) 90deg,
-      transparent 150deg,
-      rgba(239, 68, 68, 0.28) 230deg,
-      rgba(251, 191, 36, 0.30) 310deg,
+      rgba(251, 191, 36, 0.55) 35deg,
+      rgba(244, 63, 94, 0.48) 85deg,
+      transparent 140deg,
+      rgba(239, 68, 68, 0.42) 220deg,
+      rgba(251, 191, 36, 0.45) 290deg,
       transparent 360deg
-    ),
-    radial-gradient(ellipse 60% 40% at 52% 45%, transparent 20%, rgba(244, 63, 94, 0.28) 24%, transparent 32%);
-  animation: nebulaBreath 11s ease-in-out infinite alternate;
-  opacity: 0.95;
-  filter: blur(2px);
+    );
+  animation: collisionSurge 14s ease-in-out infinite alternate;
+  opacity: 0.98;
 }
-.section-backdrop-projects::after {
-  background:
-    radial-gradient(circle, rgba(255, 255, 255, 1) 0.6px, transparent 0.8px),
-    radial-gradient(circle, rgba(251, 191, 36, 0.9) 0.6px, transparent 0.8px),
-    radial-gradient(circle, rgba(244, 63, 94, 0.95) 0.7px, transparent 0.9px);
-  background-size: 165px 165px, 255px 255px, 355px 355px;
-  animation: starTwinkle 3.2s ease-in-out infinite alternate;
-  opacity: 0.95;
+
+.section-backdrop-projects .galaxy-core {
+  top: 46%;
+  left: 52%;
+  width: 340px;
+  height: 340px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 1) 0%, rgba(255, 240, 180, 0.98) 12%, rgba(251, 191, 36, 0.92) 25%, rgba(244, 63, 94, 0.6) 45%, transparent 72%);
+  animation: corePulseFiery 4.2s ease-in-out infinite alternate;
+}
+
+.section-backdrop-projects .galaxy-stars-bright {
+  background-image:
+    radial-gradient(circle, #ffffff 0.8px, transparent 1px),
+    radial-gradient(circle, rgba(251, 191, 36, 0.95) 0.8px, transparent 1.1px),
+    radial-gradient(circle, rgba(244, 63, 94, 0.95) 0.9px, transparent 1.2px);
+  background-size: 165px 165px, 265px 265px, 375px 375px;
 }
 
 .s-projects .proj-viewport {
@@ -3448,138 +3540,156 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ─────────────────────────────────────────────────────────────
    5. CERTIFICATIONS -- Ref Img 4: Helix Nebula "Eye of God"
-   Molten amber & copper circular ring, deep turquoise void pupil, piercing white dwarf star
+   Breathing molten amber ring, deep void pupil, spinning cyan dwarf starburst
    ───────────────────────────────────────────────────────────── */
 .section-backdrop-certs {
-  background:
-    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.98) 0%, rgba(56, 189, 248, 0.75) 4%, rgba(6, 182, 212, 0.48) 12%, rgba(5, 12, 28, 0.92) 20%, transparent 22%),
-    radial-gradient(ellipse 55% 50% at 50% 50%, transparent 22%, rgba(245, 158, 11, 0.58) 30%, rgba(217, 119, 6, 0.45) 38%, rgba(180, 60, 30, 0.28) 48%, transparent 58%),
-    radial-gradient(ellipse 70% 65% at 50% 50%, rgba(14, 165, 233, 0.22) 48%, transparent 68%),
-    radial-gradient(circle at 20% 25%, rgba(245, 158, 11, 0.28) 0%, transparent 40%),
-    radial-gradient(circle at 80% 75%, rgba(56, 189, 248, 0.32) 0%, transparent 42%),
-    radial-gradient(circle, rgba(255, 250, 230, 0.9) 0.6px, transparent 0.7px),
-    radial-gradient(circle, rgba(56, 189, 248, 0.85) 0.5px, transparent 0.6px),
-    linear-gradient(135deg, #030814 0%, #050e1f 50%, #02040c 100%);
-  background-size: auto, auto, auto, auto, auto, 190px 190px, 280px 280px, auto;
+  background: radial-gradient(ellipse at 50% 50%, #071120 0%, #030812 55%, #010307 100%);
 }
-.section-backdrop-certs::before {
+
+.section-backdrop-certs .galaxy-vortex {
+  top: 50%;
+  left: 50%;
+  width: 120vw;
+  height: 120vw;
+  min-width: 1100px;
+  min-height: 1100px;
   background:
+    radial-gradient(circle at 50% 50%, transparent 22%, rgba(245, 158, 11, 0.72) 30%, rgba(217, 119, 6, 0.58) 40%, rgba(180, 60, 30, 0.35) 50%, transparent 62%),
     conic-gradient(from 0deg at 50% 50%,
-      rgba(245, 158, 11, 0.30) 0deg,
+      rgba(245, 158, 11, 0.40) 0deg,
       transparent 30deg,
-      rgba(217, 119, 6, 0.35) 60deg,
-      rgba(56, 189, 248, 0.25) 90deg,
+      rgba(217, 119, 6, 0.45) 60deg,
+      rgba(56, 189, 248, 0.32) 90deg,
       transparent 120deg,
-      rgba(245, 158, 11, 0.32) 180deg,
+      rgba(245, 158, 11, 0.42) 180deg,
       transparent 210deg,
-      rgba(217, 119, 6, 0.35) 270deg,
-      rgba(56, 189, 248, 0.25) 310deg,
-      rgba(245, 158, 11, 0.30) 360deg
-    ),
-    radial-gradient(circle at 50% 50%, transparent 26%, rgba(245, 158, 11, 0.32) 32%, transparent 40%);
-  animation: cosmicPulse 10s ease-in-out infinite alternate;
-  opacity: 0.95;
-  filter: blur(2px);
+      rgba(217, 119, 6, 0.48) 270deg,
+      rgba(56, 189, 248, 0.35) 310deg,
+      rgba(245, 158, 11, 0.40) 360deg
+    );
+  animation: ringBreathing 11s ease-in-out infinite alternate;
+  opacity: 0.98;
 }
-.section-backdrop-certs::after {
+
+.section-backdrop-certs .galaxy-core {
+  top: 50%;
+  left: 50%;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
   background:
-    radial-gradient(circle, rgba(255, 255, 255, 1) 0.6px, transparent 0.8px),
-    radial-gradient(circle, rgba(251, 191, 36, 0.95) 0.6px, transparent 0.8px),
-    radial-gradient(circle, rgba(56, 189, 248, 1) 0.7px, transparent 0.9px);
-  background-size: 170px 170px, 270px 270px, 380px 380px;
-  animation: starTwinkle 3.8s ease-in-out infinite alternate;
-  opacity: 0.95;
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 1) 0%, rgba(56, 189, 248, 0.95) 8%, rgba(6, 182, 212, 0.6) 20%, rgba(3, 8, 20, 0.95) 34%, transparent 45%),
+    linear-gradient(45deg, transparent 48%, rgba(56, 189, 248, 0.9) 50%, transparent 52%),
+    linear-gradient(-45deg, transparent 48%, rgba(56, 189, 248, 0.9) 50%, transparent 52%);
+  animation: galaxySpin 25s linear infinite;
+}
+
+.section-backdrop-certs .galaxy-stars-bright {
+  background-image:
+    radial-gradient(circle, #ffffff 0.8px, transparent 1px),
+    radial-gradient(circle, rgba(251, 191, 36, 0.95) 0.8px, transparent 1.1px),
+    radial-gradient(circle, rgba(56, 189, 248, 1) 0.9px, transparent 1.2px);
+  background-size: 170px 170px, 280px 280px, 390px 390px;
 }
 
 /* ─────────────────────────────────────────────────────────────
-   6. RESUME -- Ref Img 6: Rainbow Cosmos & Planetary System Prisms
-   Multi-spectrum planetary solar system: emerald green, gold, cyan, violet, rose
+   6. RESUME -- Ref Img 6: Rainbow Cosmos & Prismatic Orbiting Systems
+   Rotating multi-color orbital rings (emerald, amber, cyan, violet, rose)
    ───────────────────────────────────────────────────────────── */
 .section-backdrop-resume {
-  background:
-    radial-gradient(circle at 52% 48%, rgba(255, 255, 230, 0.95) 0%, rgba(251, 191, 36, 0.60) 8%, rgba(245, 158, 11, 0.42) 18%, transparent 40%),
-    radial-gradient(circle at 18% 28%, rgba(13, 148, 136, 0.48) 0%, rgba(34, 197, 94, 0.35) 20%, transparent 48%),
-    radial-gradient(circle at 82% 32%, rgba(147, 51, 234, 0.45) 0%, rgba(168, 85, 247, 0.32) 22%, transparent 50%),
-    radial-gradient(circle at 25% 78%, rgba(6, 182, 212, 0.42) 0%, transparent 45%),
-    radial-gradient(ellipse at 78% 75%, rgba(236, 72, 153, 0.40) 0%, transparent 46%),
-    radial-gradient(ellipse 65% 55% at 52% 48%, transparent 22%, rgba(251, 191, 36, 0.25) 24%, transparent 26%),
-    radial-gradient(ellipse 85% 70% at 52% 48%, transparent 34%, rgba(6, 182, 212, 0.22) 36%, transparent 38%),
-    radial-gradient(circle, rgba(255, 255, 255, 0.9) 0.6px, transparent 0.7px),
-    radial-gradient(circle, rgba(34, 197, 94, 0.85) 0.5px, transparent 0.6px),
-    linear-gradient(135deg, #060312 0%, #030814 50%, #0a0314 100%);
-  background-size: auto, auto, auto, auto, auto, auto, auto, 190px 190px, 290px 290px, auto;
+  background: radial-gradient(ellipse at 50% 50%, #0d061c 0%, #05020c 55%, #020106 100%);
 }
-.section-backdrop-resume::before {
+
+.section-backdrop-resume .galaxy-vortex {
+  top: 50%;
+  left: 52%;
+  width: 140vw;
+  height: 140vw;
+  min-width: 1300px;
+  min-height: 1300px;
   background:
-    linear-gradient(125deg,
-      rgba(147, 51, 234, 0.26) 0%,
-      rgba(6, 182, 212, 0.24) 25%,
-      rgba(34, 197, 94, 0.22) 45%,
-      rgba(251, 191, 36, 0.26) 65%,
-      rgba(236, 72, 153, 0.24) 85%,
-      rgba(147, 51, 234, 0.26) 100%
-    ),
-    repeating-conic-gradient(from 0deg at 52% 48%,
-      transparent 0deg,
-      rgba(251, 191, 36, 0.08) 8deg,
-      transparent 16deg
+    radial-gradient(ellipse 65% 55% at 50% 50%, transparent 20%, rgba(251, 191, 36, 0.38) 22%, transparent 25%),
+    radial-gradient(ellipse 80% 68% at 50% 50%, transparent 32%, rgba(6, 182, 212, 0.35) 34%, transparent 37%),
+    radial-gradient(ellipse 95% 82% at 50% 50%, transparent 44%, rgba(34, 197, 94, 0.32) 46%, transparent 49%),
+    radial-gradient(ellipse 110% 95% at 50% 50%, transparent 56%, rgba(236, 72, 153, 0.30) 58%, transparent 61%),
+    conic-gradient(from 45deg at 50% 50%,
+      rgba(147, 51, 234, 0.35) 0deg,
+      rgba(6, 182, 212, 0.35) 60deg,
+      rgba(34, 197, 94, 0.32) 120deg,
+      rgba(251, 191, 36, 0.38) 180deg,
+      rgba(236, 72, 153, 0.35) 260deg,
+      rgba(147, 51, 234, 0.35) 360deg
     );
-  animation: nebulaBreath 13s ease-in-out infinite alternate;
-  opacity: 0.95;
-  filter: blur(2px);
+  animation: galaxySpin 80s linear infinite;
+  opacity: 0.98;
 }
-.section-backdrop-resume::after {
-  background:
-    radial-gradient(circle, rgba(255, 255, 255, 1) 0.6px, transparent 0.8px),
-    radial-gradient(circle, rgba(34, 197, 94, 0.95) 0.6px, transparent 0.8px),
-    radial-gradient(circle, rgba(236, 72, 153, 0.95) 0.6px, transparent 0.8px),
-    radial-gradient(circle, rgba(56, 189, 248, 0.95) 0.6px, transparent 0.8px);
-  background-size: 180px 180px, 260px 260px, 340px 340px, 420px 420px;
-  animation: starTwinkle 4.2s ease-in-out infinite alternate;
-  opacity: 0.95;
+
+.section-backdrop-resume .galaxy-core {
+  top: 50%;
+  left: 52%;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 220, 0.95) 10%, rgba(251, 191, 36, 0.85) 24%, rgba(34, 197, 94, 0.4) 45%, transparent 68%);
+  animation: corePulseHero 5s ease-in-out infinite alternate;
+}
+
+.section-backdrop-resume .galaxy-stars-bright {
+  background-image:
+    radial-gradient(circle, #ffffff 0.8px, transparent 1px),
+    radial-gradient(circle, rgba(34, 197, 94, 0.95) 0.8px, transparent 1.1px),
+    radial-gradient(circle, rgba(236, 72, 153, 0.95) 0.8px, transparent 1.1px),
+    radial-gradient(circle, rgba(56, 189, 248, 0.95) 0.9px, transparent 1.2px);
+  background-size: 180px 180px, 270px 270px, 360px 360px, 450px 450px;
 }
 
 /* ─────────────────────────────────────────────────────────────
    7. CONTACT -- Ref Img 7: Burning Crimson Plasma Ring Nebula
-   Scorching crimson-scarlet ring, molten gold inner core, deep dark hollow center, azure sparks
+   Fiery volcanic ring swirl, searing amber corona, deep void core
    ───────────────────────────────────────────────────────────── */
 .section-backdrop-contact {
-  background:
-    radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.75) 0%, rgba(6, 182, 212, 0.45) 6%, rgba(8, 3, 10, 0.94) 18%, transparent 22%),
-    radial-gradient(ellipse 60% 52% at 50% 50%, transparent 22%, rgba(225, 29, 72, 0.60) 30%, rgba(245, 158, 11, 0.52) 38%, rgba(185, 28, 28, 0.35) 50%, transparent 62%),
-    radial-gradient(circle at 18% 30%, rgba(225, 29, 72, 0.38) 0%, transparent 45%),
-    radial-gradient(circle at 82% 70%, rgba(245, 158, 11, 0.35) 0%, transparent 45%),
-    radial-gradient(ellipse at 50% 85%, rgba(185, 28, 28, 0.42) 0%, transparent 52%),
-    radial-gradient(circle, rgba(255, 230, 220, 0.9) 0.6px, transparent 0.7px),
-    radial-gradient(circle, rgba(245, 158, 11, 0.85) 0.5px, transparent 0.6px),
-    linear-gradient(135deg, #140306 0%, #1c0509 50%, #090103 100%);
-  background-size: auto, auto, auto, auto, auto, 185px 185px, 275px 275px, auto;
+  background: radial-gradient(ellipse at 50% 50%, #1a0307 0%, #0d0104 55%, #050002 100%);
 }
-.section-backdrop-contact::before {
+
+.section-backdrop-contact .galaxy-vortex {
+  top: 50%;
+  left: 50%;
+  width: 125vw;
+  height: 125vw;
+  min-width: 1150px;
+  min-height: 1150px;
   background:
-    conic-gradient(from 45deg at 50% 50%,
-      rgba(225, 29, 72, 0.35) 0deg,
-      rgba(245, 158, 11, 0.38) 45deg,
+    radial-gradient(circle at 50% 50%, transparent 20%, rgba(225, 29, 72, 0.75) 28%, rgba(245, 158, 11, 0.62) 38%, rgba(185, 28, 28, 0.42) 50%, transparent 65%),
+    conic-gradient(from 30deg at 50% 50%,
+      rgba(225, 29, 72, 0.45) 0deg,
+      rgba(245, 158, 11, 0.50) 45deg,
       transparent 90deg,
-      rgba(225, 29, 72, 0.32) 160deg,
-      rgba(245, 158, 11, 0.34) 220deg,
+      rgba(225, 29, 72, 0.42) 160deg,
+      rgba(245, 158, 11, 0.45) 220deg,
       transparent 270deg,
-      rgba(225, 29, 72, 0.38) 330deg,
-      rgba(225, 29, 72, 0.35) 360deg
-    ),
-    radial-gradient(circle at 50% 50%, transparent 24%, rgba(225, 29, 72, 0.34) 30%, transparent 38%);
-  animation: nebulaBreath 12s ease-in-out infinite alternate;
-  opacity: 0.95;
-  filter: blur(2px);
+      rgba(225, 29, 72, 0.48) 330deg,
+      rgba(225, 29, 72, 0.45) 360deg
+    );
+  animation: ringBreathing 12s ease-in-out infinite alternate;
+  opacity: 0.98;
 }
-.section-backdrop-contact::after {
-  background:
-    radial-gradient(circle, rgba(255, 255, 255, 1) 0.6px, transparent 0.8px),
-    radial-gradient(circle, rgba(245, 158, 11, 0.95) 0.6px, transparent 0.8px),
-    radial-gradient(circle, rgba(56, 189, 248, 1) 0.7px, transparent 0.9px);
-  background-size: 165px 165px, 265px 265px, 370px 370px;
-  animation: starTwinkle 3.6s ease-in-out infinite alternate;
-  opacity: 0.95;
+
+.section-backdrop-contact .galaxy-core {
+  top: 50%;
+  left: 50%;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.9) 0%, rgba(6, 182, 212, 0.5) 8%, rgba(8, 2, 6, 0.95) 22%, transparent 35%);
+  animation: corePulseCyan 4.5s ease-in-out infinite alternate;
+}
+
+.section-backdrop-contact .galaxy-stars-bright {
+  background-image:
+    radial-gradient(circle, #ffffff 0.8px, transparent 1px),
+    radial-gradient(circle, rgba(245, 158, 11, 0.95) 0.8px, transparent 1.1px),
+    radial-gradient(circle, rgba(56, 189, 248, 1) 0.8px, transparent 1.1px);
+  background-size: 165px 165px, 275px 275px, 385px 385px;
 }
 
 @media (prefers-reduced-motion: reduce) {

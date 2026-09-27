@@ -1677,6 +1677,43 @@ function initPortfolio() {
   }
   initContactForm();
 
+
+  // ══════════════════════════════════════════
+  // GALAXY PARALLAX MOTION ON MOUSE MOVE
+  // ══════════════════════════════════════════
+  function initGalaxyParallax() {
+    let mouseX = 0, mouseY = 0;
+    let currentX = 0, currentY = 0;
+    let ticking = false;
+
+    window.addEventListener('mousemove', (e) => {
+      mouseX = (e.clientX / window.innerWidth - 0.5) * 40;
+      mouseY = (e.clientY / window.innerHeight - 0.5) * 40;
+      if (!ticking) {
+        requestAnimationFrame(updateParallax);
+        ticking = true;
+      }
+    }, { passive: true });
+
+    function updateParallax() {
+      currentX += (mouseX - currentX) * 0.05;
+      currentY += (mouseY - currentY) * 0.05;
+
+      const activeBackdrop = document.querySelector('.section-backdrop');
+      if (activeBackdrop) {
+        document.documentElement.style.setProperty('--gx-pan-x', `${currentX}px`);
+        document.documentElement.style.setProperty('--gx-pan-y', `${currentY}px`);
+      }
+
+      if (Math.abs(mouseX - currentX) > 0.1 || Math.abs(mouseY - currentY) > 0.1) {
+        requestAnimationFrame(updateParallax);
+      } else {
+        ticking = false;
+      }
+    }
+  }
+  initGalaxyParallax();
+
 } // end initPortfolio
 
 window.initPortfolio = initPortfolio;

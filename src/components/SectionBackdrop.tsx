@@ -7,5 +7,13 @@ type SectionBackdropProps = {
 }
 
 export default function SectionBackdrop({ theme }: SectionBackdropProps) {
-  return <div className={`section-backdrop section-backdrop-${theme}`} aria-hidden="true" />
+  return (
+    <div className={`section-backdrop section-backdrop-${theme}`} aria-hidden="true">
+      <div className="galaxy-layer galaxy-stars-deep" />
+      <div className="galaxy-layer galaxy-vortex" />
+      <div className="galaxy-layer galaxy-core" />
+      <div className="galaxy-layer galaxy-stars-bright" />
+      <div className="galaxy-layer galaxy-overlay" />
+    </div>
+  )
 }
